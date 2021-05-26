@@ -2,7 +2,9 @@ import 'package:dio/dio.dart';
 import 'package:photo_sync/repository/interfaces/objects_repository_interface.dart';
 
 class ObjectRepository extends ObectsRepositoryInterface {
-  static const _API_PATH = "";
+  static const _HOST = "192.168.1.7";
+  static const _PORT = ":8080";
+  static const _API_PATH = "$_HOST$_PORT/photoSync/api/v1";
 
   late String _authKey;
 
@@ -59,8 +61,9 @@ class ObjectRepository extends ObectsRepositoryInterface {
   }
 
   @override
-  Future<Response> addPicture(Map<String, dynamic> object) {
-    // TODO: implement addPicture
-    throw UnimplementedError();
+  Future<Response> addPicture(Map<String, dynamic> object) async {
+    Response response =
+        await _dioInstance!.post('/addPicture', queryParameters: object);
+    return response;
   }
 }

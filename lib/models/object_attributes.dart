@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 class ObjectAttributes {
   static const _KEY_URL = "url";
   static const _KEY_SYNC_DATE = "sync_date";
@@ -17,7 +15,7 @@ class ObjectAttributes {
   final String username;
   final String picturePosition;
   final String localPath;
-  final Int64 pictureByteSize;
+  final int pictureByteSize;
   final int databaseID;
 
   ObjectAttributes({
