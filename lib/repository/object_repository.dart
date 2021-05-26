@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:photo_sync/models/raw_object.dart';
 import 'package:photo_sync/repository/interfaces/objects_repository_interface.dart';
 
 class ObjectRepository extends ObectsRepositoryInterface {
@@ -61,9 +62,9 @@ class ObjectRepository extends ObectsRepositoryInterface {
   }
 
   @override
-  Future<Response> addPicture(Map<String, dynamic> object) async {
-    Response response =
-        await _dioInstance!.post('/addPicture', queryParameters: object);
+  Future<Response> addPicture(RawObject object) async {
+    Response response = await _dioInstance!
+        .post('/addPicture', queryParameters: {'data': object.toJSON});
     return response;
   }
 }
