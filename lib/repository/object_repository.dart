@@ -11,11 +11,15 @@ class ObjectRepository extends ObectsRepositoryInterface {
 
   Dio? _dioInstance;
 
-  ObjectRepository() {
-    _setupDio();
+  static final ObjectRepository _singleton = ObjectRepository._internal();
+
+  factory ObjectRepository() {
+    return _singleton;
   }
 
-  _setupDio() {
+  ObjectRepository._internal();
+
+  void setupDio() {
     if (_dioInstance == null) {
       BaseOptions _dioOptions = BaseOptions(
         responseType: ResponseType.json,
@@ -56,8 +60,11 @@ class ObjectRepository extends ObectsRepositoryInterface {
         "password": password,
       },
     );
-    _authKey = response.data['key'];
-    _setupDio();
+    if (response.data['error'] == null) {
+      _authKey = response.data['key'];
+      //Updates the dioInstance to use the key retrieved
+      setupDio();
+    }
     return response;
   }
 
