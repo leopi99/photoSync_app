@@ -1,11 +1,15 @@
 import 'dart:collection';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
+import 'package:photo_sync/bloc/bloc_base.dart';
 import 'package:photo_sync/models/object.dart';
+import 'package:photo_sync/models/object_attributes.dart';
 import 'package:photo_sync/repository/object_repository.dart';
+import 'package:photo_sync/util/enums/object_type.dart';
 import 'package:rxdart/rxdart.dart';
 
-class ObjectsBloc {
+class ObjectsBloc extends BlocBase {
   ObjectsBloc() {
     _objectSubject = BehaviorSubject<List<Object>>.seeded([]);
     _repository = ObjectRepository()..setupDio();
@@ -30,6 +34,24 @@ class ObjectsBloc {
 
   ///Retrieves the objects (pictures and videos) from the api
   Future<void> getObjectListFromApi() async {
+    if (kDebugMode) {
+      addObjects([
+        Object(
+          objectType: ObjectType.Picture,
+          attributes: ObjectAttributes(
+            url: '',
+            syncDate: DateTime.now().toIso8601String(),
+            creationDate: DateTime.now().toIso8601String(),
+            username: 'leopi99',
+            picturePosition: 'Italy',
+            localPath: '',
+            pictureByteSize: 19000,
+            databaseID: 1,
+          ),
+        ),
+      ]);
+      return;
+    }
     Response? response;
     try {
       response = await _repository.getAll();
@@ -46,5 +68,11 @@ class ObjectsBloc {
         (index) => Object.fromJSON(response!.data[index]),
       ),
     );
+  }
+
+  @override
+  dispose() {
+    super.dispose();
+    _objectSubject.close();
   }
 }
