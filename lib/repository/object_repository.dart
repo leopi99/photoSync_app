@@ -33,6 +33,9 @@ class ObjectRepository extends ObectsRepositoryInterface {
     };
   }
 
+  Map<String, String>? get getHeaders => _dioInstance?.options.headers
+      .map((key, value) => MapEntry(key, value.toString()));
+
   @override
   Future<Response> getAll() async {
     Response response = await _dioInstance!.get('/getAll');

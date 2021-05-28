@@ -16,6 +16,7 @@ class Object {
         attributes: json[ObjectAttributes.KEY_ATTRIBUTES],
         objectType: json[_KEY_TYPE],
       );
+
   Map<String, dynamic> get toJSON => {
         ObjectAttributes.KEY_ATTRIBUTES: attributes.toJSON,
         _KEY_TYPE: objectType.toValue,

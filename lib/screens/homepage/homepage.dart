@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:photo_sync/bloc/objects_bloc.dart';
 import 'package:photo_sync/models/object.dart';
+import 'package:photo_sync/repository/object_repository.dart';
+import 'package:photo_sync/screens/base_page/base_page.dart';
 
 class Homepage extends StatefulWidget {
   @override
@@ -18,18 +20,20 @@ class _HomepageState extends State<Homepage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: StreamBuilder<List<Object>>(
+    return BasePage(
+      loadingStream: bloc.loadingStream,
+      child: StreamBuilder<List<Object>>(
         stream: bloc.objectsStream,
         initialData: [],
         builder: (context, snapshot) {
           return ListView.builder(
             itemCount: snapshot.data!.length,
-            itemBuilder: (context, index) => ListTile(
-              title: Text(
-                snapshot.data![index].attributes.syncDate,
-                style: TextStyle(color: Colors.black),
-              ), //For testing
+            itemBuilder: (context, index) => Container(
+              child: Image.network(
+                snapshot.data![index].attributes.url,
+                headers: ObjectRepository().getHeaders,
+                fit: BoxFit.cover,
+              ),
             ),
           );
         },
