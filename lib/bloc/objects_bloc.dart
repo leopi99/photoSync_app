@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:photo_sync/bloc/bloc_base.dart';
+import 'package:photo_sync/models/api_error.dart';
 import 'package:photo_sync/models/object.dart';
 import 'package:photo_sync/models/object_attributes.dart';
 import 'package:photo_sync/repository/object_repository.dart';
@@ -52,20 +53,20 @@ class ObjectsBloc extends BlocBase {
       ]);
       return;
     }
-    Response? response;
+    dynamic response;
     try {
       response = await _repository.getAll();
     } catch (e) {}
 
-    if (response == null || response.statusCode != 200) {
+    if (response is ApiError) {
       //TODO: show error to the user
       return;
     }
     //Converts the json into the objects
     addObjects(
       List.generate(
-        response.data.length,
-        (index) => Object.fromJSON(response!.data[index]),
+        response.length,
+        (index) => Object.fromJSON(response![index]),
       ),
     );
   }

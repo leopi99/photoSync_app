@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:photo_sync/models/api_error.dart';
 import 'package:photo_sync/models/raw_object.dart';
 import 'package:photo_sync/repository/interfaces/objects_repository_interface.dart';
 
@@ -37,25 +38,25 @@ class ObjectRepository extends ObectsRepositoryInterface {
       .map((key, value) => MapEntry(key, value.toString()));
 
   @override
-  Future<Response> getAll() async {
+  Future<dynamic> getAll() async {
     Response response = await _dioInstance!.get('/getAll');
-    return response;
+    return ApiError.fromJSON(response.data) ?? response.data;
   }
 
   @override
-  Future<Response> getPictures(String username) async {
+  Future<dynamic> getPictures(String username) async {
     Response response = await _dioInstance!.get('/getPictures');
-    return response;
+    return ApiError.fromJSON(response.data) ?? response.data;
   }
 
   @override
-  Future<Response> getVideos(String username) async {
+  Future<dynamic> getVideos(String username) async {
     Response response = await _dioInstance!.get('/getVideos');
-    return response;
+    return ApiError.fromJSON(response.data) ?? response.data;
   }
 
   @override
-  Future<Response> login(String username, String password) async {
+  Future<dynamic> login(String username, String password) async {
     Response response = await _dioInstance!.post(
       '/login',
       queryParameters: {
@@ -68,13 +69,13 @@ class ObjectRepository extends ObectsRepositoryInterface {
       //Updates the dioInstance to use the key retrieved
       setupDio();
     }
-    return response;
+    return ApiError.fromJSON(response.data) ?? response.data;
   }
 
   @override
-  Future<Response> addPicture(RawObject object) async {
+  Future<dynamic> addPicture(RawObject object) async {
     Response response = await _dioInstance!
         .post('/addPicture', queryParameters: {'data': object.toJSON});
-    return response;
+    return ApiError.fromJSON(response.data) ?? response.data;
   }
 }

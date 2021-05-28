@@ -7,8 +7,11 @@ class ApiError {
     required this.description,
   });
 
-  factory ApiError.fromJSON(Map<String, String> json) => ApiError(
-        description: json['description']!,
-        errorType: json['errorType']!,
-      );
+  ///Returns null if the response is not an error
+  static fromJSON(Map<String, String> json) => json['description'] != null
+      ? ApiError(
+          description: json['description']!,
+          errorType: json['errorType']!,
+        )
+      : null;
 }
