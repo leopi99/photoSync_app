@@ -88,7 +88,14 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
           height: 256,
           width: 256,
         ),
-        if (info.pageDescription != null) Text(info.pageDescription!),
+        if (info.pageDescription != null)
+          Padding(
+            padding: const EdgeInsets.only(top: 12),
+            child: Text(
+              info.pageDescription!,
+              style: TextStyle(fontWeight: FontWeight.w600),
+            ),
+          ),
       ],
     );
   }

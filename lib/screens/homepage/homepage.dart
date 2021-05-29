@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_sync/bloc/objects_bloc.dart';
@@ -39,13 +41,25 @@ class _HomepageState extends State<Homepage> {
               crossAxisSpacing: 8,
               mainAxisSpacing: 8,
             ),
-            itemBuilder: (context, index) => Container(
-              child: CachedNetworkImage(
-                imageUrl: snapshot.data![index].attributes.url,
-                httpHeaders: ObjectRepository().getHeaders,
-                height: 128,
-                width: 128,
-              ),
+            itemBuilder: (context, index) => FutureBuilder<bool>(
+              initialData: false,
+              future: snapshot.data![index].isDownloaded,
+              builder: (context, futureSnapshot) {
+                return Container(
+                  child: futureSnapshot.data!
+                      ? Image.file(
+                          File(snapshot.data![index].attributes.localPath),
+                          height: 128,
+                          width: 128,
+                        )
+                      : CachedNetworkImage(
+                          imageUrl: snapshot.data![index].attributes.url,
+                          httpHeaders: ObjectRepository().getHeaders,
+                          height: 128,
+                          width: 128,
+                        ),
+                );
+              },
             ),
           );
         },

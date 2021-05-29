@@ -7,8 +7,13 @@ import 'package:photo_sync/util/shared_manager.dart';
 class AppBloc {
   Future<void> checkSession() async {
     bool onBoarding = await SharedManager().readBool(SharedType.OnBoardingDone);
+    //Goes to th onBoarding if not already done
     if (!onBoarding)
       Navigator.pushReplacementNamed(
           navigatorKey.currentContext!, RouteBuilder.ONBOARDING_PAGE);
+
+    //If nothing needs to be done goes to the homepage
+    Navigator.pushReplacementNamed(
+        navigatorKey.currentContext!, RouteBuilder.HOMEPAGE);
   }
 }
