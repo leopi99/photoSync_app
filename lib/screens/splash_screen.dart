@@ -9,20 +9,12 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  late Timer timer;
+  static const Duration _animationDuration = Duration(seconds: 2);
 
   @override
   void initState() {
     super.initState();
-    timer = Timer.periodic(Duration(seconds: 2), (timer) {
-      Navigator.pushReplacementNamed(context, RouteBuilder.HOMEPAGE);
-    });
-  }
-
-  @override
-  void dispose() {
-    timer.cancel();
-    super.dispose();
+    Future.delayed(_animationDuration).then((_) => _onAnimationEnd());
   }
 
   //TODO: Create the animation (maybe with flare) or show the app icon.
@@ -30,8 +22,13 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Text('SPLASH'),
+        child: FlutterLogo(
+          duration: _animationDuration,
+        ),
       ),
     );
   }
+
+  void _onAnimationEnd() =>
+      Navigator.pushReplacementNamed(context, RouteBuilder.HOMEPAGE);
 }
