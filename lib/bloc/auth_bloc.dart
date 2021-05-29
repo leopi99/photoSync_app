@@ -18,14 +18,20 @@ class AuthBloc {
       print('Error $e');
       return;
     }
+
     if (data == null || data is ApiError) {
       _showError(title: 'Login error');
       return;
     }
 
+    //Fetches the list of images
     await ObjectsBlocInherited.of(navigatorKey.currentContext!)
         .getObjectListFromApi();
 
+    //Updates the user
+    _currentUser = User.fromJSON(data);
+
+    //Checks the session, should go to the homepage
     await AppBloc().checkSession();
   }
 

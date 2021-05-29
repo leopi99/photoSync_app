@@ -1,6 +1,7 @@
 enum SharedType {
   LoginUsername,
   LoginPassword,
+  LoginDone,
   OnBoardingDone,
 }
 
