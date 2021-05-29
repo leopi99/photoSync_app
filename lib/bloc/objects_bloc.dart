@@ -98,8 +98,10 @@ class ObjectsBloc extends BlocBase {
       backgroundColor: Colors.red,
       content: Text(title),
       behavior: SnackBarBehavior.floating,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       action: SnackBarAction(
         label: 'close',
+        textColor: Colors.white,
         onPressed: () => ScaffoldMessenger.of(navigatorKey.currentContext!)
             .hideCurrentSnackBar(),
       ),

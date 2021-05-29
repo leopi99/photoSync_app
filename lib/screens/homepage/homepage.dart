@@ -27,14 +27,14 @@ class _HomepageState extends State<Homepage> {
   Widget build(BuildContext context) {
     return BasePage(
       loadingStream: bloc.loadingStream,
-      appBar: AppBar(
-        title: Text('Home'),
-      ),
+      usePadding: true,
       child: StreamBuilder<List<Object>>(
         stream: bloc.objectsStream,
         initialData: [],
         builder: (context, snapshot) {
           return GridView.builder(
+            physics: BouncingScrollPhysics(),
+            padding: EdgeInsets.symmetric(horizontal: 8),
             itemCount: snapshot.data!.length,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
