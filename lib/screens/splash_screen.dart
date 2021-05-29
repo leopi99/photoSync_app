@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:photo_sync/bloc/app_bloc.dart';
 import 'package:photo_sync/global/nav_key.dart';
 import 'package:photo_sync/routes/route_builder.dart';
 
@@ -13,6 +14,7 @@ class _SplashScreenState extends State<SplashScreen> {
   static const Duration _animationDuration = Duration(seconds: 2);
 
   late double opacity;
+  bool _isAnimationDone = false;
 
   @override
   void initState() {
@@ -44,6 +46,5 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 
-  void _onAnimationEnd() =>
-      Navigator.pushReplacementNamed(context, RouteBuilder.HOMEPAGE);
+  void _onAnimationEnd() => AppBloc().checkSession();
 }

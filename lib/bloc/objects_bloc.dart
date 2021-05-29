@@ -42,7 +42,8 @@ class ObjectsBloc extends BlocBase {
         Object(
           objectType: ObjectType.Picture,
           attributes: ObjectAttributes(
-            url: '',
+            url:
+                'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fconlagentenoticias.com%2Fwp-content%2Fuploads%2F2020%2F12%2F1-1.jpg&f=1&nofb=1',
             syncDate: DateTime.now().toIso8601String(),
             creationDate: DateTime.now().toIso8601String(),
             username: 'leopi99',

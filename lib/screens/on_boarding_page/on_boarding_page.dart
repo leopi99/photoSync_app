@@ -1,22 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:photo_sync/constants/assets_path.dart';
+import 'package:photo_sync/global/nav_key.dart';
 import 'package:photo_sync/models/on_boarding_info.dart';
+import 'package:photo_sync/routes/route_builder.dart';
+import 'package:photo_sync/util/enums/shared_type.dart';
+import 'package:photo_sync/util/shared_manager.dart';
+
+const List<OnBoardingInfo> pages = [
+  OnBoardingInfo(
+    pageDescription: 'Free backup utils',
+    localImageAssetPath: AssetsPath.onBoardingImage1,
+  ),
+  OnBoardingInfo(
+    pageDescription: 'No storage limitations',
+    localImageAssetPath: AssetsPath.onBoardingImage2,
+  ),
+  OnBoardingInfo(
+    localImageAssetPath: AssetsPath.onBoardingImage3,
+  ),
+];
 
 class OnBoardingPage extends StatefulWidget {
   //The list of the pages to show in the onBoarding
-  static const List<OnBoardingInfo> _pages = [
-    OnBoardingInfo(
-      pageDescription: 'Free backup utils',
-      localImageAssetPath: AssetsPath.onBoardingImage1,
-    ),
-    OnBoardingInfo(
-      pageDescription: 'No storage limitations',
-      localImageAssetPath: AssetsPath.onBoardingImage2,
-    ),
-    OnBoardingInfo(
-      localImageAssetPath: AssetsPath.onBoardingImage3,
-    ),
-  ];
 
   @override
   _OnBoardingPageState createState() => _OnBoardingPageState();
@@ -24,6 +29,8 @@ class OnBoardingPage extends StatefulWidget {
 
 class _OnBoardingPageState extends State<OnBoardingPage> {
   late PageController _pageController;
+
+  int currentPage = 0;
 
   @override
   void initState() {
@@ -41,26 +48,27 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: PageView.builder(
-        itemCount: OnBoardingPage._pages.length,
+        onPageChanged: (value) => setState(() {
+          currentPage = value;
+        }),
+        itemCount: pages.length,
         controller: _pageController,
         physics: BouncingScrollPhysics(),
         pageSnapping: true,
         itemBuilder: (context, index) {
           return Center(
-            child: _buildPage(OnBoardingPage._pages[index]),
+            child: _buildPage(pages[index]),
           );
         },
       ),
-      floatingActionButton: _pageController.page!.truncate() ==
-              OnBoardingPage._pages.length - 1
+      floatingActionButton: currentPage < pages.length - 1
           ? FloatingActionButton.extended(
               onPressed: () {
-                _pageController.animateToPage(_pageController.page!.truncate(),
+                _pageController.animateToPage(currentPage + 1,
                     duration: Duration(milliseconds: 250),
                     curve: Curves.easeInBack);
                 //If the current page is the last, will update the ui to show the close button
-                if (_pageController.page!.truncate() ==
-                    OnBoardingPage._pages.length - 1) setState(() {});
+                if (currentPage == pages.length - 1) setState(() {});
               },
               label: Text('Next'),
             )
@@ -85,5 +93,9 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
     );
   }
 
-  void _goToHomepage() {}
+  void _goToHomepage() async {
+    await SharedManager().writeBool(SharedType.OnBoardingDone, true);
+    Navigator.pushReplacementNamed(
+        navigatorKey.currentContext!, RouteBuilder.HOMEPAGE);
+  }
 }

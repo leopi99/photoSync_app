@@ -5,26 +5,35 @@ import 'package:flutter/material.dart';
 class BasePage extends StatelessWidget {
   final Stream<bool> loadingStream;
   final Widget child;
+  final PreferredSizeWidget? appBar;
+  final bool usePadding;
 
   BasePage({
     required this.child,
     required this.loadingStream,
+    this.usePadding = false,
+    this.appBar,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: StreamBuilder<bool>(
-        stream: loadingStream,
-        initialData: false,
-        builder: (context, snapshot) => Stack(
-          children: [
-            if (snapshot.data!)
-              Container(
-                color: Colors.black26,
-              ),
-            child,
-          ],
+    return Padding(
+      padding: EdgeInsets.only(
+          top: usePadding ? MediaQuery.of(context).padding.top : 0),
+      child: Scaffold(
+        appBar: appBar,
+        body: StreamBuilder<bool>(
+          stream: loadingStream,
+          initialData: false,
+          builder: (context, snapshot) => Stack(
+            children: [
+              if (snapshot.data!)
+                Container(
+                  color: Colors.black26,
+                ),
+              child,
+            ],
+          ),
         ),
       ),
     );
