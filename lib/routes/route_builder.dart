@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_sync/screens/homepage/homepage.dart';
 import 'package:photo_sync/screens/on_boarding_page/on_boarding_page.dart';
+import 'package:photo_sync/screens/settings_page/settings_page.dart';
 import 'package:photo_sync/screens/skeleton_page/skeleton_page.dart';
 import 'package:photo_sync/screens/splash_screen.dart';
 
@@ -11,6 +12,7 @@ class RouteBuilder {
   static const String SPLASH_SCREEN = "/";
   static const String HOMEPAGE = "/homepage";
   static const String ONBOARDING_PAGE = "/on_boarding";
+  static const String SETTINGS_PAGE = "/settings_page";
   static const String INITIAl_PAGE = SPLASH_SCREEN;
 
   static Route? generateRoute(RouteSettings settings) {
@@ -24,6 +26,8 @@ class RouteBuilder {
         return _buildRoute(settings, path, SkeletonPage(initialPage: 0));
       case ONBOARDING_PAGE:
         return _buildRoute(settings, path, OnBoardingPage());
+      case SETTINGS_PAGE:
+        return _buildRoute(settings, path, SkeletonPage(initialPage: 1));
       default:
         return null;
     }

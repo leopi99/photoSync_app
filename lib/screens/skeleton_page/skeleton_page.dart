@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:photo_sync/screens/homepage/homepage.dart';
+import 'package:photo_sync/screens/settings_page/settings_page.dart';
 
 class SkeletonPage extends StatefulWidget {
   final int initialPage;
@@ -27,19 +28,6 @@ class _SkeletonPageState extends State<SkeletonPage> {
       body: Stack(
         children: [
           Align(
-            alignment: AlignmentDirectional.topCenter,
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: _BAR_HEIGHT),
-              child: PageView(
-                controller: _controller,
-                children: [
-                  Homepage(),
-                ],
-                physics: NeverScrollableScrollPhysics(),
-              ),
-            ),
-          ),
-          Align(
             alignment: AlignmentDirectional.bottomCenter,
             child: Container(
               color: Colors.white,
@@ -51,7 +39,25 @@ class _SkeletonPageState extends State<SkeletonPage> {
                     onPressed: () => _controller.jumpToPage(0),
                     icon: Icon(FeatherIcons.home),
                   ),
+                  IconButton(
+                    onPressed: () => _controller.jumpToPage(1),
+                    icon: Icon(FeatherIcons.settings),
+                  ),
                 ],
+              ),
+            ),
+          ),
+          Align(
+            alignment: AlignmentDirectional.topCenter,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: _BAR_HEIGHT),
+              child: PageView(
+                controller: _controller,
+                children: [
+                  Homepage(),
+                  SettingsPage(),
+                ],
+                physics: NeverScrollableScrollPhysics(),
               ),
             ),
           ),

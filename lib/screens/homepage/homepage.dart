@@ -4,6 +4,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_sync/bloc/objects_bloc.dart';
 import 'package:photo_sync/global/methods.dart';
+import 'package:photo_sync/global/nav_key.dart';
+import 'package:photo_sync/inherited_widgets/objects_bloc_inherited.dart';
 import 'package:photo_sync/models/object.dart';
 import 'package:photo_sync/repository/object_repository.dart';
 import 'package:photo_sync/screens/base_page/base_page.dart';
@@ -18,7 +20,7 @@ class _HomepageState extends State<Homepage> {
 
   @override
   void initState() {
-    bloc = ObjectsBloc()..getObjectListFromApi();
+    bloc = ObjectsBlocInherited.of(navigatorKey.currentContext!);
     GlobalMethods.setStatusBarColorAsScaffoldBackground();
     super.initState();
   }
@@ -32,6 +34,10 @@ class _HomepageState extends State<Homepage> {
         stream: bloc.objectsStream,
         initialData: [],
         builder: (context, snapshot) {
+          if (snapshot.data!.length == 0)
+            return Center(
+              child: Text('Nothing here'),
+            );
           return GridView.builder(
             physics: BouncingScrollPhysics(),
             padding: EdgeInsets.symmetric(horizontal: 8),
