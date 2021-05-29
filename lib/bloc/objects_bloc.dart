@@ -61,7 +61,6 @@ class ObjectsBloc extends BlocBase {
     } catch (e) {}
 
     if (response == null || response is ApiError) {
-      //TODO: show error to the user
       _showError();
       return;
     }
@@ -80,13 +79,11 @@ class ObjectsBloc extends BlocBase {
     try {
       response = await _repository.addPicture(object);
     } catch (e) {
-      //TODO: Handle the error
       _showError();
       return;
     }
 
     if (response == null || response is ApiError) {
-      //TODO: Handle the error
       _showError();
       return;
     }
