@@ -34,6 +34,7 @@ dependencies:
   storage_wrapper: ^2.0.0 # Settings/info storage save
   cached_network_image: ^3.0.0 # Network image renderer 
   flutter_statusbarcolor_ns: ^0.3.0-nullsafety # Changes the statusBar color
+  flutter_feather_icons: ^2.0.0+1 # Icons
 
 dev_dependencies:
   flutter_test:
