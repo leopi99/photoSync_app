@@ -1,7 +1,9 @@
 import 'dart:collection';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:photo_sync/bloc/bloc_base.dart';
+import 'package:photo_sync/global/nav_key.dart';
 import 'package:photo_sync/models/api_error.dart';
 import 'package:photo_sync/models/object.dart';
 import 'package:photo_sync/models/object_attributes.dart';
@@ -60,6 +62,7 @@ class ObjectsBloc extends BlocBase {
 
     if (response == null || response is ApiError) {
       //TODO: show error to the user
+      _showError();
       return;
     }
     //Converts the json into the objects
@@ -73,21 +76,37 @@ class ObjectsBloc extends BlocBase {
 
   ///Creates an image on the db => api
   Future<void> createPicture(RawObject object) async {
-    dynamic? response;
+    dynamic response;
     try {
       response = await _repository.addPicture(object);
     } catch (e) {
       //TODO: Handle the error
+      _showError();
       return;
     }
 
     if (response == null || response is ApiError) {
       //TODO: Handle the error
+      _showError();
       return;
     }
 
     //Adds the object to the list
     addObjects([Object.fromJSON(response)]);
+  }
+
+  void _showError({String title = "Error"}) {
+    SnackBar _snack = SnackBar(
+      backgroundColor: Colors.red,
+      content: Text(title),
+      behavior: SnackBarBehavior.floating,
+      action: SnackBarAction(
+        label: 'close',
+        onPressed: () => ScaffoldMessenger.of(navigatorKey.currentContext!)
+            .hideCurrentSnackBar(),
+      ),
+    );
+    ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(_snack);
   }
 
   @override
