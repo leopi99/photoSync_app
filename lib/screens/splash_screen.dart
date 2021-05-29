@@ -25,6 +25,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.dispose();
   }
 
+  //TODO: Create the animation (maybe with flare) or show the app icon.
   @override
   Widget build(BuildContext context) {
     return Scaffold(

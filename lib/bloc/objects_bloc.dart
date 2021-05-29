@@ -1,11 +1,11 @@
 import 'dart:collection';
 
-import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:photo_sync/bloc/bloc_base.dart';
 import 'package:photo_sync/models/api_error.dart';
 import 'package:photo_sync/models/object.dart';
 import 'package:photo_sync/models/object_attributes.dart';
+import 'package:photo_sync/models/raw_object.dart';
 import 'package:photo_sync/repository/object_repository.dart';
 import 'package:photo_sync/util/enums/object_type.dart';
 import 'package:rxdart/rxdart.dart';
@@ -24,7 +24,7 @@ class ObjectsBloc extends BlocBase {
   Stream<List<Object>> get objectsStream => _objectSubject.stream;
 
   //
-  // Repository
+  // Api Repository
   //
   late ObjectRepository _repository;
 
@@ -58,7 +58,7 @@ class ObjectsBloc extends BlocBase {
       response = await _repository.getAll();
     } catch (e) {}
 
-    if (response is ApiError) {
+    if (response == null || response is ApiError) {
       //TODO: show error to the user
       return;
     }
@@ -69,6 +69,25 @@ class ObjectsBloc extends BlocBase {
         (index) => Object.fromJSON(response![index]),
       ),
     );
+  }
+
+  ///Creates an image on the db => api
+  Future<void> createPicture(RawObject object) async {
+    dynamic? response;
+    try {
+      response = await _repository.addPicture(object);
+    } catch (e) {
+      //TODO: Handle the error
+      return;
+    }
+
+    if (response == null || response is ApiError) {
+      //TODO: Handle the error
+      return;
+    }
+
+    //Adds the object to the list
+    addObjects([Object.fromJSON(response)]);
   }
 
   @override

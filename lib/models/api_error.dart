@@ -8,7 +8,7 @@ class ApiError {
   });
 
   ///Returns null if the response is not an error
-  static fromJSON(Map<String, String> json) => json['description'] != null
+  static fromJSON(Map<String, String> json) => json['errorType'] != null
       ? ApiError(
           description: json['description']!,
           errorType: json['errorType']!,

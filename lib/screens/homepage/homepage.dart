@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_sync/bloc/objects_bloc.dart';
 import 'package:photo_sync/models/object.dart';
@@ -29,10 +30,9 @@ class _HomepageState extends State<Homepage> {
           return ListView.builder(
             itemCount: snapshot.data!.length,
             itemBuilder: (context, index) => Container(
-              child: Image.network(
-                snapshot.data![index].attributes.url,
-                headers: ObjectRepository().getHeaders,
-                fit: BoxFit.cover,
+              child: CachedNetworkImage(
+                imageUrl: snapshot.data![index].attributes.url,
+                httpHeaders: ObjectRepository().getHeaders,
               ),
             ),
           );
