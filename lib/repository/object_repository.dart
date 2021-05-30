@@ -20,6 +20,7 @@ class ObjectRepository extends ObectsRepositoryInterface {
 
   ObjectRepository._internal();
 
+  ///Creates the dio instance, if already present, sets the headers
   void setupDio() {
     print('ApiPath: $_API_PATH');
     if (_dioInstance == null) {
