@@ -12,7 +12,10 @@ class GlobalMethods {
             .appearance
             .isDarkMode);
     await FlutterStatusbarcolor.setStatusBarColor(
-        Theme.of(navigatorKey.currentContext!).scaffoldBackgroundColor);
+        AppearanceBlocInherited.of(navigatorKey.currentContext!)
+            .appearance
+            .currentThemeData
+            .scaffoldBackgroundColor);
   }
 
   static Future<void> hideKeyboard() async {

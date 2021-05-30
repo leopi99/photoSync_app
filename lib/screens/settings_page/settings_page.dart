@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:photo_sync/bloc/appearance_bloc.dart';
 import 'package:photo_sync/constants/appearance.dart';
+import 'package:photo_sync/global/methods.dart';
 import 'package:photo_sync/global/nav_key.dart';
 import 'package:photo_sync/inherited_widgets/appearance_bloc_inherited.dart';
 import 'package:photo_sync/util/enums/appearance_mode_type.dart';
@@ -17,6 +18,7 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   void initState() {
     appearanceBloc = AppearanceBlocInherited.of(navigatorKey.currentContext!);
+    GlobalMethods.setStatusBarColorAsScaffoldBackground();
     super.initState();
   }
 
@@ -39,10 +41,14 @@ class _SettingsPageState extends State<SettingsPage> {
         return ListTile(
           title: Text('App appearance'),
           trailing: DropdownButton<AppearanceModeType>(
-            onChanged: (value) =>
-                value != null ? appearanceBloc.changeAppearance(value) : {},
+            onChanged: (value) {
+              if (value == null) return;
+              appearanceBloc.changeAppearance(value);
+              GlobalMethods.setStatusBarColorAsScaffoldBackground();
+            },
             value: snapshot.data!.currentType,
-            underline: Container(),icon: Icon(FeatherIcons.chevronDown),
+            underline: Container(),
+            icon: Icon(FeatherIcons.chevronDown),
             items: List.generate(
               AppearanceModeType.values.length,
               (index) => DropdownMenuItem(
