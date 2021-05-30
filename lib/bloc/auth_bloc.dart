@@ -1,14 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:photo_sync/bloc/app_bloc.dart';
+import 'package:photo_sync/bloc/bloc_base.dart';
 import 'package:photo_sync/global/nav_key.dart';
 import 'package:photo_sync/inherited_widgets/objects_bloc_inherited.dart';
 import 'package:photo_sync/models/api_error.dart';
 import 'package:photo_sync/models/user.dart';
 import 'package:photo_sync/repository/object_repository.dart';
+import 'package:rxdart/rxdart.dart';
 
-class AuthBloc {
+class AuthBloc extends BlocBase {
+  AuthBloc() {
+    _hidePasswordSubject = BehaviorSubject<bool>.seeded(true);
+  }
+
+  //
+  //  CurrentUser
+  //
+
   User? _currentUser;
   User? get currentUser => _currentUser;
+
+  //
+  //  Hide the password field text
+  //
+
+  late BehaviorSubject<bool> _hidePasswordSubject;
+  Stream<bool> get hidePassword => _hidePasswordSubject.stream;
+  void changeHidePassword() =>
+      _hidePasswordSubject.add(!_hidePasswordSubject.value);
 
   Future<void> login(String username, String password) async {
     dynamic data;
@@ -49,5 +68,11 @@ class AuthBloc {
       ),
     );
     ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(_snack);
+  }
+
+  @override
+  dispose() {
+    _hidePasswordSubject.close();
+    super.dispose();
   }
 }

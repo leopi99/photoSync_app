@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:photo_sync/bloc/auth_bloc.dart';
 import 'package:photo_sync/global/nav_key.dart';
 import 'package:photo_sync/inherited_widgets/auth_bloc_inherited.dart';
+import 'package:photo_sync/widgets/sync_elevated_button.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -31,24 +33,48 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView(
-        children: [
-          TextField(
-            controller: _usernameController,
-            decoration: InputDecoration(hintText: 'Username'),
-          ),
-          SizedBox(height: 16),
-          TextField(
-            controller: _passwordController,
-            obscureText: true,
-            decoration: InputDecoration(hintText: 'Password'),
-          ),
-          SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: () {},
-            child: Text('Login'),
-          ),
-        ],
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 32),
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TextField(
+              controller: _usernameController,
+              decoration: InputDecoration(hintText: 'Username'),
+            ),
+            SizedBox(height: 16),
+            StreamBuilder<bool>(
+                stream: authBloc.hidePassword,
+                initialData: false,
+                builder: (context, snapshot) {
+                  return TextField(
+                    controller: _passwordController,
+                    obscureText: snapshot.data!,
+                    decoration: InputDecoration(
+                      hintText: 'Password',
+                      suffixIcon: IconButton(
+                        onPressed: () => authBloc.changeHidePassword(),
+                        icon: Icon(snapshot.data!
+                            ? FeatherIcons.eye
+                            : FeatherIcons.eyeOff),
+                      ),
+                    ),
+                  );
+                }),
+            SizedBox(height: 16),
+            Row(
+              children: [
+                Expanded(
+                  child: SyncElevatedButton(
+                    onPressed: () {},
+                    buttonText: 'Login',
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
