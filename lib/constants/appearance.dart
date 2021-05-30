@@ -21,16 +21,27 @@ class Appearance {
     return _lightThemeData;
   }
 
+  bool get isDarkMode {
+    if (_currentType == AppearanceModeType.Dark_Mode) return true;
+    if (_currentType == AppearanceModeType.Light_Mode) return false;
+    return MediaQueryData.fromWindow(WidgetsBinding.instance!.window)
+            .platformBrightness ==
+        Brightness.dark;
+  }
+
   ThemeData get lightThemeData => _lightThemeData;
 
   ThemeData get darkThemeData => _darkThemeData;
 
   final ThemeData _lightThemeData = ThemeData(
+    brightness: Brightness.light,
     appBarTheme: AppBarTheme(
       elevation: 0,
       backgroundColor: ThemeData().scaffoldBackgroundColor,
     ),
   );
 
-  final ThemeData _darkThemeData = ThemeData();
+  final ThemeData _darkThemeData = ThemeData(
+    brightness: Brightness.dark,
+  );
 }

@@ -30,6 +30,8 @@ class AppearanceBloc {
     changeAppearance(_mode);
   }
 
+  
+
   late BehaviorSubject<Appearance> _appearanceSubject;
   Stream<Appearance> get appearanceStream => _appearanceSubject.stream;
   Appearance get appearance => _appearanceSubject.value;

@@ -91,7 +91,10 @@ class AuthBloc extends BlocBase {
   void _showError({String title = "Error"}) {
     SnackBar _snack = SnackBar(
       backgroundColor: Colors.red,
-      content: Text(title),
+      content: Text(
+        title,
+        style: TextStyle(color: Colors.white),
+      ),
       behavior: SnackBarBehavior.floating,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       action: SnackBarAction(
