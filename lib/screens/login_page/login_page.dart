@@ -67,7 +67,8 @@ class _LoginPageState extends State<LoginPage> {
               children: [
                 Expanded(
                   child: SyncElevatedButton(
-                    onPressed: () {},
+                    onPressed: () async => await authBloc.login(
+                        _usernameController.text, _passwordController.text),
                     buttonText: 'Login',
                   ),
                 ),
