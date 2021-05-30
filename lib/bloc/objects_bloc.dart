@@ -38,6 +38,7 @@ class ObjectsBloc extends BlocBase {
 
   ///Retrieves the objects (pictures and videos) from the api
   Future<void> getObjectListFromApi() async {
+    addObjects([]);
     if (kDebugMode) {
       addObjects([
         Object(

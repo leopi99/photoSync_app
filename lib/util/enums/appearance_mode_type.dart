@@ -1,7 +1,7 @@
 enum AppearanceModeType {
   Dark_Mode,
   Light_Mode,
-  FollowS_ystem,
+  Follow_System,
 }
 
 extension AppearanceModeTypeExtension on AppearanceModeType {

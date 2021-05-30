@@ -80,9 +80,8 @@ class AuthBloc extends BlocBase {
       return;
     }
 
-    await SharedManager().writeBool(SharedType.LoginDone, true);
-    await SharedManager().writeValue(SharedType.LoginUsername, username);
-    await SharedManager().writeValue(SharedType.LoginPassword, password);
+    await SharedManager().writeString(SharedType.LoginUsername, username);
+    await SharedManager().writeString(SharedType.LoginPassword, password);
     changeLoading(false);
     //Checks the session, should go to the homepage
     await AppBloc.checkSession();

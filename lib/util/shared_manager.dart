@@ -14,11 +14,11 @@ class SharedManager {
     _wrapper = StorageWrapper.secure();
   }
 
-  Future<String?> readValue(SharedType key) async {
+  Future<String?> readString(SharedType key) async {
     return await _wrapper.read(key: key.toValue);
   }
 
-  Future<bool> writeValue(SharedType key, String value) async {
+  Future<bool> writeString(SharedType key, String value) async {
     return await _wrapper.write(key: key.toValue, value: value);
   }
 

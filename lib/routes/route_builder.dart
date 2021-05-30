@@ -13,7 +13,7 @@ class RouteBuilder {
   static const String ONBOARDING_PAGE = "/on_boarding";
   static const String SETTINGS_PAGE = "/settings_page";
   static const String LOGIN_PAGE = "/login";
-  static const String INITIAl_PAGE = SPLASH_SCREEN;
+  static const String INITIAL_PAGE = SPLASH_SCREEN;
 
   static Route? generateRoute(RouteSettings settings) {
     String? path =

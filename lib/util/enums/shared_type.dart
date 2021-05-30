@@ -1,8 +1,8 @@
 enum SharedType {
   LoginUsername,
   LoginPassword,
-  LoginDone,
   OnBoardingDone,
+  AppAppearance,
 }
 
 extension SharedTypeExtension on SharedType {

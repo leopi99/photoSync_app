@@ -8,11 +8,11 @@ import 'package:photo_sync/util/shared_manager.dart';
 class AppBloc {
   static Future<void> checkSession() async {
     bool onBoarding = await SharedManager().readBool(SharedType.OnBoardingDone);
-    bool loginDone = await SharedManager().readBool(SharedType.LoginDone);
+    
     String? username =
-        await SharedManager().readValue(SharedType.LoginUsername);
+        await SharedManager().readString(SharedType.LoginUsername);
     String? password =
-        await SharedManager().readValue(SharedType.LoginPassword);
+        await SharedManager().readString(SharedType.LoginPassword);
 
     //Goes to the onBoarding if not already done
     if (!onBoarding) {
