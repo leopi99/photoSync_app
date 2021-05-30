@@ -4,7 +4,7 @@ abstract class BlocBase {
   late BehaviorSubject<bool> _loadingSubject;
   Stream<bool> get loadingStream => _loadingSubject.stream;
 
-  void changeLoading(bool) => _loadingSubject.add;
+  void changeLoading(bool value) => _loadingSubject.add(value);
 
   BlocBase() {
     _loadingSubject = BehaviorSubject<bool>.seeded(false);

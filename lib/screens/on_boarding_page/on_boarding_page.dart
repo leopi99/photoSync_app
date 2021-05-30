@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:photo_sync/bloc/app_bloc.dart';
 import 'package:photo_sync/constants/assets_path.dart';
+import 'package:photo_sync/global/methods.dart';
 import 'package:photo_sync/models/on_boarding_info.dart';
 import 'package:photo_sync/util/enums/shared_type.dart';
 import 'package:photo_sync/util/shared_manager.dart';
@@ -35,6 +36,7 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
 
   @override
   void initState() {
+    GlobalMethods.setStatusBarColorAsScaffoldBackground();
     _pageController = PageController();
     super.initState();
   }

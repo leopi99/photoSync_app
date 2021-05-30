@@ -27,11 +27,19 @@ class BasePage extends StatelessWidget {
           initialData: false,
           builder: (context, snapshot) => Stack(
             children: [
-              if (snapshot.data!)
-                Container(
-                  color: Colors.black26,
-                ),
               child,
+              if (snapshot.data!)
+                AbsorbPointer(
+                  absorbing: true,
+                  child: Container(
+                    color: Colors.black26,
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                      ),
+                    ),
+                  ),
+                ),
             ],
           ),
         ),

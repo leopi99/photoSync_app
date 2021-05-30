@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:photo_sync/bloc/app_bloc.dart';
+import 'package:photo_sync/global/methods.dart';
 import 'package:photo_sync/global/nav_key.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -13,11 +14,11 @@ class _SplashScreenState extends State<SplashScreen> {
   static const Duration _animationDuration = Duration(seconds: 2);
 
   late double opacity;
-  bool _isAnimationDone = false;
 
   @override
   void initState() {
     super.initState();
+    GlobalMethods.hideKeyboard();
     opacity = 0;
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
       setState(() {

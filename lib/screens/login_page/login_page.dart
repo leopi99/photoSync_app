@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:photo_sync/bloc/auth_bloc.dart';
+import 'package:photo_sync/global/methods.dart';
 import 'package:photo_sync/global/nav_key.dart';
 import 'package:photo_sync/inherited_widgets/auth_bloc_inherited.dart';
+import 'package:photo_sync/screens/base_page/base_page.dart';
 import 'package:photo_sync/widgets/sync_elevated_button.dart';
 
 class LoginPage extends StatefulWidget {
@@ -17,6 +19,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void initState() {
+    GlobalMethods.setStatusBarColorAsScaffoldBackground();
     _usernameController = TextEditingController();
     _passwordController = TextEditingController();
     authBloc = AuthBlocInherited.of(navigatorKey.currentContext!);
@@ -32,13 +35,21 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
+    return BasePage(
+      loadingStream: authBloc.loadingStream,
+      child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 32),
         child: Column(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Padding(
+              padding: EdgeInsets.only(bottom: 32),
+              child: Text(
+                'Login',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+            ),
             TextField(
               controller: _usernameController,
               decoration: InputDecoration(hintText: 'Username'),

@@ -15,7 +15,7 @@ import 'package:rxdart/rxdart.dart';
 class ObjectsBloc extends BlocBase {
   ObjectsBloc() {
     _objectSubject = BehaviorSubject<List<Object>>.seeded([]);
-    _repository = ObjectRepository()..setupDio();
+    _repository = ObjectRepository();
   }
 
   //

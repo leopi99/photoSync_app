@@ -4,6 +4,7 @@ import 'package:photo_sync/bloc/objects_bloc.dart';
 import 'package:photo_sync/global/nav_key.dart';
 import 'package:photo_sync/inherited_widgets/auth_bloc_inherited.dart';
 import 'package:photo_sync/inherited_widgets/objects_bloc_inherited.dart';
+import 'package:photo_sync/repository/object_repository.dart';
 import 'package:photo_sync/routes/route_builder.dart';
 
 class App extends StatefulWidget {
@@ -19,6 +20,7 @@ class _AppState extends State<App> {
   void initState() {
     _objectsBloc = ObjectsBloc();
     _authBloc = AuthBloc();
+    ObjectRepository()..setupDio();
     super.initState();
   }
 

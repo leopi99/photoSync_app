@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_sync/bloc/app_bloc.dart';
 import 'package:photo_sync/bloc/bloc_base.dart';
+import 'package:photo_sync/global/methods.dart';
 import 'package:photo_sync/global/nav_key.dart';
 import 'package:photo_sync/inherited_widgets/objects_bloc_inherited.dart';
 import 'package:photo_sync/models/api_error.dart';
@@ -34,6 +35,7 @@ class AuthBloc extends BlocBase {
 
   ///Executes the login
   Future<void> login(String username, String password) async {
+    await GlobalMethods.hideKeyboard();
     if (username.isEmpty || password.isEmpty) {
       _showError(title: 'Please, fill all the fields');
       return;
@@ -41,22 +43,25 @@ class AuthBloc extends BlocBase {
 
     dynamic data;
 
-    if (kDebugMode) {
-      data = {
-        'apiKey': 'thisIsTheTest',
-        'username': 'leopi99',
-        'email': 'pizio.leonardo@gmail.com'
-      };
-    } else
-      try {
-        data = await ObjectRepository().login(username, password);
-      } catch (e) {
-        print('Error $e');
-        _showError(title: 'Login error');
-        return;
-      }
+    // if (kDebugMode) {
+    //   data = {
+    //     'apiKey': 'thisIsTheTest',
+    //     'username': 'leopi99',
+    //     'email': 'pizio.leonardo@gmail.com'
+    //   };
+    // } else
+    try {
+      changeLoading(true);
+      data = await ObjectRepository().login(username, password);
+    } catch (e) {
+      print('Error $e');
+      _showError(title: 'Login error');
+      changeLoading(false);
+      return;
+    }
 
     if (data == null || data is ApiError) {
+      changeLoading(false);
       _showError(title: 'Login error');
       return;
     }
@@ -67,6 +72,7 @@ class AuthBloc extends BlocBase {
 
     //Updates the user
     try {
+      changeLoading(false);
       _currentUser = User.fromJSON(data);
     } catch (e) {
       print('Error $e');
@@ -77,7 +83,7 @@ class AuthBloc extends BlocBase {
     await SharedManager().writeBool(SharedType.LoginDone, true);
     await SharedManager().writeValue(SharedType.LoginUsername, username);
     await SharedManager().writeValue(SharedType.LoginPassword, password);
-
+    changeLoading(false);
     //Checks the session, should go to the homepage
     await AppBloc.checkSession();
   }
