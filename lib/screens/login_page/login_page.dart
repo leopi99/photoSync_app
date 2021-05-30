@@ -8,6 +8,14 @@ import 'package:photo_sync/screens/base_page/base_page.dart';
 import 'package:photo_sync/widgets/sync_elevated_button.dart';
 
 class LoginPage extends StatefulWidget {
+  final String username;
+  final String password;
+
+  LoginPage({
+    required this.password,
+    required this.username,
+  });
+
   @override
   _LoginPageState createState() => _LoginPageState();
 }
@@ -23,6 +31,9 @@ class _LoginPageState extends State<LoginPage> {
     _usernameController = TextEditingController();
     _passwordController = TextEditingController();
     authBloc = AuthBlocInherited.of(navigatorKey.currentContext!);
+    if (widget.username.isNotEmpty && widget.password.isNotEmpty) {
+      authBloc.login(widget.username, widget.password);
+    }
     super.initState();
   }
 

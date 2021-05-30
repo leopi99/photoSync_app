@@ -2,10 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:photo_sync/screens/homepage/homepage.dart';
 import 'package:photo_sync/screens/login_page/login_page.dart';
 import 'package:photo_sync/screens/on_boarding_page/on_boarding_page.dart';
-import 'package:photo_sync/screens/settings_page/settings_page.dart';
 import 'package:photo_sync/screens/skeleton_page/skeleton_page.dart';
 import 'package:photo_sync/screens/splash_screen.dart';
 
@@ -33,7 +31,14 @@ class RouteBuilder {
       case SETTINGS_PAGE:
         return _buildRoute(settings, path, SkeletonPage(initialPage: 1));
       case LOGIN_PAGE:
-        return _buildRoute(settings, path, LoginPage());
+        Map<String, String> info = settings.arguments as Map<String, String>;
+        return _buildRoute(
+            settings,
+            path,
+            LoginPage(
+              password: info['password'] ?? '',
+              username: info['username'] ?? '',
+            ));
       default:
         return null;
     }

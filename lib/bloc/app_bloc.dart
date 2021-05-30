@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:photo_sync/global/nav_key.dart';
+import 'package:photo_sync/inherited_widgets/auth_bloc_inherited.dart';
 import 'package:photo_sync/routes/route_builder.dart';
 import 'package:photo_sync/util/enums/shared_type.dart';
 import 'package:photo_sync/util/shared_manager.dart';
@@ -8,6 +9,10 @@ class AppBloc {
   static Future<void> checkSession() async {
     bool onBoarding = await SharedManager().readBool(SharedType.OnBoardingDone);
     bool loginDone = await SharedManager().readBool(SharedType.LoginDone);
+    String? username =
+        await SharedManager().readValue(SharedType.LoginUsername);
+    String? password =
+        await SharedManager().readValue(SharedType.LoginPassword);
 
     //Goes to the onBoarding if not already done
     if (!onBoarding) {
@@ -15,10 +20,11 @@ class AppBloc {
           navigatorKey.currentContext!, RouteBuilder.ONBOARDING_PAGE);
       return;
     }
-    //Goes to the login if not already done
-    if (!loginDone) {
+    if (AuthBlocInherited.of(navigatorKey.currentContext!).currentUser ==
+        null) {
       Navigator.pushReplacementNamed(
-          navigatorKey.currentContext!, RouteBuilder.LOGIN_PAGE);
+          navigatorKey.currentContext!, RouteBuilder.LOGIN_PAGE,
+          arguments: {'username': username ?? '', 'password': password ?? ''});
       return;
     }
     //If nothing needs to be done, goes to the homepage
