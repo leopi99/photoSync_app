@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:photo_sync/bloc/app_bloc.dart';
 import 'package:photo_sync/constants/assets_path.dart';
-import 'package:photo_sync/global/nav_key.dart';
 import 'package:photo_sync/models/on_boarding_info.dart';
-import 'package:photo_sync/routes/route_builder.dart';
 import 'package:photo_sync/util/enums/shared_type.dart';
 import 'package:photo_sync/util/shared_manager.dart';
 
 const List<OnBoardingInfo> pages = [
+  //The list of the pages to show in the onBoarding
   OnBoardingInfo(
-    pageDescription: 'Free backup utils',
+    pageDescription:
+        'Your files are saved in your own server, privacy is everything',
     localImageAssetPath: AssetsPath.onBoardingImage1,
   ),
   OnBoardingInfo(
@@ -16,13 +18,12 @@ const List<OnBoardingInfo> pages = [
     localImageAssetPath: AssetsPath.onBoardingImage2,
   ),
   OnBoardingInfo(
+    pageDescription: 'Relax while the app does all the work',
     localImageAssetPath: AssetsPath.onBoardingImage3,
   ),
 ];
 
 class OnBoardingPage extends StatefulWidget {
-  //The list of the pages to show in the onBoarding
-
   @override
   _OnBoardingPageState createState() => _OnBoardingPageState();
 }
@@ -80,19 +81,22 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
   }
 
   Widget _buildPage(OnBoardingInfo info) {
+    final double size = MediaQuery.of(context).size.width / 2;
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Image.asset(
+        SvgPicture.asset(
           info.localImageAssetPath,
-          height: 256,
-          width: 256,
+          height: size,
+          width: size,
         ),
         if (info.pageDescription != null)
           Padding(
-            padding: const EdgeInsets.only(top: 12),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16).copyWith(top: 32),
             child: Text(
               info.pageDescription!,
+              textAlign: TextAlign.center,
               style: TextStyle(fontWeight: FontWeight.w600),
             ),
           ),
@@ -102,7 +106,6 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
 
   void _goToHomepage() async {
     await SharedManager().writeBool(SharedType.OnBoardingDone, true);
-    Navigator.pushReplacementNamed(
-        navigatorKey.currentContext!, RouteBuilder.HOMEPAGE);
+    AppBloc.checkSession();
   }
 }

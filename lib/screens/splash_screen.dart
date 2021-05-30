@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:photo_sync/bloc/app_bloc.dart';
 import 'package:photo_sync/global/nav_key.dart';
-import 'package:photo_sync/routes/route_builder.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -46,5 +45,5 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 
-  void _onAnimationEnd() => AppBloc().checkSession();
+  void _onAnimationEnd() => AppBloc.checkSession();
 }

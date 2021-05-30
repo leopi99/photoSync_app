@@ -32,7 +32,7 @@ class AuthBloc {
     _currentUser = User.fromJSON(data);
 
     //Checks the session, should go to the homepage
-    await AppBloc().checkSession();
+    await AppBloc.checkSession();
   }
 
   void _showError({String title = "Error"}) {
