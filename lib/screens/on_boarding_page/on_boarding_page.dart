@@ -23,6 +23,11 @@ const List<OnBoardingInfo> pages = [
     pageDescription: 'Relax while the app does all the work',
     localImageAssetPath: AssetsPath.onBoardingImage3,
   ),
+  OnBoardingInfo(
+    localImageAssetPath: AssetsPath.onBoardingImage4,
+    pageDescription:
+        'Please, remember to boot the api, otherwise the app won\'t work',
+  ),
 ];
 
 class OnBoardingPage extends StatefulWidget {
