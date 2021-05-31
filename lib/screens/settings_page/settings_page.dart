@@ -8,6 +8,7 @@ import 'package:photo_sync/inherited_widgets/appearance_bloc_inherited.dart';
 import 'package:photo_sync/inherited_widgets/auth_bloc_inherited.dart';
 import 'package:photo_sync/util/enums/appearance_mode_type.dart';
 import 'package:photo_sync/util/shared_manager.dart';
+import 'package:photo_sync/widgets/sync_dialog.dart';
 
 class SettingsPage extends StatefulWidget {
   @override
@@ -70,9 +71,22 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget _buildLogoutTile() {
     return ListTile(
       title: Text('Logout'),
-      onTap: () async => await SharedManager()
-          .logout()
-          .then((value) => AuthBlocInherited.of(context).logout(context)),
+      onTap: () async {
+        await SyncDialog.show(
+          context,
+          title: 'Logout',
+          content: 'Do you really want to logout?',
+          primaryButtonOnPressed: () async => await SharedManager()
+              .logout()
+              .then((value) => AuthBlocInherited.of(context).logout(context)),
+          primaryButtonText: 'OK',
+          secondaryButtonText: 'Cancel',
+          secondaryButtonOnPressed: () {},
+        );
+        // await SharedManager()
+        //     .logout()
+        //     .then((value) => AuthBlocInherited.of(context).logout(context));
+      },
     );
   }
 }

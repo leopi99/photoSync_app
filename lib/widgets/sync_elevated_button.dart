@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:photo_sync/inherited_widgets/appearance_bloc_inherited.dart';
 
 class SyncElevatedButton extends StatelessWidget {
   final String buttonText;
@@ -18,7 +19,10 @@ class SyncElevatedButton extends StatelessWidget {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        // primary: TODO: add the color from the appearance model (changes on darkMode)
+        primary: AppearanceBlocInherited.of(context)
+            .appearance
+            .currentThemeData
+            .accentColor,
       ),
       onPressed: () => onPressed(),
       child: Text(
