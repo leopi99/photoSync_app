@@ -81,11 +81,7 @@ class _SettingsPageState extends State<SettingsPage> {
               .then((value) => AuthBlocInherited.of(context).logout(context)),
           primaryButtonText: 'OK',
           secondaryButtonText: 'Cancel',
-          secondaryButtonOnPressed: () {},
         );
-        // await SharedManager()
-        //     .logout()
-        //     .then((value) => AuthBlocInherited.of(context).logout(context));
       },
     );
   }

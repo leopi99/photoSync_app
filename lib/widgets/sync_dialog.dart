@@ -75,7 +75,7 @@ class SyncDialog extends StatelessWidget {
                 ),
               ],
             ),
-            if (secondaryButtonOnPressed != null && secondaryButtonText != null)
+            if (secondaryButtonText != null)
               Row(
                 mainAxisSize: MainAxisSize.max,
                 children: [
@@ -83,7 +83,8 @@ class SyncDialog extends StatelessWidget {
                     child: TextButton(
                       onPressed: () {
                         Navigator.pop(context);
-                        secondaryButtonOnPressed!();
+                        if (secondaryButtonOnPressed != null)
+                          secondaryButtonOnPressed!();
                       },
                       child: Text(secondaryButtonText!),
                     ),
