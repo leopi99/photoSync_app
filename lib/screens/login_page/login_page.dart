@@ -109,8 +109,11 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _buildSignUp() {
     return InkWell(
-      onTap: () => Navigator.pushNamed(context, RouteBuilder.SIGN_UP_PAGE,
-          arguments: authBloc),
+      onTap: () {
+        GlobalMethods.hideKeyboard();
+        Navigator.pushNamed(context, RouteBuilder.SIGN_UP_PAGE,
+            arguments: authBloc);
+      },
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [

@@ -36,13 +36,24 @@ class Appearance {
   final ThemeData _lightThemeData = ThemeData(
     brightness: Brightness.light,
     appBarTheme: AppBarTheme(
+      centerTitle: true,
       elevation: 0,
       backgroundColor: ThemeData().scaffoldBackgroundColor,
       iconTheme: IconThemeData(color: Colors.black),
+      textTheme: TextTheme(
+        headline6: TextStyle(
+          color: Colors.black,
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
     ),
   );
 
   final ThemeData _darkThemeData = ThemeData(
     brightness: Brightness.dark,
+    appBarTheme: AppBarTheme(
+      centerTitle: true,
+    ),
   );
 }
