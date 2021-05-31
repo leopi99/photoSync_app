@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
 import 'package:photo_sync/global/nav_key.dart';
@@ -15,6 +16,14 @@ class GlobalMethods {
             .appearance
             .currentThemeData
             .scaffoldBackgroundColor);
+  }
+
+  static Future<void> setStatusBarColorForDialog() async {
+    await FlutterStatusbarcolor.setStatusBarWhiteForeground(
+        AppearanceBlocInherited.of(navigatorKey.currentContext!)
+            .appearance
+            .isDarkMode);
+    await FlutterStatusbarcolor.setStatusBarColor(Colors.transparent);
   }
 
   static Future<void> hideKeyboard() async =>

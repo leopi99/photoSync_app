@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:photo_sync/global/methods.dart';
 
 class SyncDialog extends StatelessWidget {
   final String title;
@@ -17,7 +18,8 @@ class SyncDialog extends StatelessWidget {
     Function? secondaryButtonOnPressed,
     String? secondaryButtonText,
   }) async {
-    return await showDialog(
+    await GlobalMethods.setStatusBarColorForDialog();
+    var response = await showDialog(
       context: context,
       barrierDismissible: true,
       builder: (context) => Dialog(
@@ -35,6 +37,8 @@ class SyncDialog extends StatelessWidget {
         ),
       ),
     );
+    GlobalMethods.setStatusBarColorAsScaffoldBackground();
+    return response;
   }
 
   const SyncDialog({
