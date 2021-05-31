@@ -29,4 +29,10 @@ class SharedManager {
   Future<bool> readBool(SharedType key) async {
     return ((await _wrapper.read(key: key.toValue) ?? 'false') == 'true');
   }
+
+  Future<void> logout() async {
+    await _wrapper.delete(key: SharedType.AppAppearance.toValue);
+    await _wrapper.delete(key: SharedType.LoginPassword.toValue);
+    await _wrapper.delete(key: SharedType.LoginUsername.toValue);
+  }
 }

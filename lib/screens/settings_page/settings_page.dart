@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:photo_sync/bloc/app_bloc.dart';
 import 'package:photo_sync/bloc/appearance_bloc.dart';
 import 'package:photo_sync/constants/appearance.dart';
 import 'package:photo_sync/global/methods.dart';
 import 'package:photo_sync/global/nav_key.dart';
 import 'package:photo_sync/inherited_widgets/appearance_bloc_inherited.dart';
+import 'package:photo_sync/inherited_widgets/auth_bloc_inherited.dart';
 import 'package:photo_sync/util/enums/appearance_mode_type.dart';
+import 'package:photo_sync/util/shared_manager.dart';
 
 class SettingsPage extends StatefulWidget {
   @override
@@ -28,6 +31,7 @@ class _SettingsPageState extends State<SettingsPage> {
       body: ListView(
         children: [
           _buildAppearanceTile(),
+          _buildLogoutTile(),
         ],
       ),
     );
@@ -61,6 +65,15 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
         );
       },
+    );
+  }
+
+  Widget _buildLogoutTile() {
+    return ListTile(
+      title: Text('Logout'),
+      onTap: () async => await SharedManager()
+          .logout()
+          .then((value) => AuthBlocInherited.of(context).logout(context)),
     );
   }
 }

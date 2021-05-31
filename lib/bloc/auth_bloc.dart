@@ -107,6 +107,12 @@ class AuthBloc extends BlocBase {
     ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(_snack);
   }
 
+  Future<void> logout(BuildContext context) async {
+    _currentUser = null;
+    ObjectsBlocInherited.of(context).addObjects([], reset: true);
+    AppBloc.checkSession();
+  }
+
   @override
   dispose() {
     _hidePasswordSubject.close();

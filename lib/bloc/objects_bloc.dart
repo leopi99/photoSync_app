@@ -31,8 +31,11 @@ class ObjectsBloc extends BlocBase {
   late ObjectRepository _repository;
 
   ///Adds a [List] of [Object] to the subject
-  void addObjects(List<Object> objects) {
-    _objectsList.addAll(objects);
+  void addObjects(List<Object> objects, {bool reset = false}) {
+    if (!reset)
+      _objectsList.addAll(objects);
+    else
+      _objectsList = [];
     _objectSubject.add(UnmodifiableListView(_objectsList));
   }
 
