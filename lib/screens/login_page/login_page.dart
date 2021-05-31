@@ -3,7 +3,9 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:photo_sync/bloc/auth_bloc.dart';
 import 'package:photo_sync/global/methods.dart';
 import 'package:photo_sync/global/nav_key.dart';
+import 'package:photo_sync/inherited_widgets/appearance_bloc_inherited.dart';
 import 'package:photo_sync/inherited_widgets/auth_bloc_inherited.dart';
+import 'package:photo_sync/routes/route_builder.dart';
 import 'package:photo_sync/screens/base_page/base_page.dart';
 import 'package:photo_sync/widgets/sync_elevated_button.dart';
 
@@ -67,23 +69,26 @@ class _LoginPageState extends State<LoginPage> {
             ),
             SizedBox(height: 16),
             StreamBuilder<bool>(
-                stream: authBloc.hidePassword,
-                initialData: false,
-                builder: (context, snapshot) {
-                  return TextField(
-                    controller: _passwordController,
-                    obscureText: snapshot.data!,
-                    decoration: InputDecoration(
-                      hintText: 'Password',
-                      suffixIcon: IconButton(
-                        onPressed: () => authBloc.changeHidePassword(),
-                        icon: Icon(snapshot.data!
-                            ? FeatherIcons.eye
-                            : FeatherIcons.eyeOff),
-                      ),
+              stream: authBloc.hidePassword,
+              initialData: false,
+              builder: (context, snapshot) {
+                return TextField(
+                  controller: _passwordController,
+                  obscureText: snapshot.data!,
+                  decoration: InputDecoration(
+                    hintText: 'Password',
+                    suffixIcon: IconButton(
+                      onPressed: () => authBloc.changeHidePassword(),
+                      icon: Icon(snapshot.data!
+                          ? FeatherIcons.eye
+                          : FeatherIcons.eyeOff),
                     ),
-                  );
-                }),
+                  ),
+                );
+              },
+            ),
+            SizedBox(height: 16),
+            _buildSignUp(),
             SizedBox(height: 16),
             Row(
               children: [
@@ -98,6 +103,35 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildSignUp() {
+    return InkWell(
+      onTap: () => Navigator.pushNamed(context, RouteBuilder.SIGN_UP_PAGE,
+          arguments: authBloc),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          RichText(
+            text: TextSpan(
+              text: 'First time you open the app?',
+              style: TextStyle(color: Colors.grey),
+              children: [
+                TextSpan(
+                  text: ' Sign up here',
+                  style: TextStyle(
+                    color: AppearanceBlocInherited.of(context)
+                        .appearance
+                        .currentThemeData
+                        .accentColor,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

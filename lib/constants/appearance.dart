@@ -38,6 +38,7 @@ class Appearance {
     appBarTheme: AppBarTheme(
       elevation: 0,
       backgroundColor: ThemeData().scaffoldBackgroundColor,
+      iconTheme: IconThemeData(color: Colors.black),
     ),
   );
 
