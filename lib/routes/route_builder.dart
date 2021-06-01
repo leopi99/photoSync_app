@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_sync/bloc/auth_bloc.dart';
+import 'package:photo_sync/screens/api_connection_page/api_connection_page.dart';
 import 'package:photo_sync/screens/login_page/login_page.dart';
 import 'package:photo_sync/screens/on_boarding_page/on_boarding_page.dart';
 import 'package:photo_sync/screens/sign_up_page/sign_up_page.dart';
@@ -16,6 +17,7 @@ class RouteBuilder {
   static const String SETTINGS_PAGE = "/settings_page";
   static const String LOGIN_PAGE = "/login";
   static const String SIGN_UP_PAGE = "/sign_up";
+  static const String API_NOT_REACHABLE = "/api_not_reachable";
   static const String INITIAL_PAGE = SPLASH_SCREEN;
 
   static Route? generateRoute(RouteSettings settings) {
@@ -45,6 +47,8 @@ class RouteBuilder {
       case SIGN_UP_PAGE:
         return _buildRoute(
             settings, path, SignUpPage(bloc: settings.arguments as AuthBloc));
+      case API_NOT_REACHABLE:
+        return _buildRoute(settings, path, ApiConnectionErrorPage());
       default:
         return null;
     }

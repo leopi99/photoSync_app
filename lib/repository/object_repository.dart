@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:photo_sync/models/raw_object.dart';
 import 'package:photo_sync/repository/interfaces/objects_repository_interface.dart';
+import 'package:photo_sync/util/api_connection_interceptor.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 class ObjectRepository extends ObectsRepositoryInterface {
@@ -26,7 +27,7 @@ class ObjectRepository extends ObectsRepositoryInterface {
     if (_dioInstance == null) {
       BaseOptions _dioOptions = BaseOptions(
         baseUrl: _API_PATH,
-        connectTimeout: 21600,
+        connectTimeout: 10800,
         validateStatus: (_) => true,
       );
       _dioInstance = Dio(_dioOptions);
@@ -41,6 +42,7 @@ class ObjectRepository extends ObectsRepositoryInterface {
           maxWidth: 90,
         ),
       );
+      _dioInstance!.interceptors.add(ApiConnectionInterceptor());
       return;
     }
   }
