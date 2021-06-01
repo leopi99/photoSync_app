@@ -43,32 +43,21 @@ class AuthBloc extends BlocBase {
 
     dynamic data;
 
-    // if (kDebugMode) {
-    //   data = {
-    //     'apiKey': 'thisIsTheTest',
-    //     'username': 'leopi99',
-    //     'email': 'pizio.leonardo@gmail.com'
-    //   };
-    // } else
-      try {
-        changeLoading(true);
-        data = await ObjectRepository().login(username, password);
-      } catch (e) {
-        print('Error $e');
-        _showError(title: 'Login error');
-        changeLoading(false);
-        return;
-      }
-
-    if (data == null || data is ApiError) {
-      changeLoading(false);
+    try {
+      changeLoading(true);
+      data = await ObjectRepository().login(username, password);
+    } catch (e) {
+      print('Error $e');
       _showError(title: 'Login error');
+      changeLoading(false);
       return;
     }
 
-    //Fetches the list of images
-    await ObjectsBlocInherited.of(navigatorKey.currentContext!)
-        .getObjectListFromApi();
+    if (data == null || data['error'] != null) {
+      changeLoading(false);
+      _showError();
+      return;
+    }
 
     //Updates the user
     try {
@@ -79,6 +68,10 @@ class AuthBloc extends BlocBase {
       _showError(title: 'Login error');
       return;
     }
+
+    //Fetches the list of images
+    await ObjectsBlocInherited.of(navigatorKey.currentContext!)
+        .getObjectListFromApi();
 
     await SharedManager().writeString(SharedType.LoginUsername, username);
     await SharedManager().writeString(SharedType.LoginPassword, password);

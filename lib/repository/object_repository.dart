@@ -1,11 +1,10 @@
 import 'package:dio/dio.dart';
-import 'package:photo_sync/models/api_error.dart';
 import 'package:photo_sync/models/raw_object.dart';
 import 'package:photo_sync/repository/interfaces/objects_repository_interface.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 class ObjectRepository extends ObectsRepositoryInterface {
-  static const _HOST = "http://192.168.1.14";
+  static const _HOST = "http://10.0.2.2";
   static const _PORT = ":8010";
   static const _API_PATH = "$_HOST$_PORT/photoSync/api/v1";
 
@@ -26,7 +25,6 @@ class ObjectRepository extends ObectsRepositoryInterface {
     print('ApiPath: $_API_PATH');
     if (_dioInstance == null) {
       BaseOptions _dioOptions = BaseOptions(
-        responseType: ResponseType.json,
         baseUrl: _API_PATH,
         connectTimeout: 21600,
       );
@@ -44,30 +42,36 @@ class ObjectRepository extends ObectsRepositoryInterface {
       );
       return;
     }
-    _dioInstance!.options.headers = {
-      'apiKey': _authKey,
-    };
   }
 
   Map<String, String>? get getHeaders => _dioInstance?.options.headers
       .map((key, value) => MapEntry(key, value.toString()));
 
   @override
-  Future<dynamic> getAll() async {
-    Response response = await _dioInstance!.get('/getAll');
-    return ApiError.fromJSON(response.data) ?? response.data;
+  Future<dynamic> getAll(String userID) async {
+    Response response = await _dioInstance!.get(
+      '/getAll',
+      queryParameters: {"userID": userID},
+    );
+    return response.data;
   }
 
   @override
-  Future<dynamic> getPictures(String username) async {
-    Response response = await _dioInstance!.get('/getPictures');
-    return ApiError.fromJSON(response.data) ?? response.data;
+  Future<dynamic> getPictures(String userID) async {
+    Response response = await _dioInstance!.get(
+      '/getPictures',
+      queryParameters: {"userID": userID},
+    );
+    return response.data;
   }
 
   @override
-  Future<dynamic> getVideos(String username) async {
-    Response response = await _dioInstance!.get('/getVideos');
-    return ApiError.fromJSON(response.data) ?? response.data;
+  Future<dynamic> getVideos(String userID) async {
+    Response response = await _dioInstance!.get(
+      '/getVideos',
+      queryParameters: {"userID": userID},
+    );
+    return response.data;
   }
 
   @override
@@ -79,18 +83,24 @@ class ObjectRepository extends ObectsRepositoryInterface {
         "password": password,
       },
     );
-    if (response.statusCode == 200) if (response.data['error'] == null) {
-      _authKey = response.data['key'];
+    if (response.data['error'] == null && response.data['apiKey'] != null) {
+      _authKey = response.data['apiKey'];
       //Updates the dioInstance to use the key retrieved
-      setupDio();
+      _dioInstance!.options.headers = {
+        "apiKey": _authKey,
+      };
+      _dioInstance!.options.queryParameters = {
+        "apiKey": _authKey,
+      };
     }
-    return ApiError.fromJSON(response.data) ?? response.data;
+
+    return response.data;
   }
 
   @override
   Future<dynamic> addPicture(RawObject object) async {
     Response response = await _dioInstance!
         .post('/addPicture', queryParameters: {'data': object.toJSON});
-    return ApiError.fromJSON(response.data) ?? response.data;
+    return response.data;
   }
 }

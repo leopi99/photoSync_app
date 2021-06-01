@@ -1,15 +1,13 @@
 import 'dart:collection';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_sync/bloc/bloc_base.dart';
 import 'package:photo_sync/global/nav_key.dart';
+import 'package:photo_sync/inherited_widgets/auth_bloc_inherited.dart';
 import 'package:photo_sync/models/api_error.dart';
 import 'package:photo_sync/models/object.dart';
-import 'package:photo_sync/models/object_attributes.dart';
 import 'package:photo_sync/models/raw_object.dart';
 import 'package:photo_sync/repository/object_repository.dart';
-import 'package:photo_sync/util/enums/object_type.dart';
 import 'package:rxdart/rxdart.dart';
 
 class ObjectsBloc extends BlocBase {
@@ -42,41 +40,39 @@ class ObjectsBloc extends BlocBase {
   ///Retrieves the objects (pictures and videos) from the api
   Future<void> getObjectListFromApi() async {
     addObjects([]);
-    // if (kDebugMode) {
-    //   addObjects([
-    //     Object(
-    //       objectType: ObjectType.Picture,
-    //       attributes: ObjectAttributes(
-    //         url:
-    //             'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fconlagentenoticias.com%2Fwp-content%2Fuploads%2F2020%2F12%2F1-1.jpg&f=1&nofb=1',
-    //         syncDate: DateTime.now().toIso8601String(),
-    //         creationDate: DateTime.now().toIso8601String(),
-    //         username: 'leopi99',
-    //         picturePosition: 'Italy',
-    //         localPath: '',
-    //         pictureByteSize: 19000,
-    //         databaseID: 1,
-    //       ),
-    //     ),
-    //   ]);
-    //   return;
-    // }
     dynamic response;
     try {
-      response = await _repository.getAll();
-    } catch (e) {}
+      response = await _repository.getAll(
+          AuthBlocInherited.of(navigatorKey.currentContext!)
+              .currentUser!
+              .userID
+              .toString());
+    } catch (e) {
+      _showError(title: "Get object error");
+      return;
+    }
 
-    if (response == null || response is ApiError) {
+    if (response == null) {
       _showError();
       return;
     }
-    //Converts the json into the objects
-    addObjects(
-      List.generate(
-        response.length,
-        (index) => Object.fromJSON(response![index]),
-      ),
-    );
+
+    ApiError? error;
+    try {
+      error = ApiError.fromJSON(response);
+    } catch (e) {}
+
+    if (error?.errorType != null) {
+      _showError(title: error!.description);
+      return;
+    } else
+      //Converts the json into the objects
+      addObjects(
+        List.generate(
+          response.length,
+          (index) => Object.fromJSON(response![index]),
+        ),
+      );
   }
 
   ///Creates an image on the db => api
