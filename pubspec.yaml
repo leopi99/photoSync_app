@@ -30,6 +30,7 @@ dependencies:
   cupertino_icons: ^1.0.2
 
   dio: ^4.0.0 # HTTP/HTTPS requests
+  pretty_dio_logger: ^1.2.0-beta-1 # Logs the http/https requests
   rxdart: ^0.27.0 # State management
   storage_wrapper: ^2.0.0 # Settings/info storage save
   cached_network_image: ^3.0.0 # Network image renderer 

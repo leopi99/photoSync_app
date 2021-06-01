@@ -2,10 +2,11 @@ import 'package:dio/dio.dart';
 import 'package:photo_sync/models/api_error.dart';
 import 'package:photo_sync/models/raw_object.dart';
 import 'package:photo_sync/repository/interfaces/objects_repository_interface.dart';
+import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 class ObjectRepository extends ObectsRepositoryInterface {
-  static const _HOST = "http://192.168.1.7";
-  static const _PORT = ":8080";
+  static const _HOST = "http://192.168.1.14";
+  static const _PORT = ":8010";
   static const _API_PATH = "$_HOST$_PORT/photoSync/api/v1";
 
   String? _authKey;
@@ -30,6 +31,17 @@ class ObjectRepository extends ObectsRepositoryInterface {
         connectTimeout: 21600,
       );
       _dioInstance = Dio(_dioOptions);
+      _dioInstance!.interceptors.add(
+        PrettyDioLogger(
+          requestHeader: true,
+          requestBody: true,
+          responseBody: true,
+          responseHeader: false,
+          error: true,
+          compact: true,
+          maxWidth: 90,
+        ),
+      );
       return;
     }
     _dioInstance!.options.headers = {

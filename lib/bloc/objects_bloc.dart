@@ -42,25 +42,25 @@ class ObjectsBloc extends BlocBase {
   ///Retrieves the objects (pictures and videos) from the api
   Future<void> getObjectListFromApi() async {
     addObjects([]);
-    if (kDebugMode) {
-      addObjects([
-        Object(
-          objectType: ObjectType.Picture,
-          attributes: ObjectAttributes(
-            url:
-                'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fconlagentenoticias.com%2Fwp-content%2Fuploads%2F2020%2F12%2F1-1.jpg&f=1&nofb=1',
-            syncDate: DateTime.now().toIso8601String(),
-            creationDate: DateTime.now().toIso8601String(),
-            username: 'leopi99',
-            picturePosition: 'Italy',
-            localPath: '',
-            pictureByteSize: 19000,
-            databaseID: 1,
-          ),
-        ),
-      ]);
-      return;
-    }
+    // if (kDebugMode) {
+    //   addObjects([
+    //     Object(
+    //       objectType: ObjectType.Picture,
+    //       attributes: ObjectAttributes(
+    //         url:
+    //             'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fconlagentenoticias.com%2Fwp-content%2Fuploads%2F2020%2F12%2F1-1.jpg&f=1&nofb=1',
+    //         syncDate: DateTime.now().toIso8601String(),
+    //         creationDate: DateTime.now().toIso8601String(),
+    //         username: 'leopi99',
+    //         picturePosition: 'Italy',
+    //         localPath: '',
+    //         pictureByteSize: 19000,
+    //         databaseID: 1,
+    //       ),
+    //     ),
+    //   ]);
+    //   return;
+    // }
     dynamic response;
     try {
       response = await _repository.getAll();

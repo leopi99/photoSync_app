@@ -43,13 +43,13 @@ class AuthBloc extends BlocBase {
 
     dynamic data;
 
-    if (kDebugMode) {
-      data = {
-        'apiKey': 'thisIsTheTest',
-        'username': 'leopi99',
-        'email': 'pizio.leonardo@gmail.com'
-      };
-    } else
+    // if (kDebugMode) {
+    //   data = {
+    //     'apiKey': 'thisIsTheTest',
+    //     'username': 'leopi99',
+    //     'email': 'pizio.leonardo@gmail.com'
+    //   };
+    // } else
       try {
         changeLoading(true);
         data = await ObjectRepository().login(username, password);
