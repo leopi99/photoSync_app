@@ -27,6 +27,7 @@ class ObjectRepository extends ObectsRepositoryInterface {
       BaseOptions _dioOptions = BaseOptions(
         baseUrl: _API_PATH,
         connectTimeout: 21600,
+        validateStatus: (_) => true,
       );
       _dioInstance = Dio(_dioOptions);
       _dioInstance!.interceptors.add(
