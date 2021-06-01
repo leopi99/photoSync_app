@@ -57,7 +57,7 @@ class AuthBloc extends BlocBase {
     if (data == null || data['error'] != null) {
       changeLoading(false);
       SharedManager().logout();
-      _showError();
+      _showError(title: data['description'] ?? '');
       return;
     }
 
@@ -68,7 +68,7 @@ class AuthBloc extends BlocBase {
     } catch (e) {
       print('Error $e');
       SharedManager().logout();
-      _showError(title: 'Login error');
+      _showError(title: data['description'] ?? '');
       return;
     }
 
