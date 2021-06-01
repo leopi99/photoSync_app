@@ -49,12 +49,14 @@ class AuthBloc extends BlocBase {
     } catch (e) {
       print('Error $e');
       _showError(title: 'Login error');
+      SharedManager().logout();
       changeLoading(false);
       return;
     }
 
     if (data == null || data['error'] != null) {
       changeLoading(false);
+      SharedManager().logout();
       _showError();
       return;
     }
@@ -65,6 +67,7 @@ class AuthBloc extends BlocBase {
       _currentUser = User.fromJSON(data);
     } catch (e) {
       print('Error $e');
+      SharedManager().logout();
       _showError(title: 'Login error');
       return;
     }
