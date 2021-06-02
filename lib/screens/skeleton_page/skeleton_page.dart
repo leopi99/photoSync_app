@@ -5,7 +5,6 @@ import 'package:photo_sync/constants/appearance.dart';
 import 'package:photo_sync/inherited_widgets/appearance_bloc_inherited.dart';
 import 'package:photo_sync/screens/homepage/homepage.dart';
 import 'package:photo_sync/screens/settings_page/settings_page.dart';
-import 'package:rxdart/rxdart.dart';
 
 class SkeletonPage extends StatefulWidget {
   final int initialPage;
@@ -40,8 +39,7 @@ class _SkeletonPageState extends State<SkeletonPage> {
               padding: const EdgeInsets.only(bottom: _BAR_HEIGHT),
               child: PageView(
                 controller: _controller,
-                onPageChanged: (value) =>
-                    currentPage = value, //_currentPage.add(value),
+                onPageChanged: (value) => currentPage = value,
                 children: [
                   Homepage(),
                   SettingsPage(),
