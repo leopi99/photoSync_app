@@ -75,7 +75,7 @@ class _SkeletonPageState extends State<SkeletonPage> {
                 ? Colors.white.withOpacity(.8)
                 : Colors.black,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            tabMargin: EdgeInsets.symmetric(horizontal: 8).copyWith(bottom: 8),
+            tabMargin: EdgeInsets.symmetric(horizontal: 8),
             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
             tabs: [
               GButton(

@@ -43,6 +43,7 @@ class ObjectsBloc extends BlocBase {
   ///Retrieves the objects (pictures and videos) from the api
   Future<void> getObjectListFromApi() async {
     addObjects([]);
+    await loadFromDisk();
     dynamic response;
     try {
       response = await _repository.getAll(

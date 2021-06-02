@@ -24,7 +24,6 @@ class _HomepageState extends State<Homepage> {
   void initState() {
     bloc = ObjectsBlocInherited.of(navigatorKey.currentContext!);
     GlobalMethods.setStatusBarColorAsScaffoldBackground();
-    bloc.loadFromDisk();
     super.initState();
   }
 
