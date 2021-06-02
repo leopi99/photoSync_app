@@ -54,6 +54,7 @@ class _SkeletonPageState extends State<SkeletonPage> {
     );
   }
 
+  ///Builds the page navbar
   Widget _buildNavBar() {
     return Align(
       alignment: AlignmentDirectional.bottomCenter,

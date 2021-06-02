@@ -26,7 +26,7 @@ class _SplashScreenState extends State<SplashScreen> {
         opacity = 1;
       });
     });
-    Future.delayed(_animationDuration).then((_) => _onAnimationEnd());
+    Future.delayed(_animationDuration).then((_) => AppBloc.checkSession());
   }
 
   //TODO: Create the animation (maybe with flare) or show the app icon.
@@ -46,6 +46,4 @@ class _SplashScreenState extends State<SplashScreen> {
       ),
     );
   }
-
-  void _onAnimationEnd() => AppBloc.checkSession();
 }

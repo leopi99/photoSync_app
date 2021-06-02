@@ -5,8 +5,8 @@ import 'package:photo_sync/util/api_connection_interceptor.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 class ObjectRepository extends ObectsRepositoryInterface {
-  static const _HOST = "http://10.0.2.2";
-  static const _PORT = ":8010";
+  static const _HOST = "http://10.0.2.2"; //This address works in the android emulator => change to the ip address where you host the api
+  static const _PORT = ":8010"; //Port dedicated to the api
   static const _API_PATH = "$_HOST$_PORT/photoSync/api/v1";
 
   String? _authKey;
@@ -31,6 +31,7 @@ class ObjectRepository extends ObectsRepositoryInterface {
         validateStatus: (_) => true,
       );
       _dioInstance = Dio(_dioOptions);
+      //Adds the Logger for request-reponse to Dio
       _dioInstance!.interceptors.add(
         PrettyDioLogger(
           requestHeader: true,
@@ -42,6 +43,7 @@ class ObjectRepository extends ObectsRepositoryInterface {
           maxWidth: 90,
         ),
       );
+      //If the error (of a request) is ConnectionTimeOut => Tells the user that the api are not reachable
       _dioInstance!.interceptors.add(ApiConnectionInterceptor());
       return;
     }

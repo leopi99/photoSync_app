@@ -37,6 +37,7 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
+  ///Builds the appearance selector (darkMode/lightMode/FollowSystem) => [AppearanceModeType]
   Widget _buildAppearanceTile() {
     return StreamBuilder<Appearance>(
       stream: appearanceBloc.appearanceStream,
@@ -68,6 +69,7 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
+  //Builds the logout tile
   Widget _buildLogoutTile() {
     return ListTile(
       title: Text('Logout'),
@@ -78,7 +80,7 @@ class _SettingsPageState extends State<SettingsPage> {
           content: 'Do you really want to logout?',
           primaryButtonOnPressed: () async => await SharedManager()
               .logout()
-              .then((value) => AuthBlocInherited.of(context).logout(context)),
+              .then((value) => AuthBlocInherited.of(context).logout(context)), //Removes the saved credentials, then goes to the login page
           primaryButtonText: 'OK',
           secondaryButtonText: 'Cancel',
         );

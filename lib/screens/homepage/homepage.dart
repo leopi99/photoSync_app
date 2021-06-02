@@ -7,11 +7,13 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:photo_sync/bloc/objects_bloc.dart';
 import 'package:photo_sync/global/methods.dart';
 import 'package:photo_sync/global/nav_key.dart';
+import 'package:photo_sync/inherited_widgets/appearance_bloc_inherited.dart';
 import 'package:photo_sync/inherited_widgets/objects_bloc_inherited.dart';
 import 'package:photo_sync/models/object.dart';
 import 'package:photo_sync/repository/object_repository.dart';
 import 'package:photo_sync/screens/base_page/base_page.dart';
 import 'package:photo_sync/screens/single_image_page/single_image_page.dart';
+import 'package:photo_sync/util/enums/object_type.dart';
 
 class Homepage extends StatefulWidget {
   @override
@@ -51,13 +53,18 @@ class _HomepageState extends State<Homepage> {
               mainAxisSpacing: 8,
             ),
             itemBuilder: (context, index) =>
-                _buildImage(context, index, snapshot),
+                snapshot.data![index].objectType == ObjectType.Picture
+                    ? _buildImage(context, index, snapshot)
+                    : Center(
+                        child: Text('Video not supported'),
+                      ),
           );
         },
       ),
     );
   }
 
+  //Shows the modalBottomBar with some settings/text for the single image
   void _imageBottomBar(Object object, BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -91,6 +98,7 @@ class _HomepageState extends State<Homepage> {
     );
   }
 
+  //Builds the image widget
   Widget _buildImage(BuildContext context, int index,
           AsyncSnapshot<List<Object>> snapshot) =>
       snapshot.data![index].attributes.url.isEmpty
@@ -124,7 +132,8 @@ class _HomepageState extends State<Homepage> {
                   imageUrl: snapshot.data![index].attributes.url,
                   httpHeaders: ObjectRepository().getHeaders,
                 ),
-                if (!snapshot.data![index].attributes.isDownloaded)
+                if (!snapshot.data![index].attributes
+                    .isDownloaded) //If the item is not downloaded, will show this "bage"
                   Align(
                     alignment: AlignmentDirectional.bottomEnd,
                     child: Container(
@@ -132,7 +141,13 @@ class _HomepageState extends State<Homepage> {
                       padding: EdgeInsets.all(6),
                       margin: EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                          shape: BoxShape.circle, color: Colors.white),
+                        shape: BoxShape.circle,
+                        color: AppearanceBlocInherited.of(context)
+                                .appearance
+                                .isDarkMode
+                            ? Colors.black54
+                            : Colors.white54,
+                      ),
                     ),
                   ),
               ],

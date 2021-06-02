@@ -16,10 +16,12 @@ class AppearanceBloc {
     _getSavedAppearance();
   }
 
+  //Fetches the saved preference for the app theme
   Future<void> _getSavedAppearance() async {
     String? appearance =
         await SharedManager().readString(SharedType.AppAppearance);
     if (appearance == null) return;
+    //If The value is not saved (or not available in the types), sets the follow system
     AppearanceModeType _mode = AppearanceModeType.Follow_System;
     for (int i = 0; i < AppearanceModeType.values.length; i++) {
       if (AppearanceModeType.values[i].toValue == appearance) {
@@ -30,7 +32,9 @@ class AppearanceBloc {
     changeAppearance(_mode);
   }
 
-  
+  //
+  //  Appearance
+  //
 
   late BehaviorSubject<Appearance> _appearanceSubject;
   Stream<Appearance> get appearanceStream => _appearanceSubject.stream;

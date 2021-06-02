@@ -6,6 +6,7 @@ import 'package:photo_sync/util/enums/shared_type.dart';
 import 'package:photo_sync/util/shared_manager.dart';
 
 class AppBloc {
+  //Checks the "session", changes the current page
   static Future<void> checkSession() async {
     bool onBoarding = await SharedManager().readBool(SharedType.OnBoardingDone);
     

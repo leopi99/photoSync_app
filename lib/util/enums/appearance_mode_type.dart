@@ -10,4 +10,7 @@ extension AppearanceModeTypeExtension on AppearanceModeType {
 
   ///From "AppearanceModeType.Dark_Mode" to "Dark Mode"
   String get toValueWithSeparation => this.toValue.replaceAll('_', ' ');
+
+  ///Returns true if the accessed type is equal to the one passed as parameter
+  bool equals (AppearanceModeType type) => type == this;
 }

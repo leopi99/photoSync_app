@@ -113,22 +113,6 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
           ),
         ],
       ),
-      // floatingActionButton: currentPage < pages.length - 1
-      //     ? FloatingActionButton.extended(
-      //         onPressed: () {
-      //           _pageController.animateToPage(currentPage + 1,
-      //               duration: Duration(milliseconds: 250),
-      //               curve: Curves.easeInBack);
-      //           //If the current page is the last, will update the ui to show the close button
-      //           // if (currentPage == pages.length - 1)
-      //           setState(() {});
-      //         },
-      //         label: Text('Next'),
-      //       )
-      //     : FloatingActionButton.extended(
-      //         onPressed: _goToHomepage,
-      //         label: Text('Close'),
-      //       ),
     );
   }
 

@@ -25,6 +25,7 @@ class ObjectsBloc extends BlocBase {
   //
   List<Object> _objectsList = [];
   late BehaviorSubject<List<Object>> _objectSubject;
+
   Stream<List<Object>> get objectsStream => _objectSubject.stream;
 
   //
@@ -47,22 +48,26 @@ class ObjectsBloc extends BlocBase {
     await loadFromDisk();
     dynamic response;
     if (kDebugMode) {
-      addObjects([
-        Object(
-          objectType: ObjectType.Picture,
-          attributes: ObjectAttributes(
-              url:
-                  'https://avatars.githubusercontent.com/u/51258212?v=4',
+      addObjects(
+        [
+          Object(
+            objectType: ObjectType.Picture,
+            attributes: ObjectAttributes(
+              url: 'https://avatars.githubusercontent.com/u/51258212?v=4',
               syncDate: '',
               creationDate: DateTime.now().toIso8601String(),
-              username: 'leopi99',
+              username: AuthBlocInherited.of(navigatorKey.currentContext!)
+                  .currentUser!
+                  .username,
               picturePosition: '',
               localPath: '',
               pictureByteSize: 1504561,
               databaseID: 0,
-              isDownloaded: false),
-        ),
-      ]);
+              isDownloaded: false,
+            ),
+          ),
+        ],
+      );
       return;
     }
     try {
@@ -76,11 +81,13 @@ class ObjectsBloc extends BlocBase {
       return;
     }
 
+    //Error handling
     if (response == null) {
       _showError();
       return;
     }
 
+    // Handles the api error (if there's one)
     ApiError? error;
     try {
       error = ApiError.fromJSON(response);
@@ -99,15 +106,18 @@ class ObjectsBloc extends BlocBase {
       );
   }
 
+  ///Loads the Recent folder
   Future<void> loadFromDisk() async {
     PermissionState state = await PhotoManager.requestPermissionExtend();
     if (state == PermissionState.authorized) {
       changeLoading(true);
       (await PhotoManager.getAssetPathList()).forEach(
         (element) async {
+          //Only picks the Recent "folder"
           if (element.name == "Recent") {
             List<AssetEntity> assetList = await element.assetList;
 
+            //Cycles the entities and creates the object
             for (int i = 0; i < assetList.length; i++) {
               if (assetList[i].type == AssetType.image ||
                   assetList[i].type == AssetType.video) {
@@ -126,7 +136,10 @@ class ObjectsBloc extends BlocBase {
                         syncDate: "",
                         creationDate:
                             assetList[i].modifiedDateTime.toIso8601String(),
-                        username: 'leopi99',
+                        username:
+                            AuthBlocInherited.of(navigatorKey.currentContext!)
+                                .currentUser!
+                                .username,
                         picturePosition:
                             "${assetList[i].latitude} ${assetList[i].longitude}",
                         localPath: assetList[i].relativePath!,
@@ -146,6 +159,7 @@ class ObjectsBloc extends BlocBase {
   }
 
   ///Creates an image on the db => api
+  ///TODO: Complete the code when the api handles the addPicture
   Future<void> createPicture(RawObject object) async {
     dynamic response;
     try {

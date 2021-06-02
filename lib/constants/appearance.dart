@@ -6,6 +6,7 @@ class Appearance {
     if (type != null) _currentType = type;
   }
 
+  //Default: follow system, will be changed
   AppearanceModeType _currentType = AppearanceModeType.Follow_System;
   void changeType(AppearanceModeType newType) => _currentType = newType;
 
@@ -13,8 +14,8 @@ class Appearance {
 
   ///Returns the ThemeData assigned to the currentType
   ThemeData get currentThemeData {
-    if (_currentType == AppearanceModeType.Dark_Mode) return _darkThemeData;
-    if (_currentType == AppearanceModeType.Light_Mode) return _lightThemeData;
+    if (_currentType.equals(AppearanceModeType.Dark_Mode)) return _darkThemeData;
+    if (_currentType.equals(AppearanceModeType.Light_Mode)) return _lightThemeData;
     if (MediaQueryData.fromWindow(WidgetsBinding.instance!.window)
             .platformBrightness ==
         Brightness.dark) return _darkThemeData;
@@ -22,8 +23,8 @@ class Appearance {
   }
 
   bool get isDarkMode {
-    if (_currentType == AppearanceModeType.Dark_Mode) return true;
-    if (_currentType == AppearanceModeType.Light_Mode) return false;
+    if (_currentType.equals(AppearanceModeType.Dark_Mode)) return true;
+    if (_currentType.equals(AppearanceModeType.Light_Mode)) return false;
     return MediaQueryData.fromWindow(WidgetsBinding.instance!.window)
             .platformBrightness ==
         Brightness.dark;

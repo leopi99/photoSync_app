@@ -10,6 +10,7 @@ import 'package:photo_sync/screens/sign_up_page/sign_up_page.dart';
 import 'package:photo_sync/screens/skeleton_page/skeleton_page.dart';
 import 'package:photo_sync/screens/splash_screen.dart';
 
+///Handles the routes
 class RouteBuilder {
   static const String SPLASH_SCREEN = "/";
   static const String HOMEPAGE = "/homepage";

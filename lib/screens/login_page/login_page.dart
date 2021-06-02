@@ -107,6 +107,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  //Builds the signup text/button
   Widget _buildSignUp() {
     return InkWell(
       onTap: () {

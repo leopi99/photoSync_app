@@ -54,6 +54,7 @@ class AuthBloc extends BlocBase {
       return;
     }
 
+    //Error handling, logout if the password was not changed from the app (TODO:)
     if (data == null || data['error'] != null) {
       changeLoading(false);
       SharedManager().logout();
@@ -61,7 +62,7 @@ class AuthBloc extends BlocBase {
       return;
     }
 
-    //Updates the user
+    //Updates the local user
     try {
       changeLoading(false);
       _currentUser = User.fromJSON(data);
@@ -76,6 +77,7 @@ class AuthBloc extends BlocBase {
     ObjectsBlocInherited.of(navigatorKey.currentContext!)
         .getObjectListFromApi();
 
+    //Saves the credentials
     await SharedManager().writeString(SharedType.LoginUsername, username);
     await SharedManager().writeString(SharedType.LoginPassword, password);
     changeLoading(false);
@@ -103,6 +105,7 @@ class AuthBloc extends BlocBase {
     ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(_snack);
   }
 
+  ///User logout
   Future<void> logout(BuildContext context) async {
     _currentUser = null;
     ObjectsBlocInherited.of(context).addObjects([], reset: true);
