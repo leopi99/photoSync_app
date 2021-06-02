@@ -114,10 +114,7 @@ class _HomepageState extends State<Homepage> {
                       ? Image.memory(
                           fileSnap.data!.readAsBytesSync(),
                         )
-                      : Container(
-                          height: 128,
-                          width: 128,
-                        ),
+                      : Container(),
                 ),
               ),
             )

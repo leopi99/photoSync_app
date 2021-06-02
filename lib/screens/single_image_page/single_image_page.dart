@@ -37,37 +37,23 @@ class _SingleImagePageState extends State<SingleImagePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          Center(
-            child: widget.object.attributes.url.isEmpty && widget.image != null
-                ? Hero(
-                    tag: widget.object.attributes.creationDate,
-                    child: PhotoView(
-                      imageProvider: MemoryImage(widget.image!),
-                    ),
-                  )
-                : Hero(
-                    tag: widget.object.attributes.url,
-                    child: PhotoView(
-                      imageProvider: CachedNetworkImageProvider(
-                        widget.object.attributes.url,
-                        headers: ObjectRepository().getHeaders,
-                      ),
-                    ),
+      body: Center(
+        child: widget.object.attributes.url.isEmpty && widget.image != null
+            ? Hero(
+                tag: widget.object.attributes.creationDate,
+                child: PhotoView(
+                  imageProvider: MemoryImage(widget.image!),
+                ),
+              )
+            : Hero(
+                tag: widget.object.attributes.url,
+                child: PhotoView(
+                  imageProvider: CachedNetworkImageProvider(
+                    widget.object.attributes.url,
+                    headers: ObjectRepository().getHeaders,
                   ),
-          ),
-          Align(
-            alignment: AlignmentDirectional.topStart,
-            child: IconButton(
-              onPressed: () => Navigator.pop(context),
-              icon: Icon(
-                FeatherIcons.chevronLeft,
-                color: Colors.white,
+                ),
               ),
-            ),
-          ),
-        ],
       ),
     );
   }

@@ -61,32 +61,35 @@ class _SkeletonPageState extends State<SkeletonPage> {
         stream: AppearanceBlocInherited.of(context).appearanceStream,
         initialData: Appearance(),
         builder: (context, snapshot) {
-          return GNav(
-            haptic: false,
-            tabBorderRadius: _NAV_ICONS_RADIUS,
-            curve: Curves.linear,
-            duration: Duration(milliseconds: 250),
-            selectedIndex: currentPage,
-            onTabChange: (value) => _controller.jumpToPage(value),
-            gap: 8,
-            tabBackgroundColor:
-                snapshot.data!.isDarkMode ? Colors.black45 : Colors.grey[350]!,
-            activeColor: snapshot.data!.isDarkMode
-                ? Colors.white.withOpacity(.8)
-                : Colors.black,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            tabMargin: EdgeInsets.symmetric(horizontal: 8),
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-            tabs: [
-              GButton(
-                icon: FeatherIcons.home,
-                text: 'Home',
-              ),
-              GButton(
-                icon: FeatherIcons.settings,
-                text: 'Settings',
-              )
-            ],
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: GNav(
+              haptic: false,
+              tabBorderRadius: _NAV_ICONS_RADIUS,
+              curve: Curves.linear,
+              duration: Duration(milliseconds: 250),
+              selectedIndex: currentPage,
+              onTabChange: (value) => _controller.jumpToPage(value),
+              gap: 8,
+              tabBackgroundColor:
+                  snapshot.data!.isDarkMode ? Colors.black45 : Colors.grey[350]!,
+              activeColor: snapshot.data!.isDarkMode
+                  ? Colors.white.withOpacity(.8)
+                  : Colors.black,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              tabMargin: EdgeInsets.symmetric(horizontal: 8),
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+              tabs: [
+                GButton(
+                  icon: FeatherIcons.home,
+                  text: 'Home',
+                ),
+                GButton(
+                  icon: FeatherIcons.settings,
+                  text: 'Settings',
+                )
+              ],
+            ),
           );
         },
       ),
