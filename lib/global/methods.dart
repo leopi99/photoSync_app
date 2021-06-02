@@ -26,6 +26,12 @@ class GlobalMethods {
     await FlutterStatusbarcolor.setStatusBarColor(Colors.transparent);
   }
 
+  static Future<void> setStatusBarColor(
+      Color color, bool whiteForeground) async {
+    await FlutterStatusbarcolor.setStatusBarWhiteForeground(whiteForeground);
+    await FlutterStatusbarcolor.setStatusBarColor(color);
+  }
+
   static Future<void> hideKeyboard() async =>
       await SystemChannels.textInput.invokeMethod('TextInput.hide');
 }

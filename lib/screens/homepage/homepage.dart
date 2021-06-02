@@ -10,6 +10,7 @@ import 'package:photo_sync/inherited_widgets/objects_bloc_inherited.dart';
 import 'package:photo_sync/models/object.dart';
 import 'package:photo_sync/repository/object_repository.dart';
 import 'package:photo_sync/screens/base_page/base_page.dart';
+import 'package:photo_sync/screens/single_image_page/single_image_page.dart';
 
 class Homepage extends StatefulWidget {
   @override
@@ -50,30 +51,7 @@ class _HomepageState extends State<Homepage> {
               mainAxisSpacing: 8,
             ),
             itemBuilder: (context, index) =>
-                snapshot.data![index].attributes.url.isEmpty
-                    ? FutureBuilder<File?>(
-                        future: snapshot.data![index].fileBytes!,
-                        builder: (context, fileSnap) => InkWell(
-                          onTap: () =>
-                              _imageBottomBar(snapshot.data![index], context),
-                          child: fileSnap.hasData && fileSnap.data != null
-                              ? Image.memory(
-                                  fileSnap.data!.readAsBytesSync(),
-                                  height: 128,
-                                  width: 128,
-                                )
-                              : Container(
-                                  height: 128,
-                                  width: 128,
-                                ),
-                        ),
-                      )
-                    : CachedNetworkImage(
-                        imageUrl: snapshot.data![index].attributes.url,
-                        httpHeaders: ObjectRepository().getHeaders,
-                        height: 128,
-                        width: 128,
-                      ),
+                _buildImage(context, index, snapshot),
           );
         },
       ),
@@ -81,7 +59,6 @@ class _HomepageState extends State<Homepage> {
   }
 
   void _imageBottomBar(Object object, BuildContext context) {
-    print(object.attributes.pictureByteSize);
     showModalBottomSheet(
       context: context,
       clipBehavior: Clip.antiAlias,
@@ -113,4 +90,43 @@ class _HomepageState extends State<Homepage> {
       },
     );
   }
+
+  Widget _buildImage(BuildContext context, int index,
+          AsyncSnapshot<List<Object>> snapshot) =>
+      snapshot.data![index].attributes.url.isEmpty
+          ? FutureBuilder<File?>(
+              future: snapshot.data![index].fileBytes!,
+              builder: (context, fileSnap) => InkWell(
+                onLongPress: () =>
+                    _imageBottomBar(snapshot.data![index], context),
+                onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => SingleImagePage(
+                              object: snapshot.data![index],
+                              image: fileSnap.data?.readAsBytesSync(),
+                            ))),
+                child: Hero(
+                  tag: snapshot.data![index].attributes.url.isEmpty
+                      ? snapshot.data![index].attributes.creationDate
+                      : snapshot.data![index].attributes.url,
+                  child: fileSnap.hasData && fileSnap.data != null
+                      ? Image.memory(
+                          fileSnap.data!.readAsBytesSync(),
+                          height: 128,
+                          width: 128,
+                        )
+                      : Container(
+                          height: 128,
+                          width: 128,
+                        ),
+                ),
+              ),
+            )
+          : CachedNetworkImage(
+              imageUrl: snapshot.data![index].attributes.url,
+              httpHeaders: ObjectRepository().getHeaders,
+              height: 128,
+              width: 128,
+            );
 }
