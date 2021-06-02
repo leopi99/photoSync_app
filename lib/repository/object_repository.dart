@@ -5,7 +5,8 @@ import 'package:photo_sync/util/api_connection_interceptor.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 class ObjectRepository extends ObectsRepositoryInterface {
-  static const _HOST = "http://10.0.2.2"; //This address works in the android emulator => change to the ip address where you host the api
+  static const _HOST =
+      "http://10.0.2.2"; //This address works in the android emulator => change to the ip address where you host the api
   static const _PORT = ":8010"; //Port dedicated to the api
   static const _API_PATH = "$_HOST$_PORT/photoSync/api/v1";
 

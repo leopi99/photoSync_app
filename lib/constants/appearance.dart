@@ -39,7 +39,7 @@ class Appearance {
     appBarTheme: AppBarTheme(
       centerTitle: true,
       elevation: 0,
-      backgroundColor: ThemeData().scaffoldBackgroundColor,
+      backgroundColor: Colors.transparent,
       iconTheme: IconThemeData(color: Colors.black),
       textTheme: TextTheme(
         headline6: TextStyle(
@@ -54,6 +54,8 @@ class Appearance {
   final ThemeData _darkThemeData = ThemeData(
     brightness: Brightness.dark,
     appBarTheme: AppBarTheme(
+      elevation: 0,
+      backgroundColor: Colors.transparent,
       centerTitle: true,
     ),
   );
