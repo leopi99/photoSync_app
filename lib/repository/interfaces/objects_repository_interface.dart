@@ -6,4 +6,5 @@ abstract class ObectsRepositoryInterface {
   Future<dynamic> getVideos(String userID);
   Future<dynamic> addPicture(RawObject object);
   Future<dynamic> login(String username, String password);
+  Future<dynamic> register(String username, String password);
 }

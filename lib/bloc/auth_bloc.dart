@@ -22,6 +22,7 @@ class AuthBloc extends BlocBase {
   //
 
   User? _currentUser;
+
   User? get currentUser => _currentUser;
 
   //
@@ -29,7 +30,9 @@ class AuthBloc extends BlocBase {
   //
 
   late BehaviorSubject<bool> _hidePasswordSubject;
+
   Stream<bool> get hidePassword => _hidePasswordSubject.stream;
+
   void changeHidePassword() =>
       _hidePasswordSubject.add(!_hidePasswordSubject.value);
 
@@ -83,6 +86,34 @@ class AuthBloc extends BlocBase {
     changeLoading(false);
     //Checks the session, should go to the homepage
     await AppBloc.checkSession();
+  }
+
+  Future<void> register(String username, String password) async {
+    if (password.isEmpty || username.isEmpty) {
+      _showError(title: "Please, fill all the fields");
+      return;
+    }
+
+    dynamic data;
+    changeLoading(true);
+    try {
+      data = await ObjectRepository().register(username, password);
+    } catch (e) {
+      print('Error $e');
+      _showError(title: 'Signup error');
+      SharedManager().logout();
+      changeLoading(false);
+      return;
+    }
+
+    //Error handling, logout if the password was not changed from the app (TODO:)
+    if (data == null || data['error'] != null) {
+      changeLoading(false);
+      _showError(title: data['description'] ?? '');
+      return;
+    }
+
+    await login(username, password);
   }
 
   ///Shows the error snackBar

@@ -65,7 +65,7 @@ class SignUpPage extends StatelessWidget {
               children: [
                 Expanded(
                   child: SyncElevatedButton(
-                    onPressed: () {},
+                    onPressed: () async => bloc.register(_usernameController.text, _passwordController.text),
                     buttonText: 'Register',
                   ),
                 ),

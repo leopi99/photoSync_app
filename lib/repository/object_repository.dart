@@ -108,4 +108,16 @@ class ObjectRepository extends ObectsRepositoryInterface {
         .post('/addPicture', queryParameters: {'data': object.toJSON});
     return response.data;
   }
+
+  @override
+  Future register(String username, String password) async {
+    Response response = await _dioInstance!.post(
+      '/register',
+      queryParameters: {
+        "username": username,
+        "password": password,
+      },
+    );
+    return response.data;
+  }
 }
