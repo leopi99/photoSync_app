@@ -24,6 +24,7 @@ class _SkeletonPageState extends State<SkeletonPage> {
   @override
   void initState() {
     _controller = PageController(initialPage: widget.initialPage);
+    currentPage = widget.initialPage;
     super.initState();
   }
 
@@ -63,7 +64,7 @@ class _SkeletonPageState extends State<SkeletonPage> {
           return GNav(
             haptic: false,
             tabBorderRadius: _NAV_ICONS_RADIUS,
-            curve: Curves.ease,
+            curve: Curves.linear,
             duration: Duration(milliseconds: 250),
             selectedIndex: currentPage,
             onTabChange: (value) => _controller.jumpToPage(value),
