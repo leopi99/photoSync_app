@@ -73,7 +73,7 @@ class AuthBloc extends BlocBase {
     }
 
     //Fetches the list of images
-    await ObjectsBlocInherited.of(navigatorKey.currentContext!)
+    ObjectsBlocInherited.of(navigatorKey.currentContext!)
         .getObjectListFromApi();
 
     await SharedManager().writeString(SharedType.LoginUsername, username);
