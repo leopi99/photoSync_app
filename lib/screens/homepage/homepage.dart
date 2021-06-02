@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:filesize/filesize.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:photo_sync/bloc/objects_bloc.dart';
 import 'package:photo_sync/global/methods.dart';
 import 'package:photo_sync/global/nav_key.dart';
@@ -112,8 +113,6 @@ class _HomepageState extends State<Homepage> {
                   child: fileSnap.hasData && fileSnap.data != null
                       ? Image.memory(
                           fileSnap.data!.readAsBytesSync(),
-                          height: 128,
-                          width: 128,
                         )
                       : Container(
                           height: 128,
@@ -122,10 +121,23 @@ class _HomepageState extends State<Homepage> {
                 ),
               ),
             )
-          : CachedNetworkImage(
-              imageUrl: snapshot.data![index].attributes.url,
-              httpHeaders: ObjectRepository().getHeaders,
-              height: 128,
-              width: 128,
+          : Stack(
+              children: [
+                CachedNetworkImage(
+                  imageUrl: snapshot.data![index].attributes.url,
+                  httpHeaders: ObjectRepository().getHeaders,
+                ),
+                if (!snapshot.data![index].attributes.isDownloaded)
+                  Align(
+                    alignment: AlignmentDirectional.bottomEnd,
+                    child: Container(
+                      child: Icon(FeatherIcons.downloadCloud),
+                      padding: EdgeInsets.all(6),
+                      margin: EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle, color: Colors.white),
+                    ),
+                  ),
+              ],
             );
 }

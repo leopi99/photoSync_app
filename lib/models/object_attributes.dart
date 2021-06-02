@@ -7,6 +7,7 @@ class ObjectAttributes {
   static const _KEY_BYTE_SIZE = "bytes_size";
   static const _KEY_LOCAL_PATH = "local_path";
   static const _KEY_ID = "database_id";
+  static const _KEY_IS_DOWNLOADED = "downloaded";
   static const KEY_ATTRIBUTES = "attributes";
 
   final String url;
@@ -15,6 +16,7 @@ class ObjectAttributes {
   final String username;
   final String picturePosition;
   final String localPath;
+  final bool isDownloaded;
   final int pictureByteSize;
   final int databaseID;
 
@@ -27,10 +29,12 @@ class ObjectAttributes {
     required this.localPath,
     required this.pictureByteSize,
     required this.databaseID,
+    required this.isDownloaded,
   });
 
   static ObjectAttributes fromJSON(Map<String, dynamic> json) =>
       ObjectAttributes(
+        isDownloaded: json[_KEY_IS_DOWNLOADED],
         creationDate: json[_KEY_CREATION_DATE],
         localPath: json[_KEY_LOCAL_PATH],
         pictureByteSize: json[_KEY_BYTE_SIZE],
@@ -50,5 +54,6 @@ class ObjectAttributes {
         _KEY_URL: url,
         _KEY_USERNAME: username,
         _KEY_ID: databaseID,
+        _KEY_IS_DOWNLOADED: isDownloaded,
       };
 }

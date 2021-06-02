@@ -1,5 +1,6 @@
 import 'dart:collection';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:photo_sync/bloc/bloc_base.dart';
@@ -45,6 +46,25 @@ class ObjectsBloc extends BlocBase {
     addObjects([]);
     await loadFromDisk();
     dynamic response;
+    if (kDebugMode) {
+      addObjects([
+        Object(
+          objectType: ObjectType.Picture,
+          attributes: ObjectAttributes(
+              url:
+                  'https://avatars.githubusercontent.com/u/51258212?v=4',
+              syncDate: '',
+              creationDate: DateTime.now().toIso8601String(),
+              username: 'leopi99',
+              picturePosition: '',
+              localPath: '',
+              pictureByteSize: 1504561,
+              databaseID: 0,
+              isDownloaded: false),
+        ),
+      ]);
+      return;
+    }
     try {
       response = await _repository.getAll(
           AuthBlocInherited.of(navigatorKey.currentContext!)
@@ -101,6 +121,7 @@ class ObjectsBloc extends BlocBase {
                           ? ObjectType.Picture
                           : ObjectType.Video,
                       attributes: ObjectAttributes(
+                        isDownloaded: true,
                         url: "",
                         syncDate: "",
                         creationDate:
