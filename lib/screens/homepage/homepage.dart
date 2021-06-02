@@ -25,55 +25,50 @@ class _HomepageState extends State<Homepage> {
   void initState() {
     bloc = ObjectsBlocInherited.of(navigatorKey.currentContext!);
     GlobalMethods.setStatusBarColorAsScaffoldBackground();
-    _cose();
+    _loadFromDisk();
     super.initState();
   }
 
-  Future<void> _cose() async {
-    print('Cose booted');
+  Future<void> _loadFromDisk() async {
     PermissionState state = await PhotoManager.requestPermissionExtend();
-    print('PermissionState: ${state.toString()}');
-    // (await PhotoManager.getAssetPathList()).forEach((element) {
-    //   print('name: ${element.name}\ncount: ${element.assetCount}\n');
-    // });
+    if (state == PermissionState.authorized)
+      (await PhotoManager.getAssetPathList()).forEach(
+        (element) async {
+          if (element.name == "Recent") {
+            List<AssetEntity> assetList = await element.assetList;
 
-    (await PhotoManager.getAssetPathList()).forEach(
-      (element) async {
-        if (element.name == "Recent") {
-          List<AssetEntity> assetList = await element.assetList;
-
-          for (int i = 0; i < assetList.length; i++) {
-            if (assetList[i].type == AssetType.image ||
-                assetList[i].type == AssetType.video) {
-              int bytes = (await assetList[i].originBytes)!.length;
-              print("relative path: ${assetList[i].relativePath!}");
-              bloc.addObjects(
-                [
-                  Object(
-                    fileBytes: assetList[i].file,
-                    objectType: element.type == RequestType.image
-                        ? ObjectType.Picture
-                        : ObjectType.Video,
-                    attributes: ObjectAttributes(
-                      url: "",
-                      syncDate: "",
-                      creationDate:
-                          assetList[i].modifiedDateTime.toIso8601String(),
-                      username: 'leopi99',
-                      picturePosition:
-                          "${assetList[i].latitude} ${assetList[i].longitude}",
-                      localPath: assetList[i].relativePath!,
-                      pictureByteSize: bytes,
-                      databaseID: 0,
+            for (int i = 0; i < assetList.length; i++) {
+              if (assetList[i].type == AssetType.image ||
+                  assetList[i].type == AssetType.video) {
+                int bytes = (await assetList[i].originBytes)!.length;
+                print("relative path: ${assetList[i].relativePath!}");
+                bloc.addObjects(
+                  [
+                    Object(
+                      fileBytes: assetList[i].file,
+                      objectType: element.type == RequestType.image
+                          ? ObjectType.Picture
+                          : ObjectType.Video,
+                      attributes: ObjectAttributes(
+                        url: "",
+                        syncDate: "",
+                        creationDate:
+                            assetList[i].modifiedDateTime.toIso8601String(),
+                        username: 'leopi99',
+                        picturePosition:
+                            "${assetList[i].latitude} ${assetList[i].longitude}",
+                        localPath: assetList[i].relativePath!,
+                        pictureByteSize: bytes,
+                        databaseID: 0,
+                      ),
                     ),
-                  ),
-                ],
-              );
+                  ],
+                );
+              }
             }
           }
-        }
-      },
-    );
+        },
+      );
   }
 
   @override
