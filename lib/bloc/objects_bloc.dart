@@ -1,13 +1,16 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
+import 'package:photo_manager/photo_manager.dart';
 import 'package:photo_sync/bloc/bloc_base.dart';
 import 'package:photo_sync/global/nav_key.dart';
 import 'package:photo_sync/inherited_widgets/auth_bloc_inherited.dart';
 import 'package:photo_sync/models/api_error.dart';
 import 'package:photo_sync/models/object.dart';
+import 'package:photo_sync/models/object_attributes.dart';
 import 'package:photo_sync/models/raw_object.dart';
 import 'package:photo_sync/repository/object_repository.dart';
+import 'package:photo_sync/util/enums/object_type.dart';
 import 'package:rxdart/rxdart.dart';
 
 class ObjectsBloc extends BlocBase {
@@ -73,6 +76,51 @@ class ObjectsBloc extends BlocBase {
           (index) => Object.fromJSON(response![index]),
         ),
       );
+  }
+
+  Future<void> loadFromDisk() async {
+    PermissionState state = await PhotoManager.requestPermissionExtend();
+    if (state == PermissionState.authorized) {
+      changeLoading(true);
+      (await PhotoManager.getAssetPathList()).forEach(
+        (element) async {
+          if (element.name == "Recent") {
+            List<AssetEntity> assetList = await element.assetList;
+
+            for (int i = 0; i < assetList.length; i++) {
+              if (assetList[i].type == AssetType.image ||
+                  assetList[i].type == AssetType.video) {
+                int bytes = (await assetList[i].originBytes)!.length;
+                print("relative path: ${assetList[i].relativePath!}");
+                addObjects(
+                  [
+                    Object(
+                      fileBytes: assetList[i].file,
+                      objectType: element.type == RequestType.image
+                          ? ObjectType.Picture
+                          : ObjectType.Video,
+                      attributes: ObjectAttributes(
+                        url: "",
+                        syncDate: "",
+                        creationDate:
+                            assetList[i].modifiedDateTime.toIso8601String(),
+                        username: 'leopi99',
+                        picturePosition:
+                            "${assetList[i].latitude} ${assetList[i].longitude}",
+                        localPath: assetList[i].relativePath!,
+                        pictureByteSize: bytes,
+                        databaseID: 0,
+                      ),
+                    ),
+                  ],
+                );
+              }
+            }
+          }
+        },
+      );
+      changeLoading(false);
+    }
   }
 
   ///Creates an image on the db => api

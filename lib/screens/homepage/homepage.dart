@@ -8,10 +8,8 @@ import 'package:photo_sync/global/methods.dart';
 import 'package:photo_sync/global/nav_key.dart';
 import 'package:photo_sync/inherited_widgets/objects_bloc_inherited.dart';
 import 'package:photo_sync/models/object.dart';
-import 'package:photo_sync/models/object_attributes.dart';
 import 'package:photo_sync/repository/object_repository.dart';
 import 'package:photo_sync/screens/base_page/base_page.dart';
-import 'package:photo_sync/util/enums/object_type.dart';
 
 class Homepage extends StatefulWidget {
   @override
@@ -25,50 +23,8 @@ class _HomepageState extends State<Homepage> {
   void initState() {
     bloc = ObjectsBlocInherited.of(navigatorKey.currentContext!);
     GlobalMethods.setStatusBarColorAsScaffoldBackground();
-    _loadFromDisk();
+    bloc.loadFromDisk();
     super.initState();
-  }
-
-  Future<void> _loadFromDisk() async {
-    PermissionState state = await PhotoManager.requestPermissionExtend();
-    if (state == PermissionState.authorized)
-      (await PhotoManager.getAssetPathList()).forEach(
-        (element) async {
-          if (element.name == "Recent") {
-            List<AssetEntity> assetList = await element.assetList;
-
-            for (int i = 0; i < assetList.length; i++) {
-              if (assetList[i].type == AssetType.image ||
-                  assetList[i].type == AssetType.video) {
-                int bytes = (await assetList[i].originBytes)!.length;
-                print("relative path: ${assetList[i].relativePath!}");
-                bloc.addObjects(
-                  [
-                    Object(
-                      fileBytes: assetList[i].file,
-                      objectType: element.type == RequestType.image
-                          ? ObjectType.Picture
-                          : ObjectType.Video,
-                      attributes: ObjectAttributes(
-                        url: "",
-                        syncDate: "",
-                        creationDate:
-                            assetList[i].modifiedDateTime.toIso8601String(),
-                        username: 'leopi99',
-                        picturePosition:
-                            "${assetList[i].latitude} ${assetList[i].longitude}",
-                        localPath: assetList[i].relativePath!,
-                        pictureByteSize: bytes,
-                        databaseID: 0,
-                      ),
-                    ),
-                  ],
-                );
-              }
-            }
-          }
-        },
-      );
   }
 
   @override
@@ -93,31 +49,66 @@ class _HomepageState extends State<Homepage> {
               crossAxisSpacing: 8,
               mainAxisSpacing: 8,
             ),
-            itemBuilder: (context, index) =>
-                snapshot.data![index].attributes.url.isEmpty
-                    ? FutureBuilder<File?>(
-                        future: snapshot.data![index].fileBytes!,
-                        builder: (context, fileSnap) =>
-                            fileSnap.hasData && fileSnap.data != null
-                                ? Image.memory(
-                                    fileSnap.data!.readAsBytesSync(),
-                                    height: 128,
-                                    width: 128,
-                                  )
-                                : Container(
-                                    height: 128,
-                                    width: 128,
-                                  ),
-                      )
-                    : CachedNetworkImage(
-                        imageUrl: snapshot.data![index].attributes.url,
-                        httpHeaders: ObjectRepository().getHeaders,
-                        height: 128,
-                        width: 128,
-                      ),
+            itemBuilder: (context, index) => InkWell(
+              onTap: () => _imageBottomBar(snapshot.data![index], context),
+              child: snapshot.data![index].attributes.url.isEmpty
+                  ? FutureBuilder<File?>(
+                      future: snapshot.data![index].fileBytes!,
+                      builder: (context, fileSnap) =>
+                          fileSnap.hasData && fileSnap.data != null
+                              ? Image.memory(
+                                  fileSnap.data!.readAsBytesSync(),
+                                  height: 128,
+                                  width: 128,
+                                )
+                              : Container(
+                                  height: 128,
+                                  width: 128,
+                                ),
+                    )
+                  : CachedNetworkImage(
+                      imageUrl: snapshot.data![index].attributes.url,
+                      httpHeaders: ObjectRepository().getHeaders,
+                      height: 128,
+                      width: 128,
+                    ),
+            ),
           );
         },
       ),
+    );
+  }
+
+  void _imageBottomBar(Object object, BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      clipBehavior: Clip.antiAlias,
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
+      builder: (context) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Center(
+              child: Container(
+                margin: EdgeInsets.symmetric(vertical: 16),
+                height: 4,
+                width: 64,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  color: Colors.grey[400],
+                ),
+              ),
+            ),
+            ListTile(
+              trailing: Text(object.attributes.pictureByteSize.toString()),
+              title: Text(
+                'File syze (MB)',
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }
