@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:photo_sync/constants/appearance.dart';
 import 'package:photo_sync/inherited_widgets/appearance_bloc_inherited.dart';
 import 'package:photo_sync/screens/homepage/homepage.dart';
 import 'package:photo_sync/screens/settings_page/settings_page.dart';
+import 'package:rxdart/rxdart.dart';
 
 class SkeletonPage extends StatefulWidget {
   final int initialPage;
@@ -17,6 +19,8 @@ class SkeletonPage extends StatefulWidget {
 class _SkeletonPageState extends State<SkeletonPage> {
   static const double _BAR_HEIGHT = 64;
   late PageController _controller;
+  static const double _NAV_ICONS_RADIUS = 48;
+  int currentPage = 0;
 
   @override
   void initState() {
@@ -36,6 +40,8 @@ class _SkeletonPageState extends State<SkeletonPage> {
               padding: const EdgeInsets.only(bottom: _BAR_HEIGHT),
               child: PageView(
                 controller: _controller,
+                onPageChanged: (value) =>
+                    currentPage = value, //_currentPage.add(value),
                 children: [
                   Homepage(),
                   SettingsPage(),
@@ -56,22 +62,32 @@ class _SkeletonPageState extends State<SkeletonPage> {
         stream: AppearanceBlocInherited.of(context).appearanceStream,
         initialData: Appearance(),
         builder: (context, snapshot) {
-          return Container(
-            color: snapshot.data!.currentThemeData.scaffoldBackgroundColor,
-            height: _BAR_HEIGHT,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                IconButton(
-                  onPressed: () => _controller.jumpToPage(0),
-                  icon: Icon(FeatherIcons.home),
-                ),
-                IconButton(
-                  onPressed: () => _controller.jumpToPage(1),
-                  icon: Icon(FeatherIcons.settings),
-                ),
-              ],
-            ),
+          return GNav(
+            haptic: false,
+            tabBorderRadius: _NAV_ICONS_RADIUS,
+            curve: Curves.ease,
+            duration: Duration(milliseconds: 250),
+            selectedIndex: currentPage,
+            onTabChange: (value) => _controller.jumpToPage(value),
+            gap: 8,
+            tabBackgroundColor:
+                snapshot.data!.isDarkMode ? Colors.black45 : Colors.grey[350]!,
+            activeColor: snapshot.data!.isDarkMode
+                ? Colors.white.withOpacity(.8)
+                : Colors.black,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            tabMargin: EdgeInsets.symmetric(horizontal: 8).copyWith(bottom: 8),
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            tabs: [
+              GButton(
+                icon: FeatherIcons.home,
+                text: 'Home',
+              ),
+              GButton(
+                icon: FeatherIcons.settings,
+                text: 'Settings',
+              )
+            ],
           );
         },
       ),
