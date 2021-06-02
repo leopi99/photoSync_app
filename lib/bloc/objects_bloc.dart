@@ -90,7 +90,7 @@ class ObjectsBloc extends BlocBase {
             for (int i = 0; i < assetList.length; i++) {
               if (assetList[i].type == AssetType.image ||
                   assetList[i].type == AssetType.video) {
-                int bytes = (await assetList[i].originBytes)!.length;
+                int bytes = (await assetList[i].file)!.statSync().size;
                 print("relative path: ${assetList[i].relativePath!}");
                 addObjects(
                   [

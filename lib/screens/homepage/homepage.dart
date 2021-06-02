@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:photo_manager/photo_manager.dart';
+import 'package:filesize/filesize.dart';
 import 'package:photo_sync/bloc/objects_bloc.dart';
 import 'package:photo_sync/global/methods.dart';
 import 'package:photo_sync/global/nav_key.dart';
@@ -49,13 +49,14 @@ class _HomepageState extends State<Homepage> {
               crossAxisSpacing: 8,
               mainAxisSpacing: 8,
             ),
-            itemBuilder: (context, index) => InkWell(
-              onTap: () => _imageBottomBar(snapshot.data![index], context),
-              child: snapshot.data![index].attributes.url.isEmpty
-                  ? FutureBuilder<File?>(
-                      future: snapshot.data![index].fileBytes!,
-                      builder: (context, fileSnap) =>
-                          fileSnap.hasData && fileSnap.data != null
+            itemBuilder: (context, index) =>
+                snapshot.data![index].attributes.url.isEmpty
+                    ? FutureBuilder<File?>(
+                        future: snapshot.data![index].fileBytes!,
+                        builder: (context, fileSnap) => InkWell(
+                          onTap: () =>
+                              _imageBottomBar(snapshot.data![index], context),
+                          child: fileSnap.hasData && fileSnap.data != null
                               ? Image.memory(
                                   fileSnap.data!.readAsBytesSync(),
                                   height: 128,
@@ -65,14 +66,14 @@ class _HomepageState extends State<Homepage> {
                                   height: 128,
                                   width: 128,
                                 ),
-                    )
-                  : CachedNetworkImage(
-                      imageUrl: snapshot.data![index].attributes.url,
-                      httpHeaders: ObjectRepository().getHeaders,
-                      height: 128,
-                      width: 128,
-                    ),
-            ),
+                        ),
+                      )
+                    : CachedNetworkImage(
+                        imageUrl: snapshot.data![index].attributes.url,
+                        httpHeaders: ObjectRepository().getHeaders,
+                        height: 128,
+                        width: 128,
+                      ),
           );
         },
       ),
@@ -80,6 +81,7 @@ class _HomepageState extends State<Homepage> {
   }
 
   void _imageBottomBar(Object object, BuildContext context) {
+    print(object.attributes.pictureByteSize);
     showModalBottomSheet(
       context: context,
       clipBehavior: Clip.antiAlias,
@@ -101,9 +103,9 @@ class _HomepageState extends State<Homepage> {
               ),
             ),
             ListTile(
-              trailing: Text(object.attributes.pictureByteSize.toString()),
+              trailing: Text(filesize(object.attributes.pictureByteSize)),
               title: Text(
-                'File syze (MB)',
+                'File size',
               ),
             ),
           ],
