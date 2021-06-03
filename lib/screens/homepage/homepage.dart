@@ -56,7 +56,7 @@ class _HomepageState extends State<Homepage> {
                 snapshot.data![index].objectType == ObjectType.Picture
                     ? _buildImage(context, index, snapshot)
                     : Center(
-                        child: Text('Video not supported'),
+                        child: Text('Video not yet supported'),
                       ),
           );
         },
@@ -108,12 +108,14 @@ class _HomepageState extends State<Homepage> {
                 onLongPress: () =>
                     _imageBottomBar(snapshot.data![index], context),
                 onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => SingleImagePage(
-                              object: snapshot.data![index],
-                              image: fileSnap.data?.readAsBytesSync(),
-                            ))),
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SingleImagePage(
+                      object: snapshot.data![index],
+                      image: fileSnap.data?.readAsBytesSync(),
+                    ),
+                  ),
+                ),
                 child: Hero(
                   tag: snapshot.data![index].attributes.url.isEmpty
                       ? snapshot.data![index].attributes.creationDate
@@ -128,9 +130,19 @@ class _HomepageState extends State<Homepage> {
             )
           : Stack(
               children: [
-                CachedNetworkImage(
-                  imageUrl: snapshot.data![index].attributes.url,
-                  httpHeaders: ObjectRepository().getHeaders,
+                InkWell(
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SingleImagePage(
+                        object: snapshot.data![index],
+                      ),
+                    ),
+                  ),
+                  child: CachedNetworkImage(
+                    imageUrl: snapshot.data![index].attributes.url,
+                    httpHeaders: ObjectRepository().getHeaders,
+                  ),
                 ),
                 if (!snapshot.data![index].attributes
                     .isDownloaded) //If the item is not downloaded, will show this "bage"
