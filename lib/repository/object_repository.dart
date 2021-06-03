@@ -121,4 +121,12 @@ class ObjectRepository extends ObectsRepositoryInterface {
     );
     return response.data;
   }
+
+  @override
+  Future logout(String username) async {
+    Response response = await _dioInstance!.post("/logout", queryParameters: {
+      'username': username,
+    });
+    return response.data['result'] == 'ok';
+  }
 }

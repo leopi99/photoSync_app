@@ -136,6 +136,7 @@ class AuthBloc extends BlocBase {
 
   ///User logout
   Future<void> logout(BuildContext context) async {
+    await ObjectRepository().logout(_currentUser!.username);
     _currentUser = null;
     ObjectsBlocInherited.of(context).addObjects([], reset: true);
     AppBloc.checkSession();
