@@ -126,7 +126,7 @@ class ObjectsBloc extends BlocBase {
                 addObjects(
                   [
                     Object(
-                      fileBytes: assetList[i].file,
+                      futureFileBytes: assetList[i].file,
                       objectType: assetList[i].type == AssetType.image
                           ? ObjectType.Picture
                           : ObjectType.Video,

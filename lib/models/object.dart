@@ -8,12 +8,12 @@ class Object {
 
   final ObjectType objectType;
   final ObjectAttributes attributes;
-  final Future<File?>? fileBytes;
+  final Future<File?>? futureFileBytes;
 
   Object({
     required this.objectType,
     required this.attributes,
-    this.fileBytes,
+    this.futureFileBytes,
   });
 
   ///Returns true if the file is available offline

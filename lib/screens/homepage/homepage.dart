@@ -103,7 +103,7 @@ class _HomepageState extends State<Homepage> {
           AsyncSnapshot<List<Object>> snapshot) =>
       snapshot.data![index].attributes.url.isEmpty
           ? FutureBuilder<File?>(
-              future: snapshot.data![index].fileBytes!,
+              future: snapshot.data![index].futureFileBytes!,
               builder: (context, fileSnap) => InkWell(
                 onLongPress: () =>
                     _imageBottomBar(snapshot.data![index], context),
