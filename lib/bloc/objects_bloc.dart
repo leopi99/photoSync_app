@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:photo_sync/bloc/bloc_base.dart';
 import 'package:photo_sync/global/nav_key.dart';
@@ -60,10 +61,11 @@ class ObjectsBloc extends BlocBase {
                   .currentUser!
                   .username,
               picturePosition: '',
-              localPath: '',
+              localPath:
+                  '/data/user/0/it.leonardopizio.photo_sync/app_flutter/secondImage.png',
               pictureByteSize: 1504561,
               databaseID: 0,
-              isDownloaded: false,
+              isDownloaded: true,
             ),
           ),
         ],
@@ -156,6 +158,14 @@ class ObjectsBloc extends BlocBase {
       );
       changeLoading(false);
     }
+  }
+
+  void changeObjectDownloadFlag(bool isDownloaded, int index) {
+    _objectsList[index] = _objectsList[index].copyWith(
+      attributes:
+          _objectsList[index].attributes.copyWith(isDownloaded: isDownloaded),
+    );
+    _objectSubject.add(UnmodifiableListView(_objectsList));
   }
 
   ///Creates an image on the db => api

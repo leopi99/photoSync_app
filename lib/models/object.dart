@@ -29,4 +29,11 @@ class Object {
         ObjectAttributes.KEY_ATTRIBUTES: attributes.toJSON,
         _KEY_TYPE: objectType.toValue,
       };
+
+  Object copyWith({ObjectType? objectType, ObjectAttributes? attributes}) =>
+      Object(
+        objectType: objectType ?? this.objectType,
+        attributes: attributes ?? this.attributes,
+        futureFileBytes: this.futureFileBytes,
+      );
 }

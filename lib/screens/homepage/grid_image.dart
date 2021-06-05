@@ -5,14 +5,18 @@ import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:photo_sync/inherited_widgets/appearance_bloc_inherited.dart';
+import 'package:photo_sync/inherited_widgets/objects_bloc_inherited.dart';
 import 'package:photo_sync/models/object.dart';
 import 'package:photo_sync/repository/object_repository.dart';
 import 'package:photo_sync/screens/single_image_page/single_image_page.dart';
 
 class GridImage extends StatelessWidget {
   final Object object;
+  final int objectIndex;
+
   GridImage(
     this.object,
+    this.objectIndex,
   );
 
   @override
@@ -63,7 +67,11 @@ class GridImage extends StatelessWidget {
                   .isDownloaded) //If the item is not downloaded, will show this "bage"
                 Align(
                   alignment: AlignmentDirectional.bottomEnd,
-                  child: DownloadIcon(object.attributes.url),
+                  child: DownloadIcon(
+                    url: object.attributes.url,
+                    localPath: object.attributes.localPath,
+                    objectIndex: objectIndex,
+                  ),
                 ),
             ],
           );
@@ -106,7 +114,14 @@ class GridImage extends StatelessWidget {
 
 class DownloadIcon extends StatefulWidget {
   final String url;
-  DownloadIcon(this.url);
+  final String localPath;
+  final int objectIndex;
+
+  DownloadIcon({
+    required this.url,
+    required this.localPath,
+    required this.objectIndex,
+  });
 
   @override
   _DownloadIconState createState() => _DownloadIconState();
@@ -128,16 +143,18 @@ class _DownloadIconState extends State<DownloadIcon> {
         setState(() {
           downloading = true;
         });
-        await ObjectRepository().downloadObject(widget.url, "");
+        try {
+          await ObjectRepository().downloadObject(widget.url, widget.localPath);
+          ObjectsBlocInherited.of(context)
+              .changeObjectDownloadFlag(true, widget.objectIndex);
+        } catch (e) {}
         setState(() {
           downloading = false;
         });
       },
       child: Container(
         child: downloading
-            ? Center(
-                child: CircularProgressIndicator(),
-              )
+            ? CircularProgressIndicator()
             : Icon(FeatherIcons.downloadCloud),
         padding: EdgeInsets.all(6),
         margin: EdgeInsets.all(8),

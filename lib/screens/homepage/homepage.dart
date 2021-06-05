@@ -69,7 +69,7 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
             ),
             itemBuilder: (context, index) =>
                 snapshot.data![index].objectType == ObjectType.Picture
-                    ? GridImage(snapshot.data![index])
+                    ? GridImage(snapshot.data![index], index)
                     : Center(
                         child: Text('Video not yet supported'),
                       ),

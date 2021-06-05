@@ -56,4 +56,26 @@ class ObjectAttributes {
         _KEY_ID: databaseID,
         _KEY_IS_DOWNLOADED: isDownloaded,
       };
+
+  ObjectAttributes copyWith({
+    String? url,
+    String? syncDate,
+    String? creationDate,
+    String? username,
+    String? picturePosition,
+    String? localPath,
+    bool? isDownloaded,
+    int? pictureByteSize,
+  }) =>
+      ObjectAttributes(
+        creationDate: creationDate ?? this.creationDate,
+        databaseID: this.databaseID,
+        isDownloaded: isDownloaded ?? this.isDownloaded,
+        localPath: localPath ?? this.localPath,
+        pictureByteSize: pictureByteSize ?? this.pictureByteSize,
+        picturePosition: picturePosition ?? this.picturePosition,
+        syncDate: syncDate ?? this.syncDate,
+        url: url ?? this.url,
+        username: username ?? this.username,
+      );
 }
