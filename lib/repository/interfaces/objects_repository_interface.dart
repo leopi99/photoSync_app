@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:photo_sync/models/raw_object.dart';
 
 abstract class ObectsRepositoryInterface {
@@ -8,4 +9,5 @@ abstract class ObectsRepositoryInterface {
   Future<dynamic> login(String username, String password);
   Future<dynamic> logout(String username);
   Future<dynamic> register(String username, String password);
+  Future<Response> downloadObject(String url, String localPath);
 }

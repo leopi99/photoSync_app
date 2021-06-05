@@ -129,4 +129,11 @@ class ObjectRepository extends ObectsRepositoryInterface {
     });
     return response.data['result'] == 'ok';
   }
+
+  @override
+  Future<Response> downloadObject(String url, String localPath) async {
+    Response response = await _dioInstance!
+        .download(url, localPath, queryParameters: getHeaders);
+    return response;
+  }
 }

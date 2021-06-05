@@ -12,6 +12,7 @@ import 'package:photo_sync/inherited_widgets/objects_bloc_inherited.dart';
 import 'package:photo_sync/models/object.dart';
 import 'package:photo_sync/repository/object_repository.dart';
 import 'package:photo_sync/screens/base_page/base_page.dart';
+import 'package:photo_sync/screens/homepage/grid_image.dart';
 import 'package:photo_sync/screens/single_image_page/single_image_page.dart';
 import 'package:photo_sync/util/enums/object_type.dart';
 
@@ -20,7 +21,7 @@ class Homepage extends StatefulWidget {
   _HomepageState createState() => _HomepageState();
 }
 
-class _HomepageState extends State<Homepage> {
+class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
   late ObjectsBloc bloc;
 
   @override
@@ -28,6 +29,20 @@ class _HomepageState extends State<Homepage> {
     bloc = ObjectsBlocInherited.of(navigatorKey.currentContext!);
     GlobalMethods.setStatusBarColorAsScaffoldBackground();
     super.initState();
+  }
+
+  @override
+  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
+    print('AppLifeCycle state: $state');
+    switch (state) {
+      case AppLifecycleState.resumed:
+        await bloc.loadFromDisk();
+        break;
+      case AppLifecycleState.inactive:
+      case AppLifecycleState.paused:
+      case AppLifecycleState.detached:
+        break;
+    }
   }
 
   @override
@@ -54,7 +69,7 @@ class _HomepageState extends State<Homepage> {
             ),
             itemBuilder: (context, index) =>
                 snapshot.data![index].objectType == ObjectType.Picture
-                    ? _buildImage(context, index, snapshot)
+                    ? GridImage(snapshot.data![index])
                     : Center(
                         child: Text('Video not yet supported'),
                       ),
@@ -63,105 +78,4 @@ class _HomepageState extends State<Homepage> {
       ),
     );
   }
-
-  //Shows the modalBottomBar with some settings/text for the single image
-  void _imageBottomBar(Object object, BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
-      builder: (context) {
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Center(
-              child: Container(
-                margin: EdgeInsets.symmetric(vertical: 16),
-                height: 4,
-                width: 64,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  color: Colors.grey[400],
-                ),
-              ),
-            ),
-            ListTile(
-              trailing: Text(filesize(object.attributes.pictureByteSize)),
-              title: Text(
-                'File size',
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  //Builds the image widget
-  Widget _buildImage(BuildContext context, int index,
-          AsyncSnapshot<List<Object>> snapshot) =>
-      snapshot.data![index].attributes.url.isEmpty
-          ? FutureBuilder<File?>(
-              future: snapshot.data![index].futureFileBytes!,
-              builder: (context, fileSnap) => InkWell(
-                onLongPress: () =>
-                    _imageBottomBar(snapshot.data![index], context),
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SingleImagePage(
-                      object: snapshot.data![index],
-                      image: fileSnap.data?.readAsBytesSync(),
-                    ),
-                  ),
-                ),
-                child: Hero(
-                  tag: snapshot.data![index].attributes.url.isEmpty
-                      ? snapshot.data![index].attributes.creationDate
-                      : snapshot.data![index].attributes.url,
-                  child: fileSnap.hasData && fileSnap.data != null
-                      ? Image.memory(
-                          fileSnap.data!.readAsBytesSync(),
-                        )
-                      : Container(),
-                ),
-              ),
-            )
-          : Stack(
-              children: [
-                InkWell(
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => SingleImagePage(
-                        object: snapshot.data![index],
-                      ),
-                    ),
-                  ),
-                  child: CachedNetworkImage(
-                    imageUrl: snapshot.data![index].attributes.url,
-                    httpHeaders: ObjectRepository().getHeaders,
-                  ),
-                ),
-                if (!snapshot.data![index].attributes
-                    .isDownloaded) //If the item is not downloaded, will show this "bage"
-                  Align(
-                    alignment: AlignmentDirectional.bottomEnd,
-                    child: Container(
-                      child: Icon(FeatherIcons.downloadCloud),
-                      padding: EdgeInsets.all(6),
-                      margin: EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: AppearanceBlocInherited.of(context)
-                                .appearance
-                                .isDarkMode
-                            ? Colors.black54
-                            : Colors.white54,
-                      ),
-                    ),
-                  ),
-              ],
-            );
 }
