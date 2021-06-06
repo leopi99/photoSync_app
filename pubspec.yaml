@@ -42,6 +42,7 @@ dependencies:
   photo_view: ^0.11.1 # Zoomable image
   filesize: ^2.0.1 # Handles the bytes conversion
   path_provider: ^2.0.2 # Temporary, needs to find a better solution to get the save file path
+  workmanager: ^0.4.0 # Handles the background jobs (for example the check for new photos)
 
 
 dev_dependencies:
