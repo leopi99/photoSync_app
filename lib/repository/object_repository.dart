@@ -136,4 +136,15 @@ class ObjectRepository extends ObectsRepositoryInterface {
         .download(url, localPath, queryParameters: getHeaders);
     return response;
   }
+
+  @override
+  Future<Response> updateDownloadedObject(String objectID, bool value) async {
+    Response response =
+        await _dioInstance!.post("/updateDownloadedObject", queryParameters: {
+      'objectID': objectID,
+      'value': value,
+    });
+
+    return response;
+  }
 }

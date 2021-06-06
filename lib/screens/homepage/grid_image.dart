@@ -72,8 +72,7 @@ class GridImage extends StatelessWidget {
                         ? Align(
                             alignment: AlignmentDirectional.bottomEnd,
                             child: DownloadIcon(
-                              url: object.attributes.url,
-                              localPath: object.attributes.localPath,
+                              object: object,
                               objectIndex: objectIndex,
                             ),
                           )
@@ -111,6 +110,10 @@ class GridImage extends StatelessWidget {
                 'File size',
               ),
             ),
+            ListTile(
+              title: Text('Picture shot at'),
+              trailing: Text(object.attributes.picturePosition),
+            ),
           ],
         );
       },
@@ -119,13 +122,11 @@ class GridImage extends StatelessWidget {
 }
 
 class DownloadIcon extends StatefulWidget {
-  final String url;
-  final String localPath;
+  final Object object;
   final int objectIndex;
 
   DownloadIcon({
-    required this.url,
-    required this.localPath,
+    required this.object,
     required this.objectIndex,
   });
 
@@ -150,9 +151,12 @@ class _DownloadIconState extends State<DownloadIcon> {
           downloading = true;
         });
         try {
-          await ObjectRepository().downloadObject(widget.url, widget.localPath);
+          await ObjectRepository().downloadObject(
+              widget.object.attributes.url, widget.object.attributes.localPath);
           ObjectsBlocInherited.of(context)
               .changeObjectDownloadFlag(true, widget.objectIndex);
+          await ObjectRepository().updateDownloadedObject(
+              "${widget.object.attributes.databaseID}", true);
         } catch (e) {}
         setState(() {
           downloading = false;

@@ -10,4 +10,5 @@ abstract class ObectsRepositoryInterface {
   Future<dynamic> logout(String username);
   Future<dynamic> register(String username, String password);
   Future<Response> downloadObject(String url, String localPath);
+  Future<Response> updateDownloadedObject(String objectID, bool value);
 }
