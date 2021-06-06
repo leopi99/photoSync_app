@@ -1,16 +1,16 @@
-# photo_sync
+# PhotoSync
+## What is PhotoSync_app?
 
-A new Flutter project.
+This is the frontend for the [PhotoSync api](https://github.com/leopi99/photoSync_api).
 
-## Getting Started
+## Not stable for "production" this is still in beta, everything can change
+Current version: 0.5.2
+## Features
 
-This project is a starting point for a Flutter application.
+- Background media syncronization [TODO]
+- Download your syncronized media from the api
+- Backup your media files in your server (using PhotoSync api) [TODO]
+- Dark theme (needs some work on colors)
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Why PhotoSync?
+Since the popular Google photo have dropped the unlimited storage, I thougth to create this to have more control on where my photos are stored and I can upgrade the storage size when I want 
