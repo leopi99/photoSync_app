@@ -21,9 +21,10 @@ class GridImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return object.attributes.url.isEmpty
+    return object.attributes.isDownloaded
         ? FutureBuilder<File?>(
-            future: object.futureFileBytes!,
+            future: object.futureFileBytes ??
+                Future.value(File(object.attributes.localPath)),
             builder: (context, fileSnap) => InkWell(
               onLongPress: () => _imageBottomBar(object, context),
               onTap: () => Navigator.push(
