@@ -21,8 +21,9 @@ class Object {
       await File(attributes.localPath).exists();
 
   static Object fromJSON(Map<String, dynamic> json) => Object(
-        attributes: json[ObjectAttributes.KEY_ATTRIBUTES],
-        objectType: json[_KEY_TYPE],
+        attributes:
+            ObjectAttributes.fromJSON(json[ObjectAttributes.KEY_ATTRIBUTES]),
+        objectType: ObjectType.Picture.findExact(json[_KEY_TYPE]),
       );
 
   Map<String, dynamic> get toJSON => {

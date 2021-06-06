@@ -48,30 +48,30 @@ class ObjectsBloc extends BlocBase {
     addObjects([]);
     await loadFromDisk();
     dynamic response;
-    if (kDebugMode) {
-      addObjects(
-        [
-          Object(
-            objectType: ObjectType.Picture,
-            attributes: ObjectAttributes(
-              url: 'https://avatars.githubusercontent.com/u/51258212?v=4',
-              syncDate: '',
-              creationDate: DateTime.now().toIso8601String(),
-              username: AuthBlocInherited.of(navigatorKey.currentContext!)
-                  .currentUser!
-                  .username,
-              picturePosition: '',
-              localPath:
-                  '/data/user/0/it.leonardopizio.photo_sync/app_flutter/secondImage.png',
-              pictureByteSize: 1504561,
-              databaseID: 0,
-              isDownloaded: true,
-            ),
-          ),
-        ],
-      );
-      return;
-    }
+    // if (kDebugMode) {
+    //   addObjects(
+    //     [
+    //       Object(
+    //         objectType: ObjectType.Picture,
+    //         attributes: ObjectAttributes(
+    //           url: 'https://avatars.githubusercontent.com/u/51258212?v=4',
+    //           syncDate: '',
+    //           creationDate: DateTime.now().toIso8601String(),
+    //           username: AuthBlocInherited.of(navigatorKey.currentContext!)
+    //               .currentUser!
+    //               .username,
+    //           picturePosition: '',
+    //           localPath:
+    //               '/data/user/0/it.leonardopizio.photo_sync/app_flutter/secondImage.png',
+    //           pictureByteSize: 1504561,
+    //           databaseID: 0,
+    //           isDownloaded: true,
+    //         ),
+    //       ),
+    //     ],
+    //   );
+    //   return;
+    // }
     try {
       response = await _repository.getAll(
           AuthBlocInherited.of(navigatorKey.currentContext!)
@@ -138,10 +138,6 @@ class ObjectsBloc extends BlocBase {
                         syncDate: "",
                         creationDate:
                             assetList[i].modifiedDateTime.toIso8601String(),
-                        username:
-                            AuthBlocInherited.of(navigatorKey.currentContext!)
-                                .currentUser!
-                                .username,
                         picturePosition:
                             "${assetList[i].latitude} ${assetList[i].longitude}",
                         localPath: assetList[i].relativePath!,
