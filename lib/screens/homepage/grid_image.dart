@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:photo_sync/global/methods.dart';
 import 'package:photo_sync/inherited_widgets/appearance_bloc_inherited.dart';
 import 'package:photo_sync/inherited_widgets/objects_bloc_inherited.dart';
 import 'package:photo_sync/models/object.dart';
@@ -84,8 +85,9 @@ class GridImage extends StatelessWidget {
   }
 
   //Shows the modalBottomBar with some settings/text for the single image
-  void _imageBottomBar(Object object, BuildContext context) {
-    showModalBottomSheet(
+  void _imageBottomBar(Object object, BuildContext context) async {
+    await GlobalMethods.setStatusBarColorForDialog();
+    await showModalBottomSheet(
       context: context,
       clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(
@@ -129,6 +131,7 @@ class GridImage extends StatelessWidget {
         );
       },
     );
+    await GlobalMethods.setStatusBarColorAsScaffoldBackground();
   }
 }
 
