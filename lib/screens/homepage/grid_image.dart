@@ -9,6 +9,7 @@ import 'package:photo_sync/inherited_widgets/objects_bloc_inherited.dart';
 import 'package:photo_sync/models/object.dart';
 import 'package:photo_sync/repository/object_repository.dart';
 import 'package:photo_sync/screens/single_image_page/single_image_page.dart';
+import 'package:photo_sync/extensions/date_time_extension.dart';
 
 class GridImage extends StatelessWidget {
   final Object object;
@@ -113,6 +114,16 @@ class GridImage extends StatelessWidget {
             ListTile(
               title: Text('Picture shot at'),
               trailing: Text(object.attributes.picturePosition),
+            ),
+            ListTile(
+              title: Text('Picture created'),
+              trailing: Text(object.attributes.creationDateTime.toDayMonthYear),
+            ),
+            ListTile(
+              title: Text('Syncronization date'),
+              trailing: Text(
+                  object.attributes.syncronizationDateTime?.toDayMonthYear ??
+                      'Not yet'),
             ),
           ],
         );

@@ -1,8 +1,7 @@
 import 'dart:collection';
 
-import 'package:flutter/foundation.dart';
+import 'package:photo_sync/extensions/date_time_extension.dart';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:photo_sync/bloc/bloc_base.dart';
 import 'package:photo_sync/global/nav_key.dart';
@@ -124,7 +123,6 @@ class ObjectsBloc extends BlocBase {
               if (assetList[i].type == AssetType.image ||
                   assetList[i].type == AssetType.video) {
                 int bytes = (await assetList[i].file)!.statSync().size;
-                print("relative path: ${assetList[i].relativePath!}");
                 addObjects(
                   [
                     Object(
@@ -137,7 +135,8 @@ class ObjectsBloc extends BlocBase {
                         url: "",
                         syncDate: "",
                         creationDate:
-                            assetList[i].modifiedDateTime.toIso8601String(),
+                            "${assetList[i].createDateTime.year}-${assetList[i].createDateTime.month.toString().padLeft(2, '0')}" +
+                                "-${assetList[i].createDateTime.day.toString().padLeft(2, '0')}",
                         picturePosition:
                             "${assetList[i].latitude} ${assetList[i].longitude}",
                         localPath: assetList[i].relativePath!,

@@ -10,13 +10,17 @@ class ObjectAttributes {
   static const KEY_ATTRIBUTES = "attributes";
 
   final String url;
-  final String syncDate;
+  final String? syncDate;
   final String creationDate;
   final String picturePosition;
   final String localPath;
   final bool isDownloaded;
   final int pictureByteSize;
   final int databaseID;
+
+  DateTime get creationDateTime => DateTime.parse(creationDate);
+  DateTime? get syncronizationDateTime =>
+      syncDate != null ? DateTime.tryParse(syncDate!) : null;
 
   ObjectAttributes({
     required this.url,
