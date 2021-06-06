@@ -132,8 +132,6 @@ class ObjectsBloc extends BlocBase {
                           : ObjectType.Video,
                       attributes: ObjectAttributes(
                         isDownloaded: true,
-                        url: "",
-                        syncDate: "",
                         creationDate:
                             "${assetList[i].createDateTime.year}-${assetList[i].createDateTime.month.toString().padLeft(2, '0')}" +
                                 "-${assetList[i].createDateTime.day.toString().padLeft(2, '0')}",

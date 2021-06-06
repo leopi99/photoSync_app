@@ -9,7 +9,7 @@ class ObjectAttributes {
   static const _KEY_IS_DOWNLOADED = "downloaded";
   static const KEY_ATTRIBUTES = "attributes";
 
-  final String url;
+  final String? url;
   final String? syncDate;
   final String creationDate;
   final String picturePosition;
@@ -23,8 +23,8 @@ class ObjectAttributes {
       syncDate != null ? DateTime.tryParse(syncDate!) : null;
 
   ObjectAttributes({
-    required this.url,
-    required this.syncDate,
+    this.url,
+    this.syncDate,
     required this.creationDate,
     required this.picturePosition,
     required this.localPath,

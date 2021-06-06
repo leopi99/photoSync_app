@@ -39,22 +39,19 @@ class _SingleImagePageState extends State<SingleImagePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: widget.object.attributes.url.isEmpty && widget.image != null
-            ? Hero(
-                tag: widget.object.attributes.creationDate,
-                child: PhotoView(
+        child: Hero(
+          tag: widget.object.attributes.creationDate,
+          child: widget.image != null
+              ? PhotoView(
                   imageProvider: MemoryImage(widget.image!),
-                ),
-              )
-            : Hero(
-                tag: widget.object.attributes.url,
-                child: PhotoView(
+                )
+              : PhotoView(
                   imageProvider: CachedNetworkImageProvider(
-                    widget.object.attributes.url,
+                    widget.object.attributes.url!,
                     headers: ObjectRepository().getHeaders,
                   ),
                 ),
-              ),
+        ),
       ),
     );
   }

@@ -39,9 +39,7 @@ class GridImage extends StatelessWidget {
                 ),
               ),
               child: Hero(
-                tag: object.attributes.url.isEmpty
-                    ? object.attributes.creationDate
-                    : object.attributes.url,
+                tag: object.attributes.creationDate,
                 child: fileSnap.hasData && fileSnap.data != null
                     ? Image.memory(
                         fileSnap.data!.readAsBytesSync(),
@@ -61,9 +59,12 @@ class GridImage extends StatelessWidget {
                     ),
                   ),
                 ),
-                child: CachedNetworkImage(
-                  imageUrl: object.attributes.url,
-                  httpHeaders: ObjectRepository().getHeaders,
+                child: Hero(
+                  tag: object.attributes.creationDate,
+                  child: CachedNetworkImage(
+                    imageUrl: object.attributes.url!,
+                    httpHeaders: ObjectRepository().getHeaders,
+                  ),
                 ),
               ),
               FutureBuilder<bool>(
@@ -135,6 +136,7 @@ class GridImage extends StatelessWidget {
   }
 }
 
+//Download icon on top of the web image.
 class DownloadIcon extends StatefulWidget {
   final Object object;
   final int objectIndex;
@@ -165,13 +167,17 @@ class _DownloadIconState extends State<DownloadIcon> {
           downloading = true;
         });
         try {
-          await ObjectRepository().downloadObject(
-              widget.object.attributes.url, widget.object.attributes.localPath);
+          await ObjectRepository().downloadObject(widget.object.attributes.url!,
+              widget.object.attributes.localPath);
           ObjectsBlocInherited.of(context)
               .changeObjectDownloadFlag(true, widget.objectIndex);
           await ObjectRepository().updateDownloadedObject(
               "${widget.object.attributes.databaseID}", true);
-        } catch (e) {}
+        } catch (e, stacktrace) {
+          print('Error while downloading or updating the object');
+          print(e);
+          print(stacktrace);
+        }
         setState(() {
           downloading = false;
         });
