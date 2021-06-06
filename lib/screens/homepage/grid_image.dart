@@ -63,16 +63,21 @@ class GridImage extends StatelessWidget {
                   httpHeaders: ObjectRepository().getHeaders,
                 ),
               ),
-              if (!object.attributes
-                  .isDownloaded) //If the item is not downloaded, will show this "bage"
-                Align(
-                  alignment: AlignmentDirectional.bottomEnd,
-                  child: DownloadIcon(
-                    url: object.attributes.url,
-                    localPath: object.attributes.localPath,
-                    objectIndex: objectIndex,
-                  ),
-                ),
+              FutureBuilder<bool>(
+                future: object.isDownloaded,
+                initialData: false,
+                builder: (context, downloadedSnapshot) =>
+                    !downloadedSnapshot.data!
+                        ? Align(
+                            alignment: AlignmentDirectional.bottomEnd,
+                            child: DownloadIcon(
+                              url: object.attributes.url,
+                              localPath: object.attributes.localPath,
+                              objectIndex: objectIndex,
+                            ),
+                          )
+                        : Container(),
+              ),
             ],
           );
   }
