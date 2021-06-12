@@ -9,6 +9,7 @@ import 'package:photo_sync/inherited_widgets/auth_bloc_inherited.dart';
 import 'package:photo_sync/util/enums/appearance_mode_type.dart';
 import 'package:photo_sync/util/shared_manager.dart';
 import 'package:photo_sync/widgets/sync_dialog.dart';
+import 'package:photo_sync/widgets/sync_list_tile.dart';
 
 class SettingsPage extends StatefulWidget {
   @override
@@ -29,8 +30,11 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: ListView(
+        padding: EdgeInsets.symmetric(horizontal: 16)
+            .copyWith(top: MediaQuery.of(context).padding.top + 8),
         children: [
           _buildAppearanceTile(),
+          _buildChangePasswordTile(),
           _buildLogoutTile(),
         ],
       ),
@@ -43,8 +47,8 @@ class _SettingsPageState extends State<SettingsPage> {
       stream: appearanceBloc.appearanceStream,
       initialData: Appearance(),
       builder: (context, snapshot) {
-        return ListTile(
-          title: Text('App appearance'),
+        return SyncListTile(
+          titleText: 'App appearance',
           trailing: DropdownButton<AppearanceModeType>(
             onChanged: (value) {
               if (value == null) return;
@@ -71,20 +75,30 @@ class _SettingsPageState extends State<SettingsPage> {
 
   //Builds the logout tile
   Widget _buildLogoutTile() {
-    return ListTile(
-      title: Text('Logout'),
-      onTap: () async {
-        await SyncDialog.show(
-          context,
-          title: 'Logout',
-          content: 'Do you really want to logout?',
-          primaryButtonOnPressed: () async => await SharedManager()
-              .logout()
-              .then((value) => AuthBlocInherited.of(context).logout(context)), //Removes the saved credentials, then goes to the login page
-          primaryButtonText: 'OK',
-          secondaryButtonText: 'Cancel',
-        );
-      },
+    return Padding(
+      padding: const EdgeInsets.only(top: 16),
+      child: SyncListTile(
+        titleText: 'Logout',
+        onTap: () async {
+          await SyncDialog.show(
+            context,
+            title: 'Logout',
+            content: 'Do you really want to logout?',
+            primaryButtonOnPressed: () async => await SharedManager()
+                .logout()
+                .then((value) => AuthBlocInherited.of(context).logout(
+                    context)), //Removes the saved credentials, then goes to the login page
+            primaryButtonText: 'OK',
+            secondaryButtonText: 'Cancel',
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildChangePasswordTile() {
+    return SyncListTile(
+      titleText: 'Change password',
     );
   }
 }

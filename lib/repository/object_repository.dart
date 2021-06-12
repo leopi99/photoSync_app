@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:photo_sync/models/raw_object.dart';
+import 'package:photo_sync/models/user.dart';
 import 'package:photo_sync/repository/interfaces/objects_repository_interface.dart';
 import 'package:photo_sync/util/api_connection_interceptor.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
@@ -143,6 +144,17 @@ class ObjectRepository extends ObectsRepositoryInterface {
         await _dioInstance!.post("/updateDownloadedObject", queryParameters: {
       'objectID': objectID,
       'value': value,
+    });
+
+    return response;
+  }
+
+  @override
+  Future<Response> updateProfile(User user) async {
+    Response response =
+        await _dioInstance!.post("/updateProfile", queryParameters: {
+      'username': user.username,
+      'password': user.password,
     });
 
     return response;
