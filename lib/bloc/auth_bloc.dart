@@ -116,7 +116,6 @@ class AuthBloc extends BlocBase {
 
   Future<void> changePassword(String newPassword) async {
     changeLoading(true);
-    await SharedManager().writeString(SharedType.LoginPassword, newPassword);
     _currentUser = currentUser!.copyWith(password: newPassword);
     dynamic data;
     try {
@@ -128,12 +127,14 @@ class AuthBloc extends BlocBase {
       return;
     }
 
-    //Error handling, logout if the password was not changed from the app (TODO:)
+    //Error handling
     if (data == null || data['error'] != null) {
       changeLoading(false);
       _showError(title: data['description'] ?? '');
       return;
     }
+    
+    await SharedManager().writeString(SharedType.LoginPassword, newPassword);
 
     changeLoading(false);
   }

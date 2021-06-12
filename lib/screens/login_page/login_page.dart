@@ -75,6 +75,7 @@ class _LoginPageState extends State<LoginPage> {
                 return TextField(
                   controller: _passwordController,
                   obscureText: snapshot.data!,
+                  onSubmitted: (_) async => login(),
                   decoration: InputDecoration(
                     hintText: 'Password',
                     suffixIcon: IconButton(
@@ -94,8 +95,7 @@ class _LoginPageState extends State<LoginPage> {
               children: [
                 Expanded(
                   child: SyncElevatedButton(
-                    onPressed: () async => await authBloc.login(
-                        _usernameController.text, _passwordController.text),
+                    onPressed: () async => login(),
                     buttonText: 'Login',
                   ),
                 ),
@@ -139,4 +139,7 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+
+  Future<void> login() async =>
+      await authBloc.login(_usernameController.text, _passwordController.text);
 }
