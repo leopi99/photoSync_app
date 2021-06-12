@@ -39,6 +39,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
     return BasePage(
       loadingStream: bloc.loadingStream,
       appBar: AppBar(
+        title: Text('Update profile'),
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
           icon: Icon(FeatherIcons.chevronLeft),
