@@ -56,7 +56,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
           SizedBox(height: 16),
           TextField(
             controller: passwordController,
-            decoration: InputDecoration(labelText: 'Password'),
+            decoration: InputDecoration(labelText: 'New password'),
           ),
           SyncElevatedButton(
             padding: EdgeInsets.only(top: 16),
