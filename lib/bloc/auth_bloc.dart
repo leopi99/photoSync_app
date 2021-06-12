@@ -1,8 +1,10 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_sync/bloc/app_bloc.dart';
 import 'package:photo_sync/bloc/bloc_base.dart';
 import 'package:photo_sync/global/methods.dart';
 import 'package:photo_sync/global/nav_key.dart';
+import 'package:photo_sync/inherited_widgets/appearance_bloc_inherited.dart';
 import 'package:photo_sync/inherited_widgets/objects_bloc_inherited.dart';
 import 'package:photo_sync/models/user.dart';
 import 'package:photo_sync/repository/object_repository.dart';
@@ -120,9 +122,10 @@ class AuthBloc extends BlocBase {
     dynamic data;
     try {
       data = await ObjectRepository().updateProfile(_currentUser!);
-    } catch (e) {
+    } catch (e, stacktrace) {
       print('Error $e');
-      _showError(title: 'Error');
+      print('Stacktrace: $stacktrace');
+      _showError();
       changeLoading(false);
       return;
     }
@@ -133,8 +136,10 @@ class AuthBloc extends BlocBase {
       _showError(title: data['description'] ?? '');
       return;
     }
-    
+
     await SharedManager().writeString(SharedType.LoginPassword, newPassword);
+
+    _showSuccess();
 
     changeLoading(false);
   }
@@ -143,6 +148,25 @@ class AuthBloc extends BlocBase {
   void _showError({String title = "Error"}) {
     SnackBar _snack = SnackBar(
       backgroundColor: Colors.red,
+      content: Text(
+        title,
+        style: TextStyle(color: Colors.white),
+      ),
+      behavior: SnackBarBehavior.floating,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      action: SnackBarAction(
+        label: 'close',
+        textColor: Colors.white,
+        onPressed: () => ScaffoldMessenger.of(navigatorKey.currentContext!)
+            .hideCurrentSnackBar(),
+      ),
+    );
+    ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(_snack);
+  }
+
+  void _showSuccess({String title = "Success"}) {
+    SnackBar _snack = SnackBar(
+      backgroundColor: Theme.of(navigatorKey.currentContext!).accentColor,
       content: Text(
         title,
         style: TextStyle(color: Colors.white),

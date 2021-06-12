@@ -31,6 +31,7 @@ class ObjectRepository extends ObectsRepositoryInterface {
         baseUrl: _API_PATH,
         connectTimeout: 10800,
         validateStatus: (_) => true,
+        responseType: ResponseType.json,
       );
       _dioInstance = Dio(_dioOptions);
       //Adds the Logger for request-reponse to Dio
@@ -150,13 +151,13 @@ class ObjectRepository extends ObectsRepositoryInterface {
   }
 
   @override
-  Future<Response> updateProfile(User user) async {
+  Future<dynamic> updateProfile(User user) async {
     Response response =
         await _dioInstance!.post("/updateProfile", queryParameters: {
       'username': user.username,
       'password': user.password,
     });
 
-    return response;
+    return response.data;
   }
 }
