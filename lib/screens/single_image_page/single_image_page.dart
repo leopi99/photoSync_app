@@ -45,9 +45,11 @@ class _SingleImagePageState extends State<SingleImagePage> {
               ? PhotoView(
                   imageProvider: MemoryImage(widget.image!),
                   minScale: PhotoViewComputedScale.contained,
+                  maxScale: PhotoViewComputedScale.contained * 4,
                 )
               : PhotoView(
                   minScale: PhotoViewComputedScale.contained,
+                  maxScale: PhotoViewComputedScale.contained * 4,
                   imageProvider: CachedNetworkImageProvider(
                     widget.object.attributes.url!,
                     headers: ObjectRepository().getHeaders,
