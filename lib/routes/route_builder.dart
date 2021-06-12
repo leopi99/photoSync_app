@@ -9,6 +9,7 @@ import 'package:photo_sync/screens/on_boarding_page/on_boarding_page.dart';
 import 'package:photo_sync/screens/sign_up_page/sign_up_page.dart';
 import 'package:photo_sync/screens/skeleton_page/skeleton_page.dart';
 import 'package:photo_sync/screens/splash_screen.dart';
+import 'package:photo_sync/screens/update_profile_page/update_profile_page.dart';
 
 ///Handles the routes
 class RouteBuilder {
@@ -19,6 +20,7 @@ class RouteBuilder {
   static const String LOGIN_PAGE = "/login";
   static const String SIGN_UP_PAGE = "/sign_up";
   static const String API_NOT_REACHABLE = "/api_not_reachable";
+  static const String UPDATE_PROFILE = "/update_profile";
   static const String INITIAL_PAGE = SPLASH_SCREEN;
 
   static Route? generateRoute(RouteSettings settings) {
@@ -48,6 +50,8 @@ class RouteBuilder {
       case SIGN_UP_PAGE:
         return _buildRoute(
             settings, path, SignUpPage(bloc: settings.arguments as AuthBloc));
+      case UPDATE_PROFILE:
+        return _buildRoute(settings, path, UpdateProfilePage());
       case API_NOT_REACHABLE:
         return _buildRoute(settings, path, ApiConnectionErrorPage());
       default:

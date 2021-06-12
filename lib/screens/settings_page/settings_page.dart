@@ -6,6 +6,7 @@ import 'package:photo_sync/global/methods.dart';
 import 'package:photo_sync/global/nav_key.dart';
 import 'package:photo_sync/inherited_widgets/appearance_bloc_inherited.dart';
 import 'package:photo_sync/inherited_widgets/auth_bloc_inherited.dart';
+import 'package:photo_sync/routes/route_builder.dart';
 import 'package:photo_sync/util/enums/appearance_mode_type.dart';
 import 'package:photo_sync/util/shared_manager.dart';
 import 'package:photo_sync/widgets/sync_dialog.dart';
@@ -99,6 +100,7 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget _buildChangePasswordTile() {
     return SyncListTile(
       titleText: 'Change password',
+      onTap: () => Navigator.pushNamed(context, RouteBuilder.UPDATE_PROFILE),
     );
   }
 }

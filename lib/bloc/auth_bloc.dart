@@ -114,6 +114,30 @@ class AuthBloc extends BlocBase {
     await login(username, password);
   }
 
+  Future<void> changePassword(String newPassword) async {
+    changeLoading(true);
+    await SharedManager().writeString(SharedType.LoginPassword, newPassword);
+    _currentUser = currentUser!.copyWith(password: newPassword);
+    dynamic data;
+    try {
+      data = await ObjectRepository().updateProfile(_currentUser!);
+    } catch (e) {
+      print('Error $e');
+      _showError(title: 'Error');
+      changeLoading(false);
+      return;
+    }
+
+    //Error handling, logout if the password was not changed from the app (TODO:)
+    if (data == null || data['error'] != null) {
+      changeLoading(false);
+      _showError(title: data['description'] ?? '');
+      return;
+    }
+
+    changeLoading(false);
+  }
+
   ///Shows the error snackBar
   void _showError({String title = "Error"}) {
     SnackBar _snack = SnackBar(
