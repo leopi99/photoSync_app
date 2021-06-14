@@ -7,6 +7,7 @@ class ObjectAttributes {
   static const _KEY_LOCAL_PATH = "local_path";
   static const _KEY_ID = "database_id";
   static const _KEY_IS_DOWNLOADED = "downloaded";
+  static const _KEY_EXTENSION = "extension";
   static const KEY_ATTRIBUTES = "attributes";
 
   final String? url;
@@ -17,6 +18,7 @@ class ObjectAttributes {
   final bool isDownloaded;
   final int pictureByteSize;
   final int databaseID;
+  final String? extension;
 
   DateTime get creationDateTime => DateTime.parse(creationDate);
   DateTime? get syncronizationDateTime =>
@@ -31,6 +33,7 @@ class ObjectAttributes {
     required this.pictureByteSize,
     required this.databaseID,
     required this.isDownloaded,
+    this.extension,
   });
 
   static ObjectAttributes fromJSON(Map<String, dynamic> json) =>
@@ -43,6 +46,7 @@ class ObjectAttributes {
         syncDate: json[_KEY_SYNC_DATE],
         url: json[_KEY_URL],
         databaseID: json[_KEY_ID],
+        extension: json[_KEY_EXTENSION],
       );
 
   Map<String, dynamic> get toJSON => {
@@ -50,10 +54,11 @@ class ObjectAttributes {
         _KEY_LOCAL_PATH: localPath,
         _KEY_BYTE_SIZE: pictureByteSize,
         _KEY_PICTURE_POSITION: picturePosition,
-        _KEY_SYNC_DATE: syncDate,
-        _KEY_URL: url,
+        _KEY_SYNC_DATE: syncDate ?? '',
+        _KEY_URL: url ?? '',
         _KEY_ID: databaseID,
         _KEY_IS_DOWNLOADED: isDownloaded,
+        _KEY_EXTENSION: extension ?? '',
       };
 
   ObjectAttributes copyWith({

@@ -108,7 +108,7 @@ class ObjectRepository extends ObectsRepositoryInterface {
   @override
   Future<dynamic> addObject(RawObject object) async {
     Response response =
-        await _dioInstance!.post('/addObject', queryParameters: object.toJSON);
+        await _dioInstance!.post('/addObject', data: object.toJSON);
     return response.data;
   }
 

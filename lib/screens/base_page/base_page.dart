@@ -7,12 +7,14 @@ class BasePage extends StatelessWidget {
   final Widget child;
   final PreferredSizeWidget? appBar;
   final bool usePadding;
+  final Widget? floatingActionButton;
 
   BasePage({
     required this.child,
     required this.loadingStream,
     this.usePadding = false,
     this.appBar,
+    this.floatingActionButton,
   });
 
   @override
@@ -22,6 +24,7 @@ class BasePage extends StatelessWidget {
           top: usePadding ? MediaQuery.of(context).padding.top : 0),
       child: Scaffold(
         appBar: appBar,
+        floatingActionButton: floatingActionButton,
         body: StreamBuilder<bool>(
           stream: loadingStream,
           initialData: false,

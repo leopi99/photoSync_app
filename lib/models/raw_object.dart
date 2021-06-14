@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:typed_data' show Int8List;
 import 'package:photo_sync/models/object.dart';
 
@@ -11,9 +12,7 @@ class RawObject {
   });
 
   Map<String, dynamic> get toJSON => {
-        "data": {
-          'object': object.toJSON,
-          'fileBytes': bytes,
-        }
+        'object': object.toJSON,
+        'fileBytes': bytes.buffer.asUint8List().toList(),
       };
 }
