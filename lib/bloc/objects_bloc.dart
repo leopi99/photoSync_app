@@ -166,7 +166,7 @@ class ObjectsBloc extends BlocBase {
   Future<void> createPicture(RawObject object) async {
     dynamic response;
     try {
-      response = await _repository.addPicture(object);
+      response = await _repository.addObject(object);
     } catch (e) {
       _showError();
       return;

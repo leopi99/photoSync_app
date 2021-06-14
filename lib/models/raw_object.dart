@@ -11,7 +11,9 @@ class RawObject {
   });
 
   Map<String, dynamic> get toJSON => {
-        'object': object.toJSON,
-        'fileBytes': bytes,
+        "data": {
+          'object': object.toJSON,
+          'fileBytes': bytes,
+        }
       };
 }
