@@ -34,10 +34,26 @@ class ObjectsBloc extends BlocBase {
   late ObjectRepository _repository;
 
   ///Adds a [List] of [Object] to the subject
+  ///
+  ///Only if the localId is not present into the _objectsList 
   void addObjects(List<Object> objects, {bool reset = false}) {
-    if (!reset)
-      _objectsList.addAll(objects);
-    else
+    if (!reset) {
+      List<int> objAdds = [];
+      for (int iSuper = 0; iSuper < objects.length; iSuper++) {
+        bool canBeAdded = true;
+        for (int i = 0; i < _objectsList.length; i++) {
+          if (objects[iSuper].attributes.localID ==
+              _objectsList[i].attributes.localID) {
+            canBeAdded = false;
+            break;
+          }
+        }
+        if (canBeAdded) objAdds.add(iSuper);
+      }
+      for (int i = 0; i < objAdds.length; i++) {
+        _objectsList.add(objects[i]);
+      }
+    } else
       _objectsList = [];
     _objectSubject.add(UnmodifiableListView(_objectsList));
   }
@@ -45,7 +61,6 @@ class ObjectsBloc extends BlocBase {
   ///Retrieves the objects (pictures and videos) from the api
   Future<void> getObjectListFromApi() async {
     addObjects([]);
-    await loadFromDisk();
     dynamic response;
     try {
       response = await _repository.getAll(
@@ -81,6 +96,8 @@ class ObjectsBloc extends BlocBase {
           (index) => Object.fromJSON(response![index]),
         ),
       );
+      
+    await loadFromDisk();
   }
 
   ///Loads the Recent folder
@@ -109,18 +126,17 @@ class ObjectsBloc extends BlocBase {
                           ? ObjectType.Picture
                           : ObjectType.Video,
                       attributes: ObjectAttributes(
-                        extension: '.${file!.path.split('.').last}',
-                        isDownloaded: true,
-                        creationDate: assetList[i]
-                            .createDateTime
-                            .millisecondsSinceEpoch
-                            .toString(),
-                        picturePosition: "${pos.latitude}, ${pos.longitude}",
-                        localPath: file.path,
-                        pictureByteSize: bytes,
-                        databaseID: 0,
-                        localID: int.parse(assetList[i].id)
-                      ),
+                          extension: '.${file!.path.split('.').last}',
+                          isDownloaded: true,
+                          creationDate: assetList[i]
+                              .createDateTime
+                              .millisecondsSinceEpoch
+                              .toString(),
+                          picturePosition: "${pos.latitude}, ${pos.longitude}",
+                          localPath: file.path,
+                          pictureByteSize: bytes,
+                          databaseID: 0,
+                          localID: int.parse(assetList[i].id)),
                     ),
                   ],
                 );
