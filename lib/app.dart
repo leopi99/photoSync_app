@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:photo_sync/bloc/app_bloc.dart';
 import 'package:photo_sync/bloc/appearance_bloc.dart';
 import 'package:photo_sync/bloc/auth_bloc.dart';
 import 'package:photo_sync/bloc/objects_bloc.dart';
 import 'package:photo_sync/constants/appearance.dart';
 import 'package:photo_sync/global/nav_key.dart';
+import 'package:photo_sync/inherited_widgets/app_bloc_inherited.dart';
 import 'package:photo_sync/inherited_widgets/appearance_bloc_inherited.dart';
 import 'package:photo_sync/inherited_widgets/auth_bloc_inherited.dart';
 import 'package:photo_sync/inherited_widgets/objects_bloc_inherited.dart';
@@ -19,12 +21,14 @@ class _AppState extends State<App> {
   late ObjectsBloc _objectsBloc;
   late AuthBloc _authBloc;
   late AppearanceBloc _appearanceBloc;
+  late AppBloc _appBloc;
 
   @override
   void initState() {
     _objectsBloc = ObjectsBloc();
     _authBloc = AuthBloc();
     _appearanceBloc = AppearanceBloc();
+    _appBloc = AppBloc();
     ObjectRepository()..setupDio();
     super.initState();
   }
@@ -37,29 +41,32 @@ class _AppState extends State<App> {
         bloc: _authBloc,
         child: ObjectsBlocInherited(
           bloc: _objectsBloc,
-          child: StreamBuilder<Appearance>(
-            stream: _appearanceBloc.appearanceStream,
-            initialData: Appearance(),
-            builder: (context, snapshot) {
-              return MaterialApp(
-                title: 'PhotoSync',
-                theme: snapshot.data!.currentThemeData,
-                home: WillPopScope(
-                  onWillPop: () async =>
-                      !await navigatorKey.currentState!.maybePop(),
-                  child: LayoutBuilder(
-                    builder: (context, constraints) => Navigator(
-                      key: navigatorKey,
-                      initialRoute: RouteBuilder.INITIAL_PAGE,
-                      observers: [
-                        HeroController(),
-                      ],
-                      onGenerateRoute: RouteBuilder.generateRoute,
+          child: AppBlocInherited(
+            bloc: _appBloc,
+            child: StreamBuilder<Appearance>(
+              stream: _appearanceBloc.appearanceStream,
+              initialData: Appearance(),
+              builder: (context, snapshot) {
+                return MaterialApp(
+                  title: 'PhotoSync',
+                  theme: snapshot.data!.currentThemeData,
+                  home: WillPopScope(
+                    onWillPop: () async =>
+                        !await navigatorKey.currentState!.maybePop(),
+                    child: LayoutBuilder(
+                      builder: (context, constraints) => Navigator(
+                        key: navigatorKey,
+                        initialRoute: RouteBuilder.INITIAL_PAGE,
+                        observers: [
+                          HeroController(),
+                        ],
+                        onGenerateRoute: RouteBuilder.generateRoute,
+                      ),
                     ),
                   ),
-                ),
-              );
-            },
+                );
+              },
+            ),
           ),
         ),
       ),

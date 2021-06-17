@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:photo_sync/bloc/app_bloc.dart';
 import 'package:photo_sync/bloc/appearance_bloc.dart';
 import 'package:photo_sync/constants/appearance.dart';
 import 'package:photo_sync/global/methods.dart';
 import 'package:photo_sync/global/nav_key.dart';
+import 'package:photo_sync/inherited_widgets/app_bloc_inherited.dart';
 import 'package:photo_sync/inherited_widgets/appearance_bloc_inherited.dart';
 import 'package:photo_sync/inherited_widgets/auth_bloc_inherited.dart';
 import 'package:photo_sync/routes/route_builder.dart';
@@ -19,10 +21,12 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   late AppearanceBloc appearanceBloc;
+  late AppBloc appBloc;
 
   @override
   void initState() {
     appearanceBloc = AppearanceBlocInherited.of(navigatorKey.currentContext!);
+    appBloc = AppBlocInherited.of(navigatorKey.currentContext!);
     GlobalMethods.setStatusBarColorAsScaffoldBackground();
     super.initState();
   }
@@ -36,6 +40,7 @@ class _SettingsPageState extends State<SettingsPage> {
         children: [
           _buildAppearanceTile(),
           _buildChangePasswordTile(),
+          _buildBackgroundSync(),
           _buildLogoutTile(),
         ],
       ),
@@ -101,6 +106,20 @@ class _SettingsPageState extends State<SettingsPage> {
     return SyncListTile(
       titleText: 'Change password',
       onTap: () => Navigator.pushNamed(context, RouteBuilder.UPDATE_PROFILE),
+    );
+  }
+
+  Widget _buildBackgroundSync() {
+    return StreamBuilder<bool>(
+      stream: appBloc.backgroundSyncStream,
+      initialData: false,
+      builder: (context, snapshot) {
+        return SwitchListTile(
+          title: Text('Background sync'),
+          value: snapshot.data!,
+          onChanged: (value) async => await appBloc.setBackgroundSync(value),
+        );
+      },
     );
   }
 }

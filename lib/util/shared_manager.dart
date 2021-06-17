@@ -19,10 +19,12 @@ class SharedManager {
   }
 
   Future<bool> writeString(SharedType key, String value) async {
+    print('Writing string ${key.toValue}: $value');
     return await _wrapper.write(key: key.toValue, value: value);
   }
 
   Future<bool> writeBool(SharedType key, bool value) async {
+    print('Writing bool ${key.toValue}: $value');
     return await _wrapper.write(key: key.toValue, value: '$value');
   }
 
