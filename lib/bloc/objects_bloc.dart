@@ -101,7 +101,6 @@ class ObjectsBloc extends BlocBase {
                 int bytes = (await assetList[i].file)!.statSync().size;
                 File? file = await assetList[i].file;
                 LatLng pos = await assetList[i].latlngAsync();
-                ;
                 addObjects(
                   [
                     Object(
@@ -145,7 +144,11 @@ class ObjectsBloc extends BlocBase {
   Future<void> createPicture(RawObject object) async {
     dynamic response;
     try {
-      response = await _repository.addObject(object);
+      response = await _repository.addObject(
+          object,
+          int.parse(AuthBlocInherited.of(navigatorKey.currentContext!)
+              .currentUser!
+              .userID!));
     } catch (e, stacktrace) {
       print(e);
       print(stacktrace);
