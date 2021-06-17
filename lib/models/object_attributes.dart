@@ -8,6 +8,7 @@ class ObjectAttributes {
   static const _KEY_ID = "database_id";
   static const _KEY_IS_DOWNLOADED = "downloaded";
   static const _KEY_EXTENSION = "extension";
+  static const _KEY_LOCAL_ID = "local_id";
   static const KEY_ATTRIBUTES = "attributes";
 
   final String? url;
@@ -19,6 +20,7 @@ class ObjectAttributes {
   final int pictureByteSize;
   final int databaseID;
   final String? extension;
+  final int localID;
 
   DateTime get creationDateTime =>
       DateTime.tryParse(creationDate) ??
@@ -40,7 +42,8 @@ class ObjectAttributes {
     required this.pictureByteSize,
     required this.databaseID,
     required this.isDownloaded,
-    this.extension,
+    required this.localID,
+    required this.extension,
   });
 
   static ObjectAttributes fromJSON(Map<String, dynamic> json) =>
@@ -54,6 +57,7 @@ class ObjectAttributes {
         url: json[_KEY_URL],
         databaseID: json[_KEY_ID],
         extension: json[_KEY_EXTENSION],
+        localID: json[_KEY_LOCAL_ID],
       );
 
   Map<String, dynamic> get toJSON => {
@@ -76,6 +80,8 @@ class ObjectAttributes {
     String? localPath,
     bool? isDownloaded,
     int? pictureByteSize,
+    String? extension,
+    int? localID,
   }) =>
       ObjectAttributes(
         creationDate: creationDate ?? this.creationDate,
@@ -86,5 +92,7 @@ class ObjectAttributes {
         picturePosition: picturePosition ?? this.picturePosition,
         syncDate: syncDate ?? this.syncDate,
         url: url ?? this.url,
+        extension: extension ?? this.extension,
+        localID: localID ?? this.localID,
       );
 }

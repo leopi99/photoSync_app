@@ -127,6 +127,11 @@ class GridImage extends StatelessWidget {
                   object.attributes.syncronizationDateTime?.toDayMonthYear ??
                       'Not yet'),
             ),
+            if (object.attributes.extension != null)
+              SyncListTile(
+                titleText: 'Extension',
+                trailing: Text(object.attributes.extension!),
+              ),
           ],
         );
       },

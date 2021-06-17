@@ -119,6 +119,7 @@ class ObjectsBloc extends BlocBase {
                         localPath: file.path,
                         pictureByteSize: bytes,
                         databaseID: 0,
+                        localID: int.parse(assetList[i].id)
                       ),
                     ),
                   ],
