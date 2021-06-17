@@ -101,8 +101,7 @@ class ObjectsBloc extends BlocBase {
                 int bytes = (await assetList[i].file)!.statSync().size;
                 File? file = await assetList[i].file;
                 LatLng pos = await assetList[i].latlngAsync();
-                final String creationDate =
-                    assetList[i].createDateTime.toIso8601String();
+                ;
                 addObjects(
                   [
                     Object(
@@ -113,8 +112,10 @@ class ObjectsBloc extends BlocBase {
                       attributes: ObjectAttributes(
                         extension: '.${file!.path.split('.').last}',
                         isDownloaded: true,
-                        creationDate: creationDate.replaceRange(
-                            creationDate.length - 4, creationDate.length, ""),
+                        creationDate: assetList[i]
+                            .createDateTime
+                            .millisecondsSinceEpoch
+                            .toString(),
                         picturePosition: "${pos.latitude}, ${pos.longitude}",
                         localPath: assetList[i].relativePath!,
                         pictureByteSize: bytes,
@@ -141,7 +142,6 @@ class ObjectsBloc extends BlocBase {
   }
 
   ///Creates an image on the db => api
-  ///TODO: Complete the code when the api handles the addPicture
   Future<void> createPicture(RawObject object) async {
     dynamic response;
     try {
