@@ -181,12 +181,16 @@ class ObjectsBloc extends BlocBase {
   Future<void> _recursiveAddRawObjects(
       List<Object> objects, List<RawObject> raws) async {
     print(
-        'recursiveAddRawObjects\tobjects: ${objects.length}\t raws:${raws.length}');
+        'recursiveAddRawObjects\tobjects: ${objects.length}\t rows:${raws.length}');
     try {
       Uint8List bytes =
           (await objects.first.futureFileBytes)!.readAsBytesSync();
-      raws.add(RawObject(
-          bytes: Int8List.fromList(bytes.toList()), object: objects.first));
+      Object obj = Object(
+          objectType: objects.first.objectType,
+          attributes: objects.first.attributes.copyWith(
+              syncDate: DateTime.now().millisecondsSinceEpoch.toString()));
+      raws.add(
+          RawObject(bytes: Int8List.fromList(bytes.toList()), object: obj));
     } catch (e, stacktrace) {
       print('Error: $e');
       print('StackTrace: $stacktrace');
