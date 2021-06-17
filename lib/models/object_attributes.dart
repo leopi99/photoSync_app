@@ -20,9 +20,16 @@ class ObjectAttributes {
   final int databaseID;
   final String? extension;
 
-  DateTime get creationDateTime => DateTime.parse(creationDate);
-  DateTime? get syncronizationDateTime =>
-      syncDate != null ? DateTime.tryParse(syncDate!) : null;
+  DateTime get creationDateTime =>
+      DateTime.tryParse(creationDate) ??
+      DateTime.fromMillisecondsSinceEpoch(int.parse(creationDate));
+  DateTime? get syncronizationDateTime {
+    if (syncDate == null) return null;
+    if (DateTime.tryParse(syncDate!) == null) {
+      if (int.tryParse(syncDate!) == null) return null;
+      return DateTime.fromMillisecondsSinceEpoch(int.parse(syncDate!));
+    }
+  }
 
   ObjectAttributes({
     this.url,
