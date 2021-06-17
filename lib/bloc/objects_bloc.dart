@@ -101,6 +101,8 @@ class ObjectsBloc extends BlocBase {
                 int bytes = (await assetList[i].file)!.statSync().size;
                 File? file = await assetList[i].file;
                 LatLng pos = await assetList[i].latlngAsync();
+                final String creationDate =
+                    assetList[i].createDateTime.toIso8601String();
                 addObjects(
                   [
                     Object(
@@ -111,8 +113,8 @@ class ObjectsBloc extends BlocBase {
                       attributes: ObjectAttributes(
                         extension: '.${file!.path.split('.').last}',
                         isDownloaded: true,
-                        creationDate:
-                            assetList[i].createDateTime.toIso8601String(),
+                        creationDate: creationDate.replaceRange(
+                            creationDate.length - 4, creationDate.length, ""),
                         picturePosition: "${pos.latitude}, ${pos.longitude}",
                         localPath: assetList[i].relativePath!,
                         pictureByteSize: bytes,
