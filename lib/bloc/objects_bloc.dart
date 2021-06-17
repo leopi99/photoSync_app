@@ -116,7 +116,7 @@ class ObjectsBloc extends BlocBase {
                             .millisecondsSinceEpoch
                             .toString(),
                         picturePosition: "${pos.latitude}, ${pos.longitude}",
-                        localPath: assetList[i].relativePath!,
+                        localPath: file.path,
                         pictureByteSize: bytes,
                         databaseID: 0,
                       ),
