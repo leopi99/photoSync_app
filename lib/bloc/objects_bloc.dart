@@ -100,6 +100,7 @@ class ObjectsBloc extends BlocBase {
                   assetList[i].type == AssetType.video) {
                 int bytes = (await assetList[i].file)!.statSync().size;
                 File? file = await assetList[i].file;
+                LatLng pos = await assetList[i].latlngAsync();
                 addObjects(
                   [
                     Object(
@@ -111,10 +112,8 @@ class ObjectsBloc extends BlocBase {
                         extension: '.${file!.path.split('.').last}',
                         isDownloaded: true,
                         creationDate:
-                            "${assetList[i].createDateTime.year}-${assetList[i].createDateTime.month.toString().padLeft(2, '0')}" +
-                                "-${assetList[i].createDateTime.day.toString().padLeft(2, '0')}",
-                        picturePosition:
-                            "${assetList[i].latitude}, ${assetList[i].longitude}",
+                            assetList[i].createDateTime.toIso8601String(),
+                        picturePosition: "${pos.latitude}, ${pos.longitude}",
                         localPath: assetList[i].relativePath!,
                         pictureByteSize: bytes,
                         databaseID: 0,
