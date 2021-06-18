@@ -113,9 +113,13 @@ class GridImage extends StatelessWidget {
               trailing: Text(filesize(object.attributes.pictureByteSize)),
               titleText: 'File size',
             ),
-            SyncListTile(
-              titleText: 'Picture shot at',
-              trailing: Text(object.attributes.picturePosition),
+            FutureBuilder<String?>(
+              future: object.attributes.positionFromCoordinates,
+              initialData: '',
+              builder: (context, snapshot) => SyncListTile(
+                titleText: 'Picture shot at',
+                trailing: Text(snapshot.data ?? object.attributes.picturePosition),
+              ),
             ),
             SyncListTile(
               titleText: 'Picture created',

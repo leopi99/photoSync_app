@@ -1,3 +1,5 @@
+import 'package:flutter_geocoder/geocoder.dart';
+
 class ObjectAttributes {
   static const _KEY_URL = "url";
   static const _KEY_SYNC_DATE = "sync_date";
@@ -31,6 +33,15 @@ class ObjectAttributes {
       if (int.tryParse(syncDate!) == null) return null;
       return DateTime.fromMillisecondsSinceEpoch(int.parse(syncDate!));
     }
+  }
+
+  Future<String?> get positionFromCoordinates async {
+    Coordinates coordinates = Coordinates(
+        double.parse(picturePosition.split(',').first.trim()),
+        double.parse(picturePosition.split(',').last.trim()));
+    List<Address> address =
+        await Geocoder.local.findAddressesFromCoordinates(coordinates);
+    return address.first.locality;
   }
 
   ObjectAttributes({

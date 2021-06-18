@@ -125,6 +125,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0+1"
+  flutter_geocoder:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: HEAD
+      resolved-ref: "7059f6f629336be2fa71117e971b5e7d9fd091f9"
+      url: "https://github.com/JCKodel/flutter_geocoder"
+    source: git
+    version: "0.2.2-nullsafety"
   flutter_secure_storage:
     dependency: transitive
     description:
