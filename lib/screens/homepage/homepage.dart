@@ -21,6 +21,7 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
     bloc = ObjectsBlocInherited.of(navigatorKey.currentContext!);
     GlobalMethods.setStatusBarColorAsScaffoldBackground();
     super.initState();
+    WidgetsBinding.instance!.addObserver(this);
   }
 
   @override
@@ -35,6 +36,12 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
       case AppLifecycleState.detached:
         break;
     }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance!.removeObserver(this);
+    super.dispose();
   }
 
   @override
