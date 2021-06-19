@@ -16,10 +16,10 @@ Current version: 0.6.0
 
 ## Features
 
-- Background media syncronization [TODO]
-- Download your syncronized media from the api
-- Backup your media files in your server (using [PhotoSync api](https://github.com/leopi99/photoSync_api))
-- Dark theme (needs some work on colors)
+- [ ] Background media syncronization [TODO]
+- [x] Download your syncronized media from the api
+- [x] Backup your media files in your server (using [PhotoSync api](https://github.com/leopi99/photoSync_api))
+- [x] Dark theme (needs some work on colors)
 
 ## Hot to setup the app
 
