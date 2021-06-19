@@ -26,83 +26,82 @@ class GridImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return object.attributes.isDownloaded
-        ? Stack(
-            children: [
-              Align(
-                alignment: Alignment.center,
-                child: FutureBuilder<File?>(
-                  future: object.futureFileBytes ??
-                      Future.value(File(object.attributes.localPath)),
-                  builder: (context, fileSnap) => InkWell(
-                    onLongPress: () => _imageBottomBar(object, context),
+    return FutureBuilder<bool>(
+      future: object.isDownloaded,
+      initialData: false,
+      builder: (context, isDownloaded) {
+        return isDownloaded.data!
+            ? Stack(
+                children: [
+                  Align(
+                    alignment: Alignment.center,
+                    child: FutureBuilder<File?>(
+                      future: object.futureFileBytes ??
+                          Future.value(File(object.attributes.localPath)),
+                      builder: (context, fileSnap) => InkWell(
+                        onLongPress: () => _imageBottomBar(object, context),
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SingleImagePage(
+                              object: object,
+                              image: fileSnap.data?.readAsBytesSync(),
+                            ),
+                          ),
+                        ),
+                        child: Hero(
+                          tag: object.attributes.creationDate,
+                          child: fileSnap.hasData && fileSnap.data != null
+                              ? Image.memory(
+                                  fileSnap.data!.readAsBytesSync(),
+                                )
+                              : Container(),
+                        ),
+                      ),
+                    ),
+                  ),
+                  if (object.attributes.syncDate == null)
+                    Align(
+                      alignment: AlignmentDirectional.bottomEnd,
+                      child: UploadIcon(object: object),
+                    ),
+                ],
+              )
+            : Stack(
+                children: [
+                  InkWell(
                     onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => SingleImagePage(
                           object: object,
-                          image: fileSnap.data?.readAsBytesSync(),
                         ),
                       ),
                     ),
                     child: Hero(
                       tag: object.attributes.creationDate,
-                      child: fileSnap.hasData && fileSnap.data != null
-                          ? Image.memory(
-                              fileSnap.data!.readAsBytesSync(),
-                            )
-                          : Container(),
+                      child: FutureBuilder<dynamic>(
+                        future: ObjectRepository().getSingleObject(
+                            '/object/${object.attributes.creationDate}${object.attributes.extension}'),
+                        builder: (context, snapshot) {
+                          if (snapshot.data == null) return Container();
+                          var bytes = base64Decode(snapshot.data!);
+                          return Center(child: Image.memory(bytes));
+                        },
+                      ),
                     ),
                   ),
-                ),
-              ),
-              if (object.attributes.syncDate == null)
-                Align(
-                  alignment: AlignmentDirectional.bottomEnd,
-                  child: UploadIcon(object: object),
-                ),
-            ],
-          )
-        : Stack(
-            children: [
-              InkWell(
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SingleImagePage(
+                  Align(
+                    alignment: AlignmentDirectional.bottomEnd,
+                    child: DownloadIcon(
                       object: object,
+                      objectIndex: objectIndex,
                     ),
                   ),
-                ),
-                child: Hero(
-                  tag: object.attributes.creationDate,
-                  child: FutureBuilder<dynamic>(
-                    future: ObjectRepository().getSingleObject(
-                        '/object/${object.attributes.creationDate}${object.attributes.extension}'),
-                    builder: (context, snapshot) {
-                      if (snapshot.data == null) return Container();
-                      var bytes = base64Decode(snapshot.data!);
-                      return Center(child: Image.memory(bytes));
-                    },
-                  ),
-                ),
-              ),
-              FutureBuilder<bool>(
-                future: object.isDownloaded,
-                initialData: false,
-                builder: (context, downloadedSnapshot) =>
-                    !downloadedSnapshot.data!
-                        ? Align(
-                            alignment: AlignmentDirectional.bottomEnd,
-                            child: DownloadIcon(
-                              object: object,
-                              objectIndex: objectIndex,
-                            ),
-                          )
-                        : Container(),
-              ),
-            ],
-          );
+                ],
+              );
+      },
+    );
   }
 
   //Shows the modalBottomBar with some settings/text for the single image
