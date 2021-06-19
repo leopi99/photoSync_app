@@ -8,6 +8,7 @@ import 'package:photo_sync/global/methods.dart';
 import 'package:photo_sync/inherited_widgets/appearance_bloc_inherited.dart';
 import 'package:photo_sync/inherited_widgets/objects_bloc_inherited.dart';
 import 'package:photo_sync/models/object.dart';
+import 'package:photo_sync/models/raw_object.dart';
 import 'package:photo_sync/repository/object_repository.dart';
 import 'package:photo_sync/screens/single_image_page/single_image_page.dart';
 import 'package:photo_sync/extensions/date_time_extension.dart';
@@ -25,29 +26,41 @@ class GridImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return object.attributes.isDownloaded
-        ? FutureBuilder<File?>(
-            future: object.futureFileBytes ??
-                Future.value(File(object.attributes.localPath)),
-            builder: (context, fileSnap) => InkWell(
-              onLongPress: () => _imageBottomBar(object, context),
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => SingleImagePage(
-                    object: object,
-                    image: fileSnap.data?.readAsBytesSync(),
+        ? Stack(
+            children: [
+              Align(
+                alignment: Alignment.center,
+                child: FutureBuilder<File?>(
+                  future: object.futureFileBytes ??
+                      Future.value(File(object.attributes.localPath)),
+                  builder: (context, fileSnap) => InkWell(
+                    onLongPress: () => _imageBottomBar(object, context),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SingleImagePage(
+                          object: object,
+                          image: fileSnap.data?.readAsBytesSync(),
+                        ),
+                      ),
+                    ),
+                    child: Hero(
+                      tag: object.attributes.creationDate,
+                      child: fileSnap.hasData && fileSnap.data != null
+                          ? Image.memory(
+                              fileSnap.data!.readAsBytesSync(),
+                            )
+                          : Container(),
+                    ),
                   ),
                 ),
               ),
-              child: Hero(
-                tag: object.attributes.creationDate,
-                child: fileSnap.hasData && fileSnap.data != null
-                    ? Image.memory(
-                        fileSnap.data!.readAsBytesSync(),
-                      )
-                    : Container(),
-              ),
-            ),
+              if (object.attributes.syncDate == null)
+                Align(
+                  alignment: AlignmentDirectional.bottomEnd,
+                  child: UploadIcon(object: object),
+                ),
+            ],
           )
         : Stack(
             children: [
@@ -184,6 +197,9 @@ class _DownloadIconState extends State<DownloadIcon> {
           print('Error while downloading or updating the object');
           print(e);
           print(stacktrace);
+          setState(() {
+            downloading = false;
+          });
         }
         setState(() {
           downloading = false;
@@ -193,6 +209,65 @@ class _DownloadIconState extends State<DownloadIcon> {
         child: downloading
             ? CircularProgressIndicator()
             : Icon(FeatherIcons.downloadCloud),
+        padding: EdgeInsets.all(6),
+        margin: EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: AppearanceBlocInherited.of(context).appearance.isDarkMode
+              ? Colors.black54
+              : Colors.white54,
+        ),
+      ),
+    );
+  }
+}
+
+class UploadIcon extends StatefulWidget {
+  final Object object;
+
+  UploadIcon({
+    required this.object,
+  });
+
+  @override
+  _UploadIconState createState() => _UploadIconState();
+}
+
+class _UploadIconState extends State<UploadIcon> {
+  late bool uploading;
+  late RawObject rawObject;
+
+  @override
+  void initState() {
+    uploading = false;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () async {
+        setState(() {
+          uploading = true;
+        });
+        try {
+          //TODO: implement the upload
+        } catch (e, stacktrace) {
+          print('Error while downloading or updating the object');
+          print(e);
+          print(stacktrace);
+          setState(() {
+            uploading = false;
+          });
+        }
+        setState(() {
+          uploading = false;
+        });
+      },
+      child: Container(
+        child: uploading
+            ? CircularProgressIndicator()
+            : Icon(FeatherIcons.uploadCloud),
         padding: EdgeInsets.all(6),
         margin: EdgeInsets.all(8),
         decoration: BoxDecoration(
