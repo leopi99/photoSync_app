@@ -4,7 +4,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:photo_sync/bloc/objects_bloc.dart';
 import 'package:photo_sync/global/methods.dart';
+import 'package:photo_sync/global/nav_key.dart';
 import 'package:photo_sync/inherited_widgets/appearance_bloc_inherited.dart';
 import 'package:photo_sync/inherited_widgets/objects_bloc_inherited.dart';
 import 'package:photo_sync/models/object.dart';
@@ -235,12 +237,24 @@ class UploadIcon extends StatefulWidget {
 
 class _UploadIconState extends State<UploadIcon> {
   late bool uploading;
-  late RawObject rawObject;
+  RawObject? rawObject;
+  late ObjectsBloc bloc;
 
   @override
   void initState() {
     uploading = false;
+    bloc = ObjectsBlocInherited.of(navigatorKey.currentContext!);
+    _createRawObject();
     super.initState();
+  }
+
+  Future<void> _createRawObject() async {
+    File? file = await widget.object.futureFileBytes!;
+    if (file != null)
+      rawObject = RawObject(
+        object: widget.object,
+        bytes: file.readAsBytesSync().buffer.asInt8List(),
+      );
   }
 
   @override
@@ -251,7 +265,8 @@ class _UploadIconState extends State<UploadIcon> {
           uploading = true;
         });
         try {
-          //TODO: implement the upload
+          if (rawObject != null) await bloc.createPicture(rawObject!);
+          await bloc.getObjectListFromApi();
         } catch (e, stacktrace) {
           print('Error while downloading or updating the object');
           print(e);

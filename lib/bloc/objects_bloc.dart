@@ -60,7 +60,6 @@ class ObjectsBloc extends BlocBase {
 
   ///Retrieves the objects (pictures and videos) from the api
   Future<void> getObjectListFromApi() async {
-    addObjects([]);
     dynamic response;
     try {
       response = await _repository.getAll(
@@ -88,7 +87,8 @@ class ObjectsBloc extends BlocBase {
     if (error?.errorType != null) {
       _showError(title: error!.description);
       return;
-    } else
+    } else {
+      addObjects([], reset: true);
       //Converts the json into the objects
       addObjects(
         List.generate(
@@ -96,6 +96,7 @@ class ObjectsBloc extends BlocBase {
           (index) => Object.fromJSON(response![index]),
         ),
       );
+    }
 
     await loadFromDisk();
   }
@@ -161,6 +162,14 @@ class ObjectsBloc extends BlocBase {
   Future<void> createPicture(RawObject object) async {
     dynamic response;
     try {
+      object = RawObject(
+        object: object.object.copyWith(
+          attributes: object.object.attributes.copyWith(
+            syncDate: DateTime.now().millisecondsSinceEpoch.toString(),
+          ),
+        ),
+        bytes: object.bytes,
+      );
       response = await _repository.addObject(
           object,
           int.parse(AuthBlocInherited.of(navigatorKey.currentContext!)
@@ -202,12 +211,8 @@ class ObjectsBloc extends BlocBase {
     try {
       Uint8List bytes =
           (await objects.first.futureFileBytes)!.readAsBytesSync();
-      Object obj = Object(
-          objectType: objects.first.objectType,
-          attributes: objects.first.attributes.copyWith(
-              syncDate: DateTime.now().millisecondsSinceEpoch.toString()));
-      raws.add(
-          RawObject(bytes: Int8List.fromList(bytes.toList()), object: obj));
+      raws.add(RawObject(
+          bytes: Int8List.fromList(bytes.toList()), object: objects.first));
     } catch (e, stacktrace) {
       print('Error: $e');
       print('StackTrace: $stacktrace');
