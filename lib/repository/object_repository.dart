@@ -10,6 +10,7 @@ class ObjectRepository extends ObectsRepositoryInterface {
       "http://10.0.2.2"; //This address works in the android emulator => change to the ip address where you host the api
   static const _PORT = ":8010"; //Port dedicated to the api
   static const _API_PATH = "$_HOST$_PORT/photoSync/api/v1";
+  static get apiPath => _API_PATH;
 
   String? _authKey;
 
@@ -107,8 +108,8 @@ class ObjectRepository extends ObectsRepositoryInterface {
 
   @override
   Future<dynamic> addObject(RawObject object, int userID) async {
-    Response response =
-        await _dioInstance!.post('/addObject', data: object.toJSON, queryParameters: {'userID': userID});
+    Response response = await _dioInstance!.post('/addObject',
+        data: object.toJSON, queryParameters: {'userID': userID});
     return response.data;
   }
 
@@ -134,8 +135,8 @@ class ObjectRepository extends ObectsRepositoryInterface {
 
   @override
   Future<Response> downloadObject(String url, String localPath) async {
-    Response response = await _dioInstance!
-        .download(url, localPath, queryParameters: getHeaders);
+    Response response =
+        await _dioInstance!.download(_API_PATH + 'object/$url', localPath);
     return response;
   }
 

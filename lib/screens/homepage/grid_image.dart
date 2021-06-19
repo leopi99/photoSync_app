@@ -63,7 +63,8 @@ class GridImage extends StatelessWidget {
                 child: Hero(
                   tag: object.attributes.creationDate,
                   child: CachedNetworkImage(
-                    imageUrl: object.attributes.url!,
+                    imageUrl: ObjectRepository.apiPath +
+                        '/object/${object.attributes.creationDate}${object.attributes.extension}',
                     httpHeaders: ObjectRepository().getHeaders,
                   ),
                 ),
@@ -118,7 +119,8 @@ class GridImage extends StatelessWidget {
               initialData: '',
               builder: (context, snapshot) => SyncListTile(
                 titleText: 'Picture shot at',
-                trailing: Text(snapshot.data ?? object.attributes.picturePosition),
+                trailing:
+                    Text(snapshot.data ?? object.attributes.picturePosition),
               ),
             ),
             SyncListTile(
@@ -170,7 +172,9 @@ class _DownloadIconState extends State<DownloadIcon> {
           downloading = true;
         });
         try {
-          await ObjectRepository().downloadObject(widget.object.attributes.url!,
+          await ObjectRepository().downloadObject(
+              widget.object.attributes.creationDate +
+                  widget.object.attributes.extension!,
               widget.object.attributes.localPath);
           ObjectsBlocInherited.of(context)
               .changeObjectDownloadFlag(true, widget.objectIndex);
