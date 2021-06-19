@@ -7,12 +7,10 @@ This is the app for the [PhotoSync api](https://github.com/leopi99/photoSync_api
 Current version: 0.6.0
 
 ## Some screenshots
-
-![on_boarding](screenshot/on_boarding01.png "On boarding")
-![login](screenshot/login.png "Login")
-![signup](screenshot/signup.png "Sign up")
-![home](screenshot/home.png "Homepage")
-![settings](screenshot/settings.png "Settings")
+ -/-| -/- | -/- 
+ ---|-----|----
+![on_boarding](screenshot/on_boarding01.png "On boarding") | ![login](screenshot/login.png "Login") | ![signup](screenshot/signup.png "Sign up")
+![home](screenshot/home.png "Homepage") | ![settings](screenshot/settings.png "Settings")
 
 ## Features
 
