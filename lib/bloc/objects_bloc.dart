@@ -201,6 +201,7 @@ class ObjectsBloc extends BlocBase {
             .toList(),
         objects);
     await _uploadObjectRecursive(objects);
+    await getObjectListFromApi();
     changeLoading(false);
   }
 

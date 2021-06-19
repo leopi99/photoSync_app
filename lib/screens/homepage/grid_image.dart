@@ -79,8 +79,7 @@ class GridImage extends StatelessWidget {
                   tag: object.attributes.creationDate,
                   child: CachedNetworkImage(
                     imageUrl: ObjectRepository.apiPath +
-                        '/object/${object.attributes.creationDate}${object.attributes.extension}',
-                    httpHeaders: ObjectRepository().getHeaders,
+                        '/object/${object.attributes.creationDate}${object.attributes.extension}?apiKey=${ObjectRepository().getHeaders.values.first}',
                   ),
                 ),
               ),
