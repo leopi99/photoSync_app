@@ -53,8 +53,8 @@ class ObjectRepository extends ObectsRepositoryInterface {
     }
   }
 
-  Map<String, String>? get getHeaders => _dioInstance?.options.headers
-      .map((key, value) => MapEntry(key, value.toString()));
+  Map<String, String> get getHeaders =>
+      {'apiKey': _dioInstance!.options.headers['apiKey']};
 
   @override
   Future<dynamic> getAll(String userID) async {

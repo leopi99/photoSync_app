@@ -1,10 +1,8 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_sync/bloc/app_bloc.dart';
 import 'package:photo_sync/bloc/base/bloc_base.dart';
 import 'package:photo_sync/global/methods.dart';
 import 'package:photo_sync/global/nav_key.dart';
-import 'package:photo_sync/inherited_widgets/appearance_bloc_inherited.dart';
 import 'package:photo_sync/inherited_widgets/objects_bloc_inherited.dart';
 import 'package:photo_sync/models/user.dart';
 import 'package:photo_sync/repository/object_repository.dart';
