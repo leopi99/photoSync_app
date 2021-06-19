@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:photo_sync/models/object_attributes.dart';
 import 'package:photo_sync/repository/object_repository.dart';
 import 'package:photo_sync/util/enums/object_type.dart';
@@ -43,10 +45,22 @@ class Object {
 
   Future<Uint8List> get getFileBytes async {
     Uint8List bytes;
+    FileInfo? fileInfo =
+        await DefaultCacheManager().getFileFromCache(attributes.creationDate);
 
-    var data = (await ObjectRepository().getSingleObject(
-        '/object/${attributes.creationDate}${attributes.extension}'));
-    bytes = base64Decode(data);
+    bytes = fileInfo?.file.readAsBytesSync() ?? Uint8List.fromList([]);
+    if (bytes.isEmpty) {
+      var data = (await ObjectRepository().getSingleObject(
+          '/object/${attributes.creationDate}${attributes.extension}'));
+      bytes = base64Decode(data);
+      await DefaultCacheManager().putFile(
+        ObjectRepository.apiPath +
+            '/object/${attributes.creationDate}${attributes.extension}',
+        bytes,
+        fileExtension: attributes.extension!,
+        key: attributes.creationDate,
+      );
+    }
     return bytes;
   }
 }
