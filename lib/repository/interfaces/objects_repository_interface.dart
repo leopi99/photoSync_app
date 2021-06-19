@@ -13,4 +13,5 @@ abstract class ObectsRepositoryInterface {
   Future<Response> downloadObject(String url, String localPath);
   Future<Response> updateDownloadedObject(String objectID, bool value);
   Future<dynamic> updateProfile(User user);
+  Future<dynamic> getSingleObject(String fileName);
 }

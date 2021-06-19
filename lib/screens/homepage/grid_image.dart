@@ -1,6 +1,5 @@
+import 'dart:convert';
 import 'dart:io';
-
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
@@ -77,9 +76,14 @@ class GridImage extends StatelessWidget {
                 ),
                 child: Hero(
                   tag: object.attributes.creationDate,
-                  child: CachedNetworkImage(
-                    imageUrl: ObjectRepository.apiPath +
-                        '/object/${object.attributes.creationDate}${object.attributes.extension}?apiKey=${ObjectRepository().getHeaders.values.first}',
+                  child: FutureBuilder<dynamic>(
+                    future: ObjectRepository().getSingleObject(
+                        '/object/${object.attributes.creationDate}${object.attributes.extension}'),
+                    builder: (context, snapshot) {
+                      if (snapshot.data == null) return Container();
+                      var bytes = base64Decode(snapshot.data!);
+                      return Center(child: Image.memory(bytes));
+                    },
                   ),
                 ),
               ),

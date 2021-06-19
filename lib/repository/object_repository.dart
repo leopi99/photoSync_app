@@ -161,4 +161,10 @@ class ObjectRepository extends ObectsRepositoryInterface {
 
     return response.data;
   }
+
+  @override
+  Future getSingleObject(String path) async{
+    Response response = await _dioInstance!.get(path, options: Options(responseType: ResponseType.plain));
+    return response.data;
+  }
 }
