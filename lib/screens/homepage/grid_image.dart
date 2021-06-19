@@ -121,7 +121,15 @@ class GridImage extends StatelessWidget {
                               secondaryButtonText: 'Cancel',
                             );
                             if (isOk) {
-                              //TODO: implement the file delete
+                              try {
+                                await File(object.attributes.localPath)
+                                    .delete();
+                                await ObjectsBlocInherited.of(context)
+                                    .getObjectListFromApi();
+                              } catch (e) {
+                                print(e);
+                              }
+                              Navigator.pop(context);
                             }
                           },
                           icon: Icon(
