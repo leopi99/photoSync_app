@@ -9,7 +9,7 @@ Current version: 0.5.4
 
 - Background media syncronization [TODO]
 - Download your syncronized media from the api
-- Backup your media files in your server (using PhotoSync api) [TODO]
+- Backup your media files in your server (using PhotoSync api)
 - Dark theme (needs some work on colors)
 
 ## Why PhotoSync?
