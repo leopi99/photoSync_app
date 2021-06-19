@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:photo_sync/models/raw_object.dart';
 import 'package:photo_sync/models/user.dart';
@@ -135,8 +138,19 @@ class ObjectRepository extends ObectsRepositoryInterface {
 
   @override
   Future<Response> downloadObject(String url, String localPath) async {
-    Response response =
-        await _dioInstance!.download(_API_PATH + 'object/$url', localPath);
+    Response response = await _dioInstance!.get(
+      '/object/$url',
+      options: Options(responseType: ResponseType.plain),
+    );
+    try {
+      await File(localPath).writeAsBytes(base64Decode(response.data));
+    } catch (e, stacktrace) {
+      print(e);
+      print(stacktrace);
+      return Response(
+          statusCode: 500,
+          requestOptions: RequestOptions(path: _API_PATH + '/object/$url'));
+    }
     return response;
   }
 
@@ -152,8 +166,9 @@ class ObjectRepository extends ObectsRepositoryInterface {
   }
 
   @override
-  Future getSingleObject(String path) async{
-    Response response = await _dioInstance!.get(path, options: Options(responseType: ResponseType.plain));
+  Future getSingleObject(String path) async {
+    Response response = await _dioInstance!
+        .get(path, options: Options(responseType: ResponseType.plain));
     return response.data;
   }
 }

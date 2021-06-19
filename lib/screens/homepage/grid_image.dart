@@ -13,6 +13,7 @@ import 'package:photo_sync/models/raw_object.dart';
 import 'package:photo_sync/repository/object_repository.dart';
 import 'package:photo_sync/screens/single_image_page/single_image_page.dart';
 import 'package:photo_sync/extensions/date_time_extension.dart';
+import 'package:photo_sync/widgets/sync_dialog.dart';
 import 'package:photo_sync/widgets/sync_list_tile.dart';
 
 class GridImage extends StatelessWidget {
@@ -30,80 +31,52 @@ class GridImage extends StatelessWidget {
       future: object.isDownloaded,
       initialData: false,
       builder: (context, isDownloaded) {
-        return isDownloaded.data!
-            ? Stack(
-                children: [
-                  Align(
-                    alignment: Alignment.center,
-                    child: FutureBuilder<File?>(
-                      future: object.futureFileBytes ??
-                          Future.value(File(object.attributes.localPath)),
-                      builder: (context, fileSnap) => InkWell(
-                        onLongPress: () => _imageBottomBar(object, context),
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => SingleImagePage(
-                              object: object,
-                              image: fileSnap.data?.readAsBytesSync(),
-                            ),
-                          ),
-                        ),
-                        child: Hero(
-                          tag: object.attributes.creationDate,
-                          child: fileSnap.hasData && fileSnap.data != null
-                              ? Image.memory(
-                                  fileSnap.data!.readAsBytesSync(),
-                                )
-                              : Container(),
-                        ),
-                      ),
-                    ),
+        return Stack(
+          children: [
+            InkWell(
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SingleImagePage(
+                    object: object,
                   ),
-                  if (object.attributes.syncDate == null)
-                    Align(
-                      alignment: AlignmentDirectional.bottomEnd,
-                      child: UploadIcon(object: object),
-                    ),
-                ],
-              )
-            : Stack(
-                children: [
-                  InkWell(
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => SingleImagePage(
-                          object: object,
-                        ),
-                      ),
-                    ),
-                    child: Hero(
-                      tag: object.attributes.creationDate,
-                      child: FutureBuilder<dynamic>(
-                        future: object.getFileBytes,
-                        builder: (context, snapshot) {
-                          if (snapshot.data == null) return Container();
-                          return Center(child: Image.memory(snapshot.data));
-                        },
-                      ),
-                    ),
-                  ),
-                  Align(
-                    alignment: AlignmentDirectional.bottomEnd,
-                    child: DownloadIcon(
-                      object: object,
-                      objectIndex: objectIndex,
-                    ),
-                  ),
-                ],
-              );
+                ),
+              ),
+              onLongPress: () =>
+                  _imageBottomBar(object, context, isDownloaded.data!),
+              child: Hero(
+                tag: object.attributes.creationDate,
+                child: FutureBuilder<dynamic>(
+                  future: object.getFileBytes,
+                  builder: (context, snapshot) {
+                    if (snapshot.data == null) return Container();
+                    return Center(child: Image.memory(snapshot.data));
+                  },
+                ),
+              ),
+            ),
+            if (!isDownloaded.data!)
+              Align(
+                alignment: AlignmentDirectional.bottomEnd,
+                child: DownloadIcon(
+                  object: object,
+                  objectIndex: objectIndex,
+                ),
+              ),
+            if (object.attributes.syncDate == null)
+              Align(
+                alignment: AlignmentDirectional.bottomEnd,
+                child: UploadIcon(object: object),
+              ),
+          ],
+        );
       },
     );
   }
 
   //Shows the modalBottomBar with some settings/text for the single image
-  void _imageBottomBar(Object object, BuildContext context) async {
+  void _imageBottomBar(
+      Object object, BuildContext context, bool downloaded) async {
     await GlobalMethods.setStatusBarColorForDialog();
     await showModalBottomSheet(
       context: context,
@@ -123,6 +96,41 @@ class GridImage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                   color: Colors.grey[400],
                 ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  downloaded
+                      ? IconButton(
+                          padding: EdgeInsets.all(16),
+                          onPressed: () async {
+                            bool isOk = false;
+                            await SyncDialog.show(
+                              context,
+                              title: 'Really?',
+                              content:
+                                  'Do you really want to delete this file from the disk?',
+                              primaryButtonOnPressed: () {
+                                isOk = true;
+                              },
+                              primaryButtonText: 'I really want',
+                              secondaryButtonOnPressed: () {},
+                              secondaryButtonText: 'Cancel',
+                            );
+                            if (isOk) {
+                              //TODO: implement the file delete
+                            }
+                          },
+                          icon: Icon(
+                            FeatherIcons.trash2,
+                            color: Theme.of(context).accentColor,
+                          ),
+                        )
+                      : Container(),
+                ],
               ),
             ),
             SyncListTile(
@@ -191,6 +199,7 @@ class _DownloadIconState extends State<DownloadIcon> {
               widget.object.attributes.creationDate +
                   widget.object.attributes.extension!,
               widget.object.attributes.localPath);
+          await ObjectsBlocInherited.of(context).getObjectListFromApi();
         } catch (e, stacktrace) {
           print('Error while downloading or updating the object');
           print(e);

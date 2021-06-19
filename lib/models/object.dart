@@ -43,6 +43,9 @@ class Object {
       );
 
   Future<Uint8List> get getFileBytes async {
+    if (futureFileBytes != null) {
+      return (await futureFileBytes)!.readAsBytesSync();
+    }
     Uint8List bytes;
     FileInfo? fileInfo =
         await DefaultCacheManager().getFileFromCache(attributes.creationDate);
