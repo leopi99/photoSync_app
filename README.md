@@ -4,7 +4,7 @@
 This is the frontend for the [PhotoSync api](https://github.com/leopi99/photoSync_api).
 
 ## Not stable for "production" this is still in beta, everything can change
-Current version: 0.5.6
+Current version: 0.6.0
 ## Features
 
 - Background media syncronization [TODO]
