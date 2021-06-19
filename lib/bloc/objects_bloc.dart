@@ -35,7 +35,7 @@ class ObjectsBloc extends BlocBase {
 
   ///Adds a [List] of [Object] to the subject
   ///
-  ///Only if the localId is not present into the _objectsList 
+  ///Only if the localId is not present into the _objectsList
   void addObjects(List<Object> objects, {bool reset = false}) {
     if (!reset) {
       List<int> objAdds = [];
@@ -96,7 +96,7 @@ class ObjectsBloc extends BlocBase {
           (index) => Object.fromJSON(response![index]),
         ),
       );
-      
+
     await loadFromDisk();
   }
 
@@ -188,7 +188,7 @@ class ObjectsBloc extends BlocBase {
     List<RawObject> objects = [];
     await _recursiveAddRawObjects(
         _objectsList
-            .where((element) => element.attributes.url?.isEmpty ?? true)
+            .where((element) => element.attributes.syncDate?.isEmpty ?? true)
             .toList(),
         objects);
     await _uploadObjectRecursive(objects);
