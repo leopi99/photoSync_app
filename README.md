@@ -17,4 +17,4 @@ Current version: 0.6.0
 There is not much to do (except some work on the features and bugs...), if you don't like the default values for the api (object_repository.dart) you can change the base endpoint path.
 
 ## Why PhotoSync?
-Since the popular Google photo have dropped the unlimited storage, I thougth to create this to have more control on where my photos are stored and I can upgrade the storage size when I want 
+Since the popular Google photo have dropped the unlimited storage, I thougth to create this to have the storage size when I want
