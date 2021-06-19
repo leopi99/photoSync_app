@@ -16,7 +16,6 @@ class ObjectAttributes {
   final String creationDate;
   final String picturePosition;
   final String localPath;
-  final bool isDownloaded;
   final int pictureByteSize;
   final int databaseID;
   final String? extension;
@@ -49,14 +48,12 @@ class ObjectAttributes {
     required this.localPath,
     required this.pictureByteSize,
     required this.databaseID,
-    required this.isDownloaded,
     required this.localID,
     required this.extension,
   });
 
   static ObjectAttributes fromJSON(Map<String, dynamic> json) =>
       ObjectAttributes(
-        isDownloaded: json[_KEY_IS_DOWNLOADED],
         creationDate: json[_KEY_CREATION_DATE],
         localPath: json[_KEY_LOCAL_PATH],
         pictureByteSize: json[_KEY_BYTE_SIZE],
@@ -74,7 +71,6 @@ class ObjectAttributes {
         _KEY_PICTURE_POSITION: picturePosition,
         _KEY_SYNC_DATE: syncDate ?? '',
         _KEY_ID: databaseID,
-        _KEY_IS_DOWNLOADED: isDownloaded,
         _KEY_EXTENSION: extension ?? '',
         _KEY_LOCAL_ID: localID,
       };
@@ -84,7 +80,6 @@ class ObjectAttributes {
     String? creationDate,
     String? picturePosition,
     String? localPath,
-    bool? isDownloaded,
     int? pictureByteSize,
     String? extension,
     int? localID,
@@ -92,7 +87,6 @@ class ObjectAttributes {
       ObjectAttributes(
         creationDate: creationDate ?? this.creationDate,
         databaseID: this.databaseID,
-        isDownloaded: isDownloaded ?? this.isDownloaded,
         localPath: localPath ?? this.localPath,
         pictureByteSize: pictureByteSize ?? this.pictureByteSize,
         picturePosition: picturePosition ?? this.picturePosition,

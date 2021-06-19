@@ -141,17 +141,6 @@ class ObjectRepository extends ObectsRepositoryInterface {
   }
 
   @override
-  Future<Response> updateDownloadedObject(String objectID, bool value) async {
-    Response response =
-        await _dioInstance!.post("/updateDownloadedObject", queryParameters: {
-      'objectID': objectID,
-      'value': value,
-    });
-
-    return response;
-  }
-
-  @override
   Future<dynamic> updateProfile(User user) async {
     Response response =
         await _dioInstance!.post("/updateProfile", queryParameters: {

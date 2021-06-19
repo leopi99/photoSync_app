@@ -191,10 +191,6 @@ class _DownloadIconState extends State<DownloadIcon> {
               widget.object.attributes.creationDate +
                   widget.object.attributes.extension!,
               widget.object.attributes.localPath);
-          ObjectsBlocInherited.of(context)
-              .changeObjectDownloadFlag(true, widget.objectIndex);
-          await ObjectRepository().updateDownloadedObject(
-              "${widget.object.attributes.databaseID}", true);
         } catch (e, stacktrace) {
           print('Error while downloading or updating the object');
           print(e);

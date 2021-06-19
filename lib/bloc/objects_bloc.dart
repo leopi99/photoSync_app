@@ -128,7 +128,6 @@ class ObjectsBloc extends BlocBase {
                           : ObjectType.Video,
                       attributes: ObjectAttributes(
                           extension: '.${file!.path.split('.').last}',
-                          isDownloaded: true,
                           creationDate: assetList[i]
                               .createDateTime
                               .millisecondsSinceEpoch
@@ -148,14 +147,6 @@ class ObjectsBloc extends BlocBase {
       );
       changeLoading(false);
     }
-  }
-
-  void changeObjectDownloadFlag(bool isDownloaded, int index) {
-    _objectsList[index] = _objectsList[index].copyWith(
-      attributes:
-          _objectsList[index].attributes.copyWith(isDownloaded: isDownloaded),
-    );
-    _objectSubject.add(UnmodifiableListView(_objectsList));
   }
 
   ///Creates an image on the db => api
