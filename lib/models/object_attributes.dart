@@ -81,6 +81,7 @@ class ObjectAttributes {
         _KEY_ID: databaseID,
         _KEY_IS_DOWNLOADED: isDownloaded,
         _KEY_EXTENSION: extension ?? '',
+        _KEY_LOCAL_ID: localID,
       };
 
   ObjectAttributes copyWith({
