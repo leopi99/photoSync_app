@@ -81,12 +81,10 @@ class GridImage extends StatelessWidget {
                     child: Hero(
                       tag: object.attributes.creationDate,
                       child: FutureBuilder<dynamic>(
-                        future: ObjectRepository().getSingleObject(
-                            '/object/${object.attributes.creationDate}${object.attributes.extension}'),
+                        future: object.getFileBytes,
                         builder: (context, snapshot) {
                           if (snapshot.data == null) return Container();
-                          var bytes = base64Decode(snapshot.data!);
-                          return Center(child: Image.memory(bytes));
+                          return Center(child: Image.memory(snapshot.data));
                         },
                       ),
                     ),

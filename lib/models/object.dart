@@ -1,6 +1,9 @@
+import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:photo_sync/models/object_attributes.dart';
+import 'package:photo_sync/repository/object_repository.dart';
 import 'package:photo_sync/util/enums/object_type.dart';
 
 class Object {
@@ -37,4 +40,13 @@ class Object {
         attributes: attributes ?? this.attributes,
         futureFileBytes: this.futureFileBytes,
       );
+
+  Future<Uint8List> get getFileBytes async {
+    Uint8List bytes;
+
+    var data = (await ObjectRepository().getSingleObject(
+        '/object/${attributes.creationDate}${attributes.extension}'));
+    bytes = base64Decode(data);
+    return bytes;
+  }
 }
