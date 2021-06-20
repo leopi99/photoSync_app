@@ -21,4 +21,10 @@ class User {
       "password": password!,
     };
   }
+
+  User copyWith({String? username, String? password, String? userID}) => User(
+        username: username ?? this.username,
+        password: password ?? this.password,
+        userID: userID ?? this.userID,
+      );
 }

@@ -9,7 +9,7 @@ import 'package:photo_sync/screens/settings_page/settings_page.dart';
 class SkeletonPage extends StatefulWidget {
   final int initialPage;
 
-  SkeletonPage({this.initialPage = 0});
+  SkeletonPage({this.initialPage: 0});
 
   @override
   _SkeletonPageState createState() => _SkeletonPageState();
@@ -72,8 +72,9 @@ class _SkeletonPageState extends State<SkeletonPage> {
               selectedIndex: currentPage,
               onTabChange: (value) => _controller.jumpToPage(value),
               gap: 8,
-              tabBackgroundColor:
-                  snapshot.data!.isDarkMode ? Colors.black45 : Colors.grey[350]!,
+              tabBackgroundColor: snapshot.data!.isDarkMode
+                  ? Colors.black45
+                  : Colors.grey[350]!,
               activeColor: snapshot.data!.isDarkMode
                   ? Colors.white.withOpacity(.8)
                   : Colors.black,

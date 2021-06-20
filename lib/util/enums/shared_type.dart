@@ -3,6 +3,7 @@ enum SharedType {
   LoginPassword,
   OnBoardingDone,
   AppAppearance,
+  BackgroundBackup,
 }
 
 extension SharedTypeExtension on SharedType {
