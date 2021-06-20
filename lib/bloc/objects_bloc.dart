@@ -183,24 +183,30 @@ class ObjectsBloc extends BlocBase {
     // addObjects([Object.fromJSON(response)]);
   }
 
+  ///Checks the presence of new objects and uploads the found objects
   Future<void> checkNewObjectsAndBackup() async {
     changeLoading(true);
     List<RawObject> objects = [];
+    //Creates a list of new objects (where the syncDate is not set)
     await _recursiveAddRawObjects(
         _objectsList
             .where((element) => element.attributes.syncDate?.isEmpty ?? true)
             .toList(),
         objects);
-    await _uploadObjectRecursive(objects);
-    await getObjectListFromApi();
+    if (objects.isNotEmpty) {
+      await _uploadObjectRecursive(objects);
+      await getObjectListFromApi();
+    }
     changeLoading(false);
   }
 
+  //Creates a list of RawObject from the list of Object passed
   Future<void> _recursiveAddRawObjects(
       List<Object> objects, List<RawObject> raws) async {
     print(
         'recursiveAddRawObjects\tobjects: ${objects.length}\t rows:${raws.length}');
     try {
+      //Gets the bytes of the object
       Uint8List bytes =
           (await objects.first.futureFileBytes)!.readAsBytesSync();
       raws.add(RawObject(
@@ -211,12 +217,14 @@ class ObjectsBloc extends BlocBase {
       changeLoading(false);
       return;
     }
+    //If the list is not empty, calls itself
     if (objects.length - 1 > 0) {
       objects.removeAt(0);
       _recursiveAddRawObjects(objects, raws);
     }
   }
 
+  //Uploads the list of RawObject
   Future<void> _uploadObjectRecursive(List<RawObject> objects) async {
     try {
       print('uploadObjectRecursive\tobjects: ${objects.length}');
@@ -227,6 +235,7 @@ class ObjectsBloc extends BlocBase {
       changeLoading(false);
       return;
     }
+    //If the list is not empty, calls itself
     if (objects.length - 1 > 0) {
       objects.removeAt(0);
       _uploadObjectRecursive(objects);
