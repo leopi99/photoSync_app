@@ -13,7 +13,7 @@ class Homepage extends StatefulWidget {
   _HomepageState createState() => _HomepageState();
 }
 
-class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
+class _HomepageState extends State<Homepage> {
   late ObjectsBloc bloc;
 
   @override
@@ -21,29 +21,8 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
     bloc = ObjectsBlocInherited.of(navigatorKey.currentContext!);
     GlobalMethods.setStatusBarColorAsScaffoldBackground();
     super.initState();
-    WidgetsBinding.instance!.addObserver(this);
   }
-
-  @override
-  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
-    print('AppLifeCycle state: $state');
-    switch (state) {
-      case AppLifecycleState.resumed:
-        await bloc.loadFromDisk();
-        break;
-      case AppLifecycleState.inactive:
-      case AppLifecycleState.paused:
-      case AppLifecycleState.detached:
-        break;
-    }
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance!.removeObserver(this);
-    super.dispose();
-  }
-
+  
   @override
   Widget build(BuildContext context) {
     return BasePage(

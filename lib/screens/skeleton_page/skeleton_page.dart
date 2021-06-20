@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:photo_sync/constants/appearance.dart';
+import 'package:photo_sync/global/methods.dart';
+import 'package:photo_sync/global/nav_key.dart';
 import 'package:photo_sync/inherited_widgets/appearance_bloc_inherited.dart';
+import 'package:photo_sync/inherited_widgets/objects_bloc_inherited.dart';
 import 'package:photo_sync/screens/homepage/homepage.dart';
 import 'package:photo_sync/screens/settings_page/settings_page.dart';
 
@@ -15,7 +18,8 @@ class SkeletonPage extends StatefulWidget {
   _SkeletonPageState createState() => _SkeletonPageState();
 }
 
-class _SkeletonPageState extends State<SkeletonPage> {
+class _SkeletonPageState extends State<SkeletonPage>
+    with WidgetsBindingObserver {
   static const double _BAR_HEIGHT = 64;
   late PageController _controller;
   static const double _NAV_ICONS_RADIUS = 48;
@@ -25,7 +29,28 @@ class _SkeletonPageState extends State<SkeletonPage> {
   void initState() {
     _controller = PageController(initialPage: widget.initialPage);
     currentPage = widget.initialPage;
+    WidgetsBinding.instance!.addObserver(this);
     super.initState();
+  }
+
+  @override
+  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
+    print('AppLifeCycle state: $state');
+    GlobalMethods.setStatusBarColorAsScaffoldBackground();
+    switch (state) {
+      case AppLifecycleState.resumed:
+        await ObjectsBlocInherited.of(navigatorKey.currentContext!)
+            .loadFromDisk();
+        break;
+      default:
+        break;
+    }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance!.removeObserver(this);
+    super.dispose();
   }
 
   @override
