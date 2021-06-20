@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
@@ -18,6 +19,7 @@ import 'package:photo_sync/widgets/sync_list_tile.dart';
 class GridImage extends StatelessWidget {
   final Object object;
   final int objectIndex;
+  Uint8List? imageBytes;
 
   GridImage(
     this.object,
@@ -38,6 +40,7 @@ class GridImage extends StatelessWidget {
                 MaterialPageRoute(
                   builder: (context) => SingleImagePage(
                     object: object,
+                    image: imageBytes,
                   ),
                 ),
               ),
@@ -49,6 +52,7 @@ class GridImage extends StatelessWidget {
                   future: object.getFileBytes,
                   builder: (context, snapshot) {
                     if (snapshot.data == null) return Container();
+                    imageBytes = snapshot.data;
                     return Center(child: Image.memory(snapshot.data));
                   },
                 ),
@@ -102,7 +106,8 @@ class GridImage extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  downloaded && (object.attributes.syncDate?.isNotEmpty ?? false)
+                  downloaded &&
+                          (object.attributes.syncDate?.isNotEmpty ?? false)
                       ? IconButton(
                           padding: EdgeInsets.all(16),
                           onPressed: () async {
