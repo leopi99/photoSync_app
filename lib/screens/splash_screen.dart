@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:photo_sync/bloc/app_bloc.dart';
 import 'package:photo_sync/global/methods.dart';

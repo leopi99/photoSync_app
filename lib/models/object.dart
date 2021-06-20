@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
-
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:photo_sync/models/object_attributes.dart';
 import 'package:photo_sync/repository/object_repository.dart';

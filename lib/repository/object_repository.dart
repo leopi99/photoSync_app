@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:dio/dio.dart';
 import 'package:photo_sync/models/raw_object.dart';
 import 'package:photo_sync/models/user.dart';
