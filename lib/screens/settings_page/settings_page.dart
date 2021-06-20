@@ -38,9 +38,9 @@ class _SettingsPageState extends State<SettingsPage> {
         padding: EdgeInsets.symmetric(horizontal: 16)
             .copyWith(top: MediaQuery.of(context).padding.top + 8),
         children: [
-          _buildAppearanceTile(),
-          _buildChangePasswordTile(),
           _buildBackgroundSync(),
+          _buildChangePasswordTile(),
+          _buildAppearanceTile(),
           _buildLogoutTile(),
         ],
       ),
