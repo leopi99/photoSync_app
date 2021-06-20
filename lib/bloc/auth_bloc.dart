@@ -9,8 +9,20 @@ import 'package:photo_sync/repository/object_repository.dart';
 import 'package:photo_sync/util/enums/shared_type.dart';
 import 'package:photo_sync/util/shared_manager.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:workmanager/workmanager.dart';
 
 class AuthBloc extends BlocBase {
+  ///
+  /// Test function for the background worker
+  ///
+
+  static void _testDispatcher() {
+    Workmanager().executeTask((task, inputData) {
+      print("Native called background task with this data: $inputData");
+      return Future.value(true);
+    });
+  }
+
   AuthBloc() {
     _hidePasswordSubject = BehaviorSubject<bool>.seeded(true);
   }
@@ -73,6 +85,17 @@ class AuthBloc extends BlocBase {
       _showError(title: data['description'] ?? '');
       return;
     }
+
+    await Workmanager().initialize(_testDispatcher, isInDebugMode: true);
+
+    Workmanager().registerPeriodicTask(
+      "background_worker_test",
+      'test_worker_name',
+      frequency: Duration(minutes: 15),
+      inputData: {
+        'thisData': DateTime.now().toIso8601String(),
+      },
+    );
 
     //Fetches the list of images
     ObjectsBlocInherited.of(navigatorKey.currentContext!)

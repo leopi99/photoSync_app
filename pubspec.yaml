@@ -30,6 +30,7 @@ dependencies:
   flutter_geocoder:
     git:
       url: https://github.com/JCKodel/flutter_geocoder
+  workmanager: ^0.4.1
 
 
 dev_dependencies:
