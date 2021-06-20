@@ -102,6 +102,7 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
+  //Builds the change password tile, opens the page
   Widget _buildChangePasswordTile() {
     return SyncListTile(
       titleText: 'Change password',
@@ -109,6 +110,7 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
+  //Builds the backgroundSync switch tile
   Widget _buildBackgroundSync() {
     return StreamBuilder<bool>(
       stream: appBloc.backgroundSyncStream,
