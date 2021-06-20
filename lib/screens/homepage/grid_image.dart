@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';

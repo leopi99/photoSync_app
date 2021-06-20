@@ -7,7 +7,6 @@ class ObjectAttributes {
   static const _KEY_BYTE_SIZE = "bytes_size";
   static const _KEY_LOCAL_PATH = "local_path";
   static const _KEY_ID = "database_id";
-  static const _KEY_IS_DOWNLOADED = "downloaded";
   static const _KEY_EXTENSION = "extension";
   static const _KEY_LOCAL_ID = "local_id";
   static const KEY_ATTRIBUTES = "attributes";
