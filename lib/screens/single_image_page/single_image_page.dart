@@ -41,20 +41,22 @@ class _SingleImagePageState extends State<SingleImagePage> {
       body: Center(
         child: Hero(
           tag: widget.object.attributes.creationDate,
-          child: widget.image != null
-              ? PhotoView(
+          child: widget.image == null
+              ? FutureBuilder<dynamic>(
+                  future: widget.object.getFileBytes,
+                  builder: (context, snapshot) {
+                    if (snapshot.data == null) return Container();
+                    return PhotoView(
+                      imageProvider: MemoryImage(snapshot.data),
+                      minScale: PhotoViewComputedScale.contained,
+                      maxScale: PhotoViewComputedScale.contained * 4,
+                    );
+                  },
+                )
+              : PhotoView(
                   imageProvider: MemoryImage(widget.image!),
                   minScale: PhotoViewComputedScale.contained,
                   maxScale: PhotoViewComputedScale.contained * 4,
-                )
-              : PhotoView(
-                  minScale: PhotoViewComputedScale.contained,
-                  maxScale: PhotoViewComputedScale.contained * 4,
-                  imageProvider: CachedNetworkImageProvider(
-                    ObjectRepository.apiPath +
-                        '/object/${widget.object.attributes.creationDate}${widget.object.attributes.extension}',
-                    headers: ObjectRepository().getHeaders,
-                  ),
                 ),
         ),
       ),
