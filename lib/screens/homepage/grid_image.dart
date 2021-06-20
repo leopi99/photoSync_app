@@ -102,7 +102,7 @@ class GridImage extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  downloaded
+                  downloaded && (object.attributes.syncDate?.isNotEmpty ?? false)
                       ? IconButton(
                           padding: EdgeInsets.all(16),
                           onPressed: () async {
