@@ -7,6 +7,7 @@ import 'package:photo_sync/models/object.dart';
 import 'package:photo_sync/screens/base_page/base_page.dart';
 import 'package:photo_sync/screens/homepage/grid_image.dart';
 import 'package:photo_sync/util/enums/object_type.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class Homepage extends StatefulWidget {
   @override
@@ -35,7 +36,7 @@ class _HomepageState extends State<Homepage> {
         builder: (context, snapshot) {
           if (snapshot.data!.length == 0)
             return Center(
-              child: Text('Nothing here'),
+              child: Text('nothingHere'.tr()),
             );
           return GridView.builder(
             physics: BouncingScrollPhysics(),
@@ -65,7 +66,7 @@ class _HomepageState extends State<Homepage> {
       onPressed: () async {
         await bloc.checkNewObjectsAndBackup();
       },
-      label: Text('Backup all objects'),
+      label: Text('backupAllObjects'.tr()),
     );
   }
 }

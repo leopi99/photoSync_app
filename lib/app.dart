@@ -11,6 +11,7 @@ import 'package:photo_sync/inherited_widgets/auth_bloc_inherited.dart';
 import 'package:photo_sync/inherited_widgets/objects_bloc_inherited.dart';
 import 'package:photo_sync/repository/object_repository.dart';
 import 'package:photo_sync/routes/route_builder.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class App extends StatefulWidget {
   @override
@@ -48,6 +49,8 @@ class _AppState extends State<App> {
               initialData: Appearance(),
               builder: (context, snapshot) {
                 return MaterialApp(
+                  supportedLocales: context.supportedLocales,
+                  localizationsDelegates: context.localizationDelegates,
                   title: 'PhotoSync',
                   theme: snapshot.data!.currentThemeData,
                   home: WillPopScope(

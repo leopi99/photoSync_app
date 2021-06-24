@@ -8,6 +8,7 @@ import 'package:photo_sync/inherited_widgets/appearance_bloc_inherited.dart';
 import 'package:photo_sync/inherited_widgets/objects_bloc_inherited.dart';
 import 'package:photo_sync/screens/homepage/homepage.dart';
 import 'package:photo_sync/screens/settings_page/settings_page.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class SkeletonPage extends StatefulWidget {
   final int initialPage;
@@ -109,11 +110,11 @@ class _SkeletonPageState extends State<SkeletonPage>
               tabs: [
                 GButton(
                   icon: FeatherIcons.home,
-                  text: 'Home',
+                  text: 'home'.tr(),
                 ),
                 GButton(
                   icon: FeatherIcons.settings,
-                  text: 'Settings',
+                  text: 'settings'.tr(),
                 )
               ],
             ),

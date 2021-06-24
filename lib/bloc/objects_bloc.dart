@@ -14,6 +14,7 @@ import 'package:photo_sync/repository/interfaces/objects_repository_interface.da
 import 'package:photo_sync/repository/object_repository.dart';
 import 'package:photo_sync/util/enums/object_type.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class ObjectsBloc extends BlocBase {
   ObjectsBloc() {
@@ -219,7 +220,7 @@ class ObjectsBloc extends BlocBase {
       behavior: SnackBarBehavior.floating,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       action: SnackBarAction(
-        label: 'close',
+        label: 'close'.tr(),
         textColor: Colors.white,
         onPressed: () => ScaffoldMessenger.of(navigatorKey.currentContext!)
             .hideCurrentSnackBar(),

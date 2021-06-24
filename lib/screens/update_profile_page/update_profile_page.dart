@@ -5,6 +5,7 @@ import 'package:photo_sync/global/nav_key.dart';
 import 'package:photo_sync/inherited_widgets/auth_bloc_inherited.dart';
 import 'package:photo_sync/screens/base_page/base_page.dart';
 import 'package:photo_sync/widgets/sync_elevated_button.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class UpdateProfilePage extends StatefulWidget {
   UpdateProfilePage();
@@ -39,7 +40,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
     return BasePage(
       loadingStream: bloc.loadingStream,
       appBar: AppBar(
-        title: Text('Update profile'),
+        title: Text('updateProfile'.tr()),
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
           icon: Icon(FeatherIcons.chevronLeft),
@@ -51,16 +52,16 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
           TextField(
             enabled: false,
             controller: usernameController,
-            decoration: InputDecoration(labelText: 'Username'),
+            decoration: InputDecoration(labelText: 'username'.tr()),
           ),
           SizedBox(height: 16),
           TextField(
             controller: passwordController,
-            decoration: InputDecoration(labelText: 'New password'),
+            decoration: InputDecoration(labelText: 'newPassword'.tr()),
           ),
           SyncElevatedButton(
             padding: EdgeInsets.only(top: 16),
-            buttonText: 'Update',
+            buttonText: 'update'.tr(),
             onPressed: () async {
               await bloc.changePassword(passwordController.text);
             },

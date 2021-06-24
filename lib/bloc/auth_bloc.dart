@@ -8,6 +8,7 @@ import 'package:photo_sync/models/user.dart';
 import 'package:photo_sync/repository/object_repository.dart';
 import 'package:photo_sync/util/enums/shared_type.dart';
 import 'package:photo_sync/util/shared_manager.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:rxdart/rxdart.dart';
 
 class AuthBloc extends BlocBase {
@@ -38,7 +39,7 @@ class AuthBloc extends BlocBase {
   Future<void> login(String username, String password) async {
     await GlobalMethods.hideKeyboard();
     if (username.isEmpty || password.isEmpty) {
-      _showError(title: 'Please, fill all the fields');
+      _showError(title: 'fillAllTheFields'.tr());
       return;
     }
 
@@ -49,7 +50,7 @@ class AuthBloc extends BlocBase {
       data = await ObjectRepository().login(username, password);
     } catch (e) {
       print('Error $e');
-      _showError(title: 'Login error');
+      _showError(title: 'loginError'.tr());
       SharedManager().logout();
       changeLoading(false);
       return;
@@ -98,7 +99,7 @@ class AuthBloc extends BlocBase {
       data = await ObjectRepository().register(username, password);
     } catch (e) {
       print('Error $e');
-      _showError(title: 'Signup error');
+      _showError(title: 'signUpError'.tr());
       SharedManager().logout();
       changeLoading(false);
       return;
@@ -153,7 +154,7 @@ class AuthBloc extends BlocBase {
       behavior: SnackBarBehavior.floating,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       action: SnackBarAction(
-        label: 'close',
+        label: 'close'.tr(),
         textColor: Colors.white,
         onPressed: () => ScaffoldMessenger.of(navigatorKey.currentContext!)
             .hideCurrentSnackBar(),
@@ -172,7 +173,7 @@ class AuthBloc extends BlocBase {
       behavior: SnackBarBehavior.floating,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       action: SnackBarAction(
-        label: 'close',
+        label: 'close'.tr(),
         textColor: Colors.white,
         onPressed: () => ScaffoldMessenger.of(navigatorKey.currentContext!)
             .hideCurrentSnackBar(),

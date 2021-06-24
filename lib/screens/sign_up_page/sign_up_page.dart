@@ -4,6 +4,7 @@ import 'package:photo_sync/bloc/auth_bloc.dart';
 import 'package:photo_sync/global/methods.dart';
 import 'package:photo_sync/screens/base_page/base_page.dart';
 import 'package:photo_sync/widgets/sync_elevated_button.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class SignUpPage extends StatelessWidget {
   final AuthBloc bloc;
@@ -20,7 +21,7 @@ class SignUpPage extends StatelessWidget {
     return BasePage(
       loadingStream: bloc.loadingStream,
       appBar: AppBar(
-        title: Text('Sign up'),
+        title: Text('signup'.tr()),
         automaticallyImplyLeading: false,
         leading: IconButton(
           onPressed: () async {
@@ -38,7 +39,7 @@ class SignUpPage extends StatelessWidget {
           children: [
             TextField(
               controller: _usernameController,
-              decoration: InputDecoration(hintText: 'Username'),
+              decoration: InputDecoration(hintText: 'username'.tr()),
             ),
             SizedBox(height: 16),
             StreamBuilder<bool>(
@@ -49,7 +50,7 @@ class SignUpPage extends StatelessWidget {
                   controller: _passwordController,
                   obscureText: snapshot.data!,
                   decoration: InputDecoration(
-                    hintText: 'Password',
+                    hintText: 'password'.tr(),
                     suffixIcon: IconButton(
                       onPressed: () => bloc.changeHidePassword(),
                       icon: Icon(snapshot.data!
@@ -66,7 +67,7 @@ class SignUpPage extends StatelessWidget {
                 Expanded(
                   child: SyncElevatedButton(
                     onPressed: () async => bloc.register(_usernameController.text, _passwordController.text),
-                    buttonText: 'Register',
+                    buttonText: 'register'.tr(),
                   ),
                 ),
               ],

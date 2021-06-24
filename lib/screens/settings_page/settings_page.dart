@@ -13,6 +13,7 @@ import 'package:photo_sync/util/enums/appearance_mode_type.dart';
 import 'package:photo_sync/util/shared_manager.dart';
 import 'package:photo_sync/widgets/sync_dialog.dart';
 import 'package:photo_sync/widgets/sync_list_tile.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class SettingsPage extends StatefulWidget {
   @override
@@ -54,7 +55,7 @@ class _SettingsPageState extends State<SettingsPage> {
       initialData: Appearance(),
       builder: (context, snapshot) {
         return SyncListTile(
-          titleText: 'App appearance',
+          titleText: 'appAppearance'.tr(),
           trailing: DropdownButton<AppearanceModeType>(
             onChanged: (value) {
               if (value == null) return;
@@ -69,7 +70,7 @@ class _SettingsPageState extends State<SettingsPage> {
               (index) => DropdownMenuItem(
                 value: AppearanceModeType.values[index],
                 child: Text(
-                  AppearanceModeType.values[index].toValueWithSeparation,
+                  '${AppearanceModeType.values[index].toValue}'.tr(),
                 ),
               ),
             ),
@@ -84,18 +85,18 @@ class _SettingsPageState extends State<SettingsPage> {
     return Padding(
       padding: const EdgeInsets.only(top: 16),
       child: SyncListTile(
-        titleText: 'Logout',
+        titleText: 'logout'.tr(),
         onTap: () async {
           await SyncDialog.show(
             context,
-            title: 'Logout',
-            content: 'Do you really want to logout?',
+            title: 'logout'.tr(),
+            content: 'logoutDescription'.tr(),
             primaryButtonOnPressed: () async => await SharedManager()
                 .logout()
                 .then((value) => AuthBlocInherited.of(context).logout(
                     context)), //Removes the saved credentials, then goes to the login page
-            primaryButtonText: 'OK',
-            secondaryButtonText: 'Cancel',
+            primaryButtonText: 'ok'.tr(),
+            secondaryButtonText: 'cancel'.tr(),
           );
         },
       ),
@@ -105,7 +106,7 @@ class _SettingsPageState extends State<SettingsPage> {
   //Builds the change password tile, opens the page
   Widget _buildChangePasswordTile() {
     return SyncListTile(
-      titleText: 'Change password',
+      titleText: 'changePassword'.tr(),
       onTap: () => Navigator.pushNamed(context, RouteBuilder.UPDATE_PROFILE),
     );
   }
@@ -117,7 +118,7 @@ class _SettingsPageState extends State<SettingsPage> {
       initialData: false,
       builder: (context, snapshot) {
         return SwitchListTile(
-          title: Text('Background sync'),
+          title: Text('backgroundSync'.tr()),
           value: snapshot.data!,
           onChanged: (value) async => await appBloc.setBackgroundSync(value),
         );

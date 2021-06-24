@@ -7,6 +7,7 @@ import 'package:photo_sync/inherited_widgets/appearance_bloc_inherited.dart';
 import 'package:photo_sync/models/on_boarding_info.dart';
 import 'package:photo_sync/util/enums/shared_type.dart';
 import 'package:photo_sync/util/shared_manager.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 const List<OnBoardingInfo> pages = [
   //The list of the pages to show in the onBoarding
@@ -93,19 +94,17 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
                         _pageController.animateToPage(currentPage + 1,
                             duration: Duration(milliseconds: 250),
                             curve: Curves.easeInBack);
-                        //If the current page is the last, will update the ui to show the close button
-                        // if (currentPage == pages.length - 1)
                         setState(() {});
                       },
                       child: Text(
-                        'Next',
+                        'next'.tr(),
                         style: TextStyle(fontSize: 16),
                       ),
                     )
                   : TextButton(
                       onPressed: _goToHomepage,
                       child: Text(
-                        'Close',
+                        'close'.tr(),
                         style: TextStyle(fontSize: 16),
                       ),
                     ),
