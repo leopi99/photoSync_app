@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:photo_sync/constants/assets_path.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 ///Tells the user that the server is not reachable
 class ApiConnectionErrorPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final double size = MediaQuery.of(context).size.width - 64;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Api error'),
+        title: Text('ApiError'.tr()),
         leading: IconButton(
           onPressed: () => Navigator.of(context).pop(),
           icon: Icon(FeatherIcons.chevronLeft),
@@ -23,12 +25,12 @@ class ApiConnectionErrorPage extends StatelessWidget {
             children: [
               SvgPicture.asset(
                 AssetsPath.notReachableApi,
-                height: MediaQuery.of(context).size.width - 64,
-                width: MediaQuery.of(context).size.width - 64,
+                height: size,
+                width: size,
               ),
               SizedBox(height: 32),
               Text(
-                'The api are not reachable, please check your connection and if your server is running properly',
+                'apiNotReachableDescription'.tr(),
                 textAlign: TextAlign.center,
               ),
             ],

@@ -10,9 +10,11 @@ import 'package:photo_sync/models/api_error.dart';
 import 'package:photo_sync/models/object.dart';
 import 'package:photo_sync/models/object_attributes.dart';
 import 'package:photo_sync/models/raw_object.dart';
+import 'package:photo_sync/repository/interfaces/objects_repository_interface.dart';
 import 'package:photo_sync/repository/object_repository.dart';
 import 'package:photo_sync/util/enums/object_type.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class ObjectsBloc extends BlocBase {
   ObjectsBloc() {
@@ -31,7 +33,7 @@ class ObjectsBloc extends BlocBase {
   //
   // Api Repository
   //
-  late ObjectRepository _repository;
+  late ObjectsRepositoryInterface _repository;
 
   ///Adds a [List] of [Object] to the subject
   ///
@@ -60,44 +62,10 @@ class ObjectsBloc extends BlocBase {
 
   ///Retrieves the objects (pictures and videos) from the api
   Future<void> getObjectListFromApi() async {
-    dynamic response;
-    try {
-      response = await _repository.getAll(
-          AuthBlocInherited.of(navigatorKey.currentContext!)
-              .currentUser!
-              .userID
-              .toString());
-    } catch (e) {
-      _showError(title: "Get object error");
-      return;
-    }
-
-    //Error handling
-    if (response == null) {
-      _showError();
-      return;
-    }
-
-    // Handles the api error (if there's one)
-    ApiError? error;
-    try {
-      error = ApiError.fromJSON(response);
-    } catch (e) {}
-
-    if (error?.errorType != null) {
-      _showError(title: error!.description);
-      return;
-    } else {
-      addObjects([], reset: true);
-      //Converts the json into the objects
-      addObjects(
-        List.generate(
-          response.length,
-          (index) => Object.fromJSON(response![index]),
-        ),
-      );
-    }
-
+    List<Object> response;
+    response = await _repository.getAll(_showError);
+    addObjects([], reset: true);
+    addObjects(response);
     await loadFromDisk();
   }
 
@@ -183,24 +151,30 @@ class ObjectsBloc extends BlocBase {
     // addObjects([Object.fromJSON(response)]);
   }
 
+  ///Checks the presence of new objects and uploads the found objects
   Future<void> checkNewObjectsAndBackup() async {
     changeLoading(true);
     List<RawObject> objects = [];
+    //Creates a list of new objects (where the syncDate is not set)
     await _recursiveAddRawObjects(
         _objectsList
             .where((element) => element.attributes.syncDate?.isEmpty ?? true)
             .toList(),
         objects);
-    await _uploadObjectRecursive(objects);
-    await getObjectListFromApi();
+    if (objects.isNotEmpty) {
+      await _uploadObjectRecursive(objects);
+      await getObjectListFromApi();
+    }
     changeLoading(false);
   }
 
+  //Creates a list of RawObject from the list of Object passed
   Future<void> _recursiveAddRawObjects(
       List<Object> objects, List<RawObject> raws) async {
     print(
         'recursiveAddRawObjects\tobjects: ${objects.length}\t rows:${raws.length}');
     try {
+      //Gets the bytes of the object
       Uint8List bytes =
           (await objects.first.futureFileBytes)!.readAsBytesSync();
       raws.add(RawObject(
@@ -211,12 +185,14 @@ class ObjectsBloc extends BlocBase {
       changeLoading(false);
       return;
     }
+    //If the list is not empty, calls itself
     if (objects.length - 1 > 0) {
       objects.removeAt(0);
       _recursiveAddRawObjects(objects, raws);
     }
   }
 
+  //Uploads the list of RawObject
   Future<void> _uploadObjectRecursive(List<RawObject> objects) async {
     try {
       print('uploadObjectRecursive\tobjects: ${objects.length}');
@@ -227,6 +203,7 @@ class ObjectsBloc extends BlocBase {
       changeLoading(false);
       return;
     }
+    //If the list is not empty, calls itself
     if (objects.length - 1 > 0) {
       objects.removeAt(0);
       _uploadObjectRecursive(objects);
@@ -243,7 +220,7 @@ class ObjectsBloc extends BlocBase {
       behavior: SnackBarBehavior.floating,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       action: SnackBarAction(
-        label: 'close',
+        label: 'close'.tr(),
         textColor: Colors.white,
         onPressed: () => ScaffoldMessenger.of(navigatorKey.currentContext!)
             .hideCurrentSnackBar(),

@@ -8,6 +8,7 @@ import 'package:photo_sync/inherited_widgets/auth_bloc_inherited.dart';
 import 'package:photo_sync/routes/route_builder.dart';
 import 'package:photo_sync/screens/base_page/base_page.dart';
 import 'package:photo_sync/widgets/sync_elevated_button.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class LoginPage extends StatefulWidget {
   final String username;
@@ -30,8 +31,8 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     GlobalMethods.setStatusBarColorAsScaffoldBackground();
-    _usernameController = TextEditingController();
-    _passwordController = TextEditingController();
+    _usernameController = TextEditingController(text: widget.username);
+    _passwordController = TextEditingController(text: widget.password);
     authBloc = AuthBlocInherited.of(navigatorKey.currentContext!);
     if (widget.username.isNotEmpty && widget.password.isNotEmpty) {
       authBloc.login(widget.username, widget.password);
@@ -65,7 +66,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
             TextField(
               controller: _usernameController,
-              decoration: InputDecoration(hintText: 'Username'),
+              decoration: InputDecoration(hintText: 'username'.tr()),
             ),
             SizedBox(height: 16),
             StreamBuilder<bool>(
@@ -77,7 +78,7 @@ class _LoginPageState extends State<LoginPage> {
                   obscureText: snapshot.data!,
                   onSubmitted: (_) async => login(),
                   decoration: InputDecoration(
-                    hintText: 'Password',
+                    hintText: 'password'.tr(),
                     suffixIcon: IconButton(
                       onPressed: () => authBloc.changeHidePassword(),
                       icon: Icon(snapshot.data!
@@ -96,7 +97,7 @@ class _LoginPageState extends State<LoginPage> {
                 Expanded(
                   child: SyncElevatedButton(
                     onPressed: () async => login(),
-                    buttonText: 'Login',
+                    buttonText: 'login'.tr(),
                   ),
                 ),
               ],
@@ -120,11 +121,11 @@ class _LoginPageState extends State<LoginPage> {
         children: [
           RichText(
             text: TextSpan(
-              text: 'First time you open the app?',
+              text: 'signUpInvite'.tr(),
               style: TextStyle(color: Colors.grey),
               children: [
                 TextSpan(
-                  text: ' Sign up here',
+                  text: 'signUpHere'.tr(),
                   style: TextStyle(
                     color: AppearanceBlocInherited.of(context)
                         .appearance

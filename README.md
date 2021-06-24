@@ -21,7 +21,7 @@ Current version: 0.6.0
 
 ## Hot to setup the app
 
-There is not much to do (except some work on the features and bugs...), if you don't like the default values for the api (object_repository.dart) you can change the base endpoint path.
+There is not much to do (except some work on the features and bugs...), if you don't like the default values for the api (object_repository.dart) you can change the base endpoint path; maybe it's a good idea to change the ip address of the api.
 
 ## Why PhotoSync?
 Since the popular Google photo have dropped the unlimited storage, I thougth to create this to have the storage size when I want

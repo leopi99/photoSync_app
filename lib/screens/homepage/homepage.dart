@@ -7,13 +7,14 @@ import 'package:photo_sync/models/object.dart';
 import 'package:photo_sync/screens/base_page/base_page.dart';
 import 'package:photo_sync/screens/homepage/grid_image.dart';
 import 'package:photo_sync/util/enums/object_type.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class Homepage extends StatefulWidget {
   @override
   _HomepageState createState() => _HomepageState();
 }
 
-class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
+class _HomepageState extends State<Homepage> {
   late ObjectsBloc bloc;
 
   @override
@@ -21,29 +22,8 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
     bloc = ObjectsBlocInherited.of(navigatorKey.currentContext!);
     GlobalMethods.setStatusBarColorAsScaffoldBackground();
     super.initState();
-    WidgetsBinding.instance!.addObserver(this);
   }
-
-  @override
-  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
-    print('AppLifeCycle state: $state');
-    switch (state) {
-      case AppLifecycleState.resumed:
-        await bloc.loadFromDisk();
-        break;
-      case AppLifecycleState.inactive:
-      case AppLifecycleState.paused:
-      case AppLifecycleState.detached:
-        break;
-    }
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance!.removeObserver(this);
-    super.dispose();
-  }
-
+  
   @override
   Widget build(BuildContext context) {
     return BasePage(
@@ -56,7 +36,7 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
         builder: (context, snapshot) {
           if (snapshot.data!.length == 0)
             return Center(
-              child: Text('Nothing here'),
+              child: Text('nothingHere'.tr()),
             );
           return GridView.builder(
             physics: BouncingScrollPhysics(),
@@ -86,7 +66,7 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
       onPressed: () async {
         await bloc.checkNewObjectsAndBackup();
       },
-      label: Text('Backup all objects'),
+      label: Text('backupAllObjects'.tr()),
     );
   }
 }

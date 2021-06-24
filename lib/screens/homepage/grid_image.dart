@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
@@ -14,10 +15,12 @@ import 'package:photo_sync/screens/single_image_page/single_image_page.dart';
 import 'package:photo_sync/extensions/date_time_extension.dart';
 import 'package:photo_sync/widgets/sync_dialog.dart';
 import 'package:photo_sync/widgets/sync_list_tile.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class GridImage extends StatelessWidget {
   final Object object;
   final int objectIndex;
+  Uint8List? imageBytes;
 
   GridImage(
     this.object,
@@ -38,6 +41,7 @@ class GridImage extends StatelessWidget {
                 MaterialPageRoute(
                   builder: (context) => SingleImagePage(
                     object: object,
+                    image: imageBytes,
                   ),
                 ),
               ),
@@ -49,6 +53,7 @@ class GridImage extends StatelessWidget {
                   future: object.getFileBytes,
                   builder: (context, snapshot) {
                     if (snapshot.data == null) return Container();
+                    imageBytes = snapshot.data;
                     return Center(child: Image.memory(snapshot.data));
                   },
                 ),
@@ -102,22 +107,22 @@ class GridImage extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  downloaded
+                  downloaded &&
+                          (object.attributes.syncDate?.isNotEmpty ?? false)
                       ? IconButton(
                           padding: EdgeInsets.all(16),
                           onPressed: () async {
                             bool isOk = false;
                             await SyncDialog.show(
                               context,
-                              title: 'Really?',
-                              content:
-                                  'Do you really want to delete this file from the disk?',
+                              title: 'really?'.tr(),
+                              content: 'deleteFileDescription'.tr(),
                               primaryButtonOnPressed: () {
                                 isOk = true;
                               },
-                              primaryButtonText: 'I really want',
+                              primaryButtonText: 'reallyWant'.tr(),
                               secondaryButtonOnPressed: () {},
-                              secondaryButtonText: 'Cancel',
+                              secondaryButtonText: 'cancel'.tr(),
                             );
                             if (isOk) {
                               try {
@@ -142,26 +147,26 @@ class GridImage extends StatelessWidget {
             ),
             SyncListTile(
               trailing: Text(filesize(object.attributes.pictureByteSize)),
-              titleText: 'File size',
+              titleText: 'fileSize'.tr(),
             ),
             FutureBuilder<String?>(
               future: object.attributes.positionFromCoordinates,
               initialData: '',
               builder: (context, snapshot) => SyncListTile(
-                titleText: 'Picture shot at',
+                titleText: 'pictureShotAt'.tr(),
                 trailing:
                     Text(snapshot.data ?? object.attributes.picturePosition),
               ),
             ),
             SyncListTile(
-              titleText: 'Picture created',
+              titleText: 'pictureCreated'.tr(),
               trailing: Text(object.attributes.creationDateTime.toDayMonthYear),
             ),
             SyncListTile(
-              titleText: 'Syncronization date',
+              titleText: 'syncDate'.tr(),
               trailing: Text(
                   object.attributes.syncronizationDateTime?.toDayMonthYear ??
-                      'Not yet'),
+                      'notYet'.tr()),
             ),
           ],
         );
