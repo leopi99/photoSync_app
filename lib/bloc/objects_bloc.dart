@@ -10,6 +10,7 @@ import 'package:photo_sync/models/api_error.dart';
 import 'package:photo_sync/models/object.dart';
 import 'package:photo_sync/models/object_attributes.dart';
 import 'package:photo_sync/models/raw_object.dart';
+import 'package:photo_sync/repository/interfaces/objects_repository_interface.dart';
 import 'package:photo_sync/repository/object_repository.dart';
 import 'package:photo_sync/util/enums/object_type.dart';
 import 'package:rxdart/rxdart.dart';
@@ -31,7 +32,7 @@ class ObjectsBloc extends BlocBase {
   //
   // Api Repository
   //
-  late ObjectRepository _repository;
+  late ObjectsRepositoryInterface _repository;
 
   ///Adds a [List] of [Object] to the subject
   ///
@@ -60,44 +61,10 @@ class ObjectsBloc extends BlocBase {
 
   ///Retrieves the objects (pictures and videos) from the api
   Future<void> getObjectListFromApi() async {
-    dynamic response;
-    try {
-      response = await _repository.getAll(
-          AuthBlocInherited.of(navigatorKey.currentContext!)
-              .currentUser!
-              .userID
-              .toString());
-    } catch (e) {
-      _showError(title: "Get object error");
-      return;
-    }
-
-    //Error handling
-    if (response == null) {
-      _showError();
-      return;
-    }
-
-    // Handles the api error (if there's one)
-    ApiError? error;
-    try {
-      error = ApiError.fromJSON(response);
-    } catch (e) {}
-
-    if (error?.errorType != null) {
-      _showError(title: error!.description);
-      return;
-    } else {
-      addObjects([], reset: true);
-      //Converts the json into the objects
-      addObjects(
-        List.generate(
-          response.length,
-          (index) => Object.fromJSON(response![index]),
-        ),
-      );
-    }
-
+    List<Object> response;
+    response = await _repository.getAll(_showError);
+    addObjects([], reset: true);
+    addObjects(response);
     await loadFromDisk();
   }
 
