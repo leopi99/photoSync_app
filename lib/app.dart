@@ -36,6 +36,37 @@ class _AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) {
+    return _createInheriteds(
+      StreamBuilder<Appearance>(
+        stream: _appearanceBloc.appearanceStream,
+        initialData: Appearance(),
+        builder: (context, snapshot) {
+          return MaterialApp(
+            supportedLocales: context.supportedLocales,
+            localizationsDelegates: context.localizationDelegates,
+            title: 'PhotoSync',
+            theme: snapshot.data!.currentThemeData,
+            home: WillPopScope(
+              onWillPop: () async =>
+                  !await navigatorKey.currentState!.maybePop(),
+              child: LayoutBuilder(
+                builder: (context, constraints) => Navigator(
+                  key: navigatorKey,
+                  initialRoute: RouteBuilder.INITIAL_PAGE,
+                  observers: [
+                    HeroController(),
+                  ],
+                  onGenerateRoute: RouteBuilder.generateRoute,
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _createInheriteds(Widget child) {
     return AppearanceBlocInherited(
       bloc: _appearanceBloc,
       child: AuthBlocInherited(
@@ -44,32 +75,7 @@ class _AppState extends State<App> {
           bloc: _objectsBloc,
           child: AppBlocInherited(
             bloc: _appBloc,
-            child: StreamBuilder<Appearance>(
-              stream: _appearanceBloc.appearanceStream,
-              initialData: Appearance(),
-              builder: (context, snapshot) {
-                return MaterialApp(
-                  supportedLocales: context.supportedLocales,
-                  localizationsDelegates: context.localizationDelegates,
-                  title: 'PhotoSync',
-                  theme: snapshot.data!.currentThemeData,
-                  home: WillPopScope(
-                    onWillPop: () async =>
-                        !await navigatorKey.currentState!.maybePop(),
-                    child: LayoutBuilder(
-                      builder: (context, constraints) => Navigator(
-                        key: navigatorKey,
-                        initialRoute: RouteBuilder.INITIAL_PAGE,
-                        observers: [
-                          HeroController(),
-                        ],
-                        onGenerateRoute: RouteBuilder.generateRoute,
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ),
+            child: child,
           ),
         ),
       ),
