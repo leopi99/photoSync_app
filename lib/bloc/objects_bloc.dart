@@ -171,19 +171,26 @@ class ObjectsBloc extends BlocBase {
   //Creates a list of RawObject from the list of Object passed
   Future<void> _recursiveAddRawObjects(
       List<Object> objects, List<RawObject> raws) async {
+    if (objects.length == 0) {
+      print('No need to upload media');
+      return;
+    }
     print(
         'recursiveAddRawObjects\tobjects: ${objects.length}\t rows:${raws.length}');
     try {
-      //Gets the bytes of the object
-      Uint8List bytes =
-          (await objects.first.futureFileBytes)!.readAsBytesSync();
-      raws.add(RawObject(
-          bytes: Int8List.fromList(bytes.toList()), object: objects.first));
+      if (objects.first.futureFileBytes != null) {
+        //Gets the bytes of the object
+        Uint8List bytes =
+            (await objects.first.futureFileBytes)!.readAsBytesSync();
+        raws.add(RawObject(
+            bytes: Int8List.fromList(bytes.toList()), object: objects.first));
+      }
     } catch (e, stacktrace) {
       print('Error: $e');
       print('StackTrace: $stacktrace');
+      print('Error uploading file from ${objects.first.attributes.localPath}');
       changeLoading(false);
-      return;
+      // return;
     }
     //If the list is not empty, calls itself
     if (objects.length - 1 > 0) {
