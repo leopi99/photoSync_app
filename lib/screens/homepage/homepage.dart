@@ -14,8 +14,12 @@ class Homepage extends StatefulWidget {
   _HomepageState createState() => _HomepageState();
 }
 
-class _HomepageState extends State<Homepage> {
+class _HomepageState extends State<Homepage>
+    with AutomaticKeepAliveClientMixin {
   late ObjectsBloc bloc;
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -23,9 +27,10 @@ class _HomepageState extends State<Homepage> {
     GlobalMethods.setStatusBarColorAsScaffoldBackground();
     super.initState();
   }
-  
+
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return BasePage(
       loadingStream: bloc.loadingStream,
       usePadding: true,
