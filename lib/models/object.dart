@@ -43,6 +43,7 @@ class Object {
 
   Future<Uint8List> get getFileBytes async {
     if (futureFileBytes != null) {
+      print('Getting file data from file');
       return (await futureFileBytes)!.readAsBytesSync();
     }
     Uint8List bytes;
@@ -51,6 +52,7 @@ class Object {
 
     bytes = fileInfo?.file.readAsBytesSync() ?? Uint8List.fromList([]);
     if (bytes.isEmpty) {
+      print('Getting file data from api');
       var data = (await ObjectRepository().getSingleObject(
           '/object/${attributes.creationDate}${attributes.extension}'));
       bytes = base64Decode(data);
@@ -61,7 +63,8 @@ class Object {
         fileExtension: attributes.extension!,
         key: attributes.creationDate,
       );
-    }
+    } else
+      print('Getting file data from cache');
     return bytes;
   }
 }
