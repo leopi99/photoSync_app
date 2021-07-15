@@ -17,6 +17,7 @@ class Homepage extends StatefulWidget {
 class _HomepageState extends State<Homepage>
     with AutomaticKeepAliveClientMixin {
   late ObjectsBloc bloc;
+  late ScrollController _scrollController;
 
   @override
   bool get wantKeepAlive => true;
@@ -24,8 +25,19 @@ class _HomepageState extends State<Homepage>
   @override
   void initState() {
     bloc = ObjectsBlocInherited.of(navigatorKey.currentContext!);
+    _scrollController = ScrollController();
+    _scrollController.addListener(() {
+      if (_scrollController.position.atEdge) bloc.loadMoreFromDisk();
+    });
     GlobalMethods.setStatusBarColorAsScaffoldBackground();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    bloc.dispose();
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -46,6 +58,7 @@ class _HomepageState extends State<Homepage>
           return GridView.builder(
             physics: BouncingScrollPhysics(),
             padding: EdgeInsets.symmetric(horizontal: 8),
+            controller: _scrollController,
             itemCount: snapshot.data!.length,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,

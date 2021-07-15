@@ -30,6 +30,9 @@ class ObjectsBloc extends BlocBase {
 
   Stream<List<Object>> get objectsStream => _objectSubject.stream;
 
+  ///To use for the "pagination" when loading media files
+  int _localMediaPage = 20;
+
   //
   // Api Repository
   //
@@ -69,6 +72,11 @@ class ObjectsBloc extends BlocBase {
     await loadFromDisk();
   }
 
+  Future<void> loadMoreFromDisk() async {
+    _localMediaPage += 20;
+    await loadFromDisk();
+  }
+
   ///Loads the Recent folder
   Future<void> loadFromDisk() async {
     PermissionState state = await PhotoManager.requestPermissionExtend();
@@ -81,7 +89,12 @@ class ObjectsBloc extends BlocBase {
             List<AssetEntity> assetList = await element.assetList;
 
             //Cycles the entities and creates the object
-            for (int i = 0; i < assetList.length; i++) {
+            for (int i = 0;
+                i <
+                    (assetList.length > _localMediaPage
+                        ? _localMediaPage
+                        : assetList.length);
+                i++) {
               if (assetList[i].type == AssetType.image ||
                   assetList[i].type == AssetType.video) {
                 int bytes = (await assetList[i].file)!.statSync().size;
@@ -177,21 +190,23 @@ class ObjectsBloc extends BlocBase {
     }
     print(
         'recursiveAddRawObjects\tobjects: ${objects.length}\t rows:${raws.length}');
-    try {
-      if (objects.first.futureFileBytes != null) {
-        //Gets the bytes of the object
-        Uint8List bytes =
-            (await objects.first.futureFileBytes)!.readAsBytesSync();
-        raws.add(RawObject(
-            bytes: Int8List.fromList(bytes.toList()), object: objects.first));
+    if (objects.first.objectType == ObjectType.Picture) //Only uploads the object if is a photo TODO: allow videos
+      try {
+        if (objects.first.futureFileBytes != null) {
+          //Gets the bytes of the object
+          Uint8List bytes =
+              (await objects.first.futureFileBytes)!.readAsBytesSync();
+          raws.add(RawObject(
+              bytes: Int8List.fromList(bytes.toList()), object: objects.first));
+        }
+      } catch (e, stacktrace) {
+        print('Error: $e');
+        print('StackTrace: $stacktrace');
+        print(
+            'Error uploading file from ${objects.first.attributes.localPath}');
+        changeLoading(false);
+        // return;
       }
-    } catch (e, stacktrace) {
-      print('Error: $e');
-      print('StackTrace: $stacktrace');
-      print('Error uploading file from ${objects.first.attributes.localPath}');
-      changeLoading(false);
-      // return;
-    }
     //If the list is not empty, calls itself
     if (objects.length - 1 > 0) {
       objects.removeAt(0);
