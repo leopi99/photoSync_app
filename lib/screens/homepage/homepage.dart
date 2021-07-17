@@ -27,7 +27,7 @@ class _HomepageState extends State<Homepage>
     bloc = ObjectsBlocInherited.of(navigatorKey.currentContext!);
     _scrollController = ScrollController();
     _scrollController.addListener(() {
-      if (_scrollController.position.atEdge) bloc.loadMoreFromDisk();
+      if (_scrollController.position.extentAfter <= 10) bloc.loadMoreFromDisk();
     });
     GlobalMethods.setStatusBarColorAsScaffoldBackground();
     super.initState();

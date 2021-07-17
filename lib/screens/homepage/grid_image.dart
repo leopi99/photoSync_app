@@ -49,12 +49,16 @@ class GridImage extends StatelessWidget {
                   _imageBottomBar(object, context, isDownloaded.data!),
               child: Hero(
                 tag: object.attributes.creationDate,
-                child: FutureBuilder<dynamic>(
+                child: FutureBuilder<Uint8List>(
                   future: object.getFileBytes,
                   builder: (context, snapshot) {
                     if (snapshot.data == null) return Container();
                     imageBytes = snapshot.data;
-                    return Center(child: Image.memory(snapshot.data));
+                    return Center(
+                        child: Image.memory(
+                      snapshot.data!,
+                      filterQuality: FilterQuality.low,
+                    ));
                   },
                 ),
               ),

@@ -12,23 +12,27 @@ class Object {
   final ObjectType objectType;
   final ObjectAttributes attributes;
   final Future<File?>? futureFileBytes;
+  final String _imageRemotePath;
 
   Object({
     required this.objectType,
     required this.attributes,
     this.futureFileBytes,
-  });
+  }) : _imageRemotePath =
+            '/object/${attributes.creationDate}${attributes.extension}';
 
   ///Returns true if the file is available offline
   Future<bool> get isDownloaded async =>
       await File(attributes.localPath).exists();
 
+  ///Returns the object from a json
   static Object fromJSON(Map<String, dynamic> json) => Object(
         attributes:
             ObjectAttributes.fromJSON(json[ObjectAttributes.KEY_ATTRIBUTES]),
         objectType: ObjectType.Picture.findExact(json[_KEY_TYPE]),
       );
 
+  ///Returns the json representation of the object
   Map<String, dynamic> get toJSON => {
         ObjectAttributes.KEY_ATTRIBUTES: attributes.toJSON,
         _KEY_TYPE: objectType.toValue,
@@ -41,30 +45,25 @@ class Object {
         futureFileBytes: this.futureFileBytes,
       );
 
+  ///Returns the bytes of the object from cache/local memory or api
   Future<Uint8List> get getFileBytes async {
-    if (futureFileBytes != null) {
-      print('Getting file data from file');
+    if (futureFileBytes != null)
       return (await futureFileBytes)!.readAsBytesSync();
-    }
+
     Uint8List bytes;
     FileInfo? fileInfo =
         await DefaultCacheManager().getFileFromCache(attributes.creationDate);
-
     bytes = fileInfo?.file.readAsBytesSync() ?? Uint8List.fromList([]);
     if (bytes.isEmpty) {
-      print('Getting file data from api');
-      var data = (await ObjectRepository().getSingleObject(
-          '/object/${attributes.creationDate}${attributes.extension}'));
+      var data = (await ObjectRepository().getSingleObject(_imageRemotePath));
       bytes = base64Decode(data);
       await DefaultCacheManager().putFile(
-        ObjectRepository.apiPath +
-            '/object/${attributes.creationDate}${attributes.extension}',
+        ObjectRepository.apiPath + _imageRemotePath,
         bytes,
         fileExtension: attributes.extension!,
         key: attributes.creationDate,
       );
-    } else
-      print('Getting file data from cache');
+    }
     return bytes;
   }
 }
