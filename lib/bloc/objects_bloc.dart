@@ -41,26 +41,25 @@ class ObjectsBloc extends BlocBase {
   ///Adds a [List] of [Object] to the subject
   ///
   ///Only if the localId is not present into the _objectsList
-  void addObjects(List<Object> objects, {bool reset = false}) {
-    if (!reset) {
-      List<int> objAdds = [];
-      for (int iSuper = 0; iSuper < objects.length; iSuper++) {
-        bool canBeAdded = true;
-        for (int i = 0; i < _objectsList.length; i++) {
-          if (objects[iSuper].attributes.localID ==
-              _objectsList[i].attributes.localID) {
-            canBeAdded = false;
-            break;
-          }
+  void addObjects(List<Object> objects,
+      {bool reset = false, bool updateState = true}) {
+    if (reset) _objectsList = [];
+    List<int> objAdds = [];
+    for (int iSuper = 0; iSuper < objects.length; iSuper++) {
+      bool canBeAdded = true;
+      for (int i = 0; i < _objectsList.length; i++) {
+        if (objects[iSuper].attributes.localID ==
+            _objectsList[i].attributes.localID) {
+          canBeAdded = false;
+          break;
         }
-        if (canBeAdded) objAdds.add(iSuper);
       }
-      for (int i = 0; i < objAdds.length; i++) {
-        _objectsList.add(objects[i]);
-      }
-    } else
-      _objectsList = [];
-    _objectSubject.add(UnmodifiableListView(_objectsList));
+      if (canBeAdded) objAdds.add(iSuper);
+    }
+    for (int i = 0; i < objAdds.length; i++) {
+      _objectsList.add(objects[i]);
+    }
+    if (updateState) _objectSubject.add(UnmodifiableListView(_objectsList));
   }
 
   ///Retrieves the objects (pictures and videos) from the api
@@ -87,47 +86,50 @@ class ObjectsBloc extends BlocBase {
           //Only picks the Recent "folder"
           if (element.name == "Recent") {
             List<AssetEntity> assetList = await element.assetList;
-
             //Cycles the entities and creates the object
-            for (int i = 0;
-                i <
-                    (assetList.length > _localMediaPage
-                        ? _localMediaPage
-                        : assetList.length);
-                i++) {
-              if (assetList[i].type == AssetType.image ||
-                  assetList[i].type == AssetType.video) {
-                int bytes = (await assetList[i].file)!.statSync().size;
-                File? file = await assetList[i].file;
-                LatLng pos = await assetList[i].latlngAsync();
-                addObjects(
-                  [
-                    Object(
-                      futureFileBytes: assetList[i].file,
-                      objectType: assetList[i].type == AssetType.image
-                          ? ObjectType.Picture
-                          : ObjectType.Video,
-                      attributes: ObjectAttributes(
-                          extension: '.${file!.path.split('.').last}',
-                          creationDate: assetList[i]
-                              .createDateTime
-                              .millisecondsSinceEpoch
-                              .toString(),
-                          picturePosition: "${pos.latitude}, ${pos.longitude}",
-                          localPath: file.path,
-                          pictureByteSize: bytes,
-                          databaseID: 0,
-                          localID: int.parse(assetList[i].id)),
-                    ),
-                  ],
-                );
-              }
-            }
+            await _recursivelyAddObject(assetList.sublist(
+                _localMediaPage - 20 >= 0 ? _localMediaPage - 20 : 0,
+                _localMediaPage));
+            _objectSubject.add(UnmodifiableListView(_objectsList));
+            changeLoading(false);
           }
         },
       );
-      changeLoading(false);
     }
+  }
+
+  ///Recursively adds objects from the local media [List<AssetEntity>]
+  Future _recursivelyAddObject(List<AssetEntity> assetList) async {
+    if (assetList.first.type == AssetType.image ||
+        assetList.first.type == AssetType.video) {
+      int bytes = (await assetList.first.file)!.statSync().size;
+      File? file = await assetList.first.file;
+      LatLng pos = await assetList.first.latlngAsync();
+      addObjects(
+        [
+          Object(
+            futureFileBytes: assetList.first.file,
+            objectType: assetList.first.type == AssetType.image
+                ? ObjectType.Picture
+                : ObjectType.Video,
+            attributes: ObjectAttributes(
+              extension: '.${file!.path.split('.').last}',
+              creationDate: assetList
+                  .first.createDateTime.millisecondsSinceEpoch
+                  .toString(),
+              picturePosition: "${pos.latitude}, ${pos.longitude}",
+              localPath: file.path,
+              pictureByteSize: bytes,
+              databaseID: 0,
+              localID: int.parse(assetList.first.id),
+            ),
+          ),
+        ],
+        updateState: false,
+      );
+      assetList.removeAt(0);
+    }
+    if (assetList.length > 0) await _recursivelyAddObject(assetList);
   }
 
   ///Creates an image on the db => api
@@ -190,7 +192,9 @@ class ObjectsBloc extends BlocBase {
     }
     print(
         'recursiveAddRawObjects\tobjects: ${objects.length}\t rows:${raws.length}');
-    if (objects.first.objectType == ObjectType.Picture) //Only uploads the object if is a photo TODO: allow videos
+    if (objects.first.objectType ==
+        ObjectType
+            .Picture) //Only uploads the object if is a photo TODO: allow videos
       try {
         if (objects.first.futureFileBytes != null) {
           //Gets the bytes of the object
