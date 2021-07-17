@@ -17,6 +17,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class ObjectsBloc extends BlocBase {
+  static const int _UPDATE_LOCAL_MEDIA_STEP = 20;
   ObjectsBloc() {
     _objectSubject = BehaviorSubject<List<Object>>.seeded([]);
     _repository = ObjectRepository();
@@ -31,7 +32,7 @@ class ObjectsBloc extends BlocBase {
   Stream<List<Object>> get objectsStream => _objectSubject.stream;
 
   ///To use for the "pagination" when loading media files
-  int _localMediaPage = 20;
+  int _localMediaPage = _UPDATE_LOCAL_MEDIA_STEP;
 
   //
   // Api Repository
@@ -66,13 +67,13 @@ class ObjectsBloc extends BlocBase {
   Future<void> getObjectListFromApi() async {
     List<Object> response;
     response = await _repository.getAll(_showError);
-    addObjects([], reset: true);
-    addObjects(response);
+    addObjects([], reset: true, updateState: false);
+    addObjects(response, updateState: false);
     await loadFromDisk();
   }
 
   Future<void> loadMoreFromDisk() async {
-    _localMediaPage += 20;
+    _localMediaPage += _UPDATE_LOCAL_MEDIA_STEP;
     await loadFromDisk();
   }
 
@@ -86,9 +87,11 @@ class ObjectsBloc extends BlocBase {
           //Only picks the Recent "folder"
           if (element.name == "Recent") {
             List<AssetEntity> assetList = await element.assetList;
-            //Cycles the entities and creates the object
+            //Cycles the entities and creates the objects
             await _recursivelyAddObject(assetList.sublist(
-                _localMediaPage - 20 >= 0 ? _localMediaPage - 20 : 0,
+                _localMediaPage - _UPDATE_LOCAL_MEDIA_STEP >= 0
+                    ? _localMediaPage - _UPDATE_LOCAL_MEDIA_STEP
+                    : 0,
                 _localMediaPage));
             _objectSubject.add(UnmodifiableListView(_objectsList));
             changeLoading(false);
