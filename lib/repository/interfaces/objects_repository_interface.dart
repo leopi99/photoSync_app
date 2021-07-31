@@ -15,7 +15,7 @@ abstract class ObjectsRepositoryInterface {
   Future<List<Object>> getVideos(Function errorCallBack);
 
   ///Uploads a [RawObject]
-  Future<Map<String, dynamic>> addObject(RawObject object, int userID);
+  Future<Map<String, dynamic>> addObject(RawObject object);
 
   ///Logs into the api
   Future<Map<String, dynamic>> login(String username, String password);

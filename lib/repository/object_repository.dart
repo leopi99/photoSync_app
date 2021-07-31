@@ -16,7 +16,6 @@ class ObjectRepository extends ObjectsRepositoryInterface {
   static get apiPath => _API_PATH;
 
   String? _authKey;
-  int? _userID;
 
   Dio? _dioInstance;
 
@@ -92,15 +91,9 @@ class ObjectRepository extends ObjectsRepositoryInterface {
     );
     if (response.data['error'] == null) {
       _authKey = response.data['apiKey'];
-      _userID = response.data['userID'];
-      //Updates the dioInstance to use the key retrieved and the userID
-      _dioInstance!.options.headers = {
-        "apiKey": _authKey,
-        "userID": _userID,
-      };
+      //Updates the dioInstance to use the key retrieved
       _dioInstance!.options.queryParameters = {
         "apiKey": _authKey,
-        "userID": _userID,
       };
     }
 
@@ -108,7 +101,7 @@ class ObjectRepository extends ObjectsRepositoryInterface {
   }
 
   @override
-  Future<Map<String, dynamic>> addObject(RawObject object, int userID) async {
+  Future<Map<String, dynamic>> addObject(RawObject object) async {
     Response response =
         await _dioInstance!.post('/addObject', data: object.toJSON);
     return response.data;

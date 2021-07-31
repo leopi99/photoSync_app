@@ -93,8 +93,7 @@ class ObjectsBloc extends BlocBase {
             int end = _localMediaPage;
             if (assetList.length < end) end = assetList.length;
             //Cycles the entities and creates the objects
-            await _recursivelyAddObject(
-                assetList.sublist(start, end));
+            await _recursivelyAddObject(assetList.sublist(start, end));
             _objectSubject.add(UnmodifiableListView(_objectsList));
             changeLoading(false);
           }
@@ -149,11 +148,7 @@ class ObjectsBloc extends BlocBase {
         ),
         bytes: object.bytes,
       );
-      response = await _repository.addObject(
-          object,
-          int.parse(AuthBlocInherited.of(navigatorKey.currentContext!)
-              .currentUser!
-              .userID!));
+      response = await _repository.addObject(object);
     } catch (e, stacktrace) {
       print(e);
       print(stacktrace);
