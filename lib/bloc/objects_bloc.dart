@@ -87,12 +87,14 @@ class ObjectsBloc extends BlocBase {
           //Only picks the Recent "folder"
           if (element.name == "Recent") {
             List<AssetEntity> assetList = await element.assetList;
+            int start = _localMediaPage - _UPDATE_LOCAL_MEDIA_STEP >= 0
+                ? _localMediaPage - _UPDATE_LOCAL_MEDIA_STEP
+                : 0;
+            int end = _localMediaPage;
+            if (assetList.length < end) end = assetList.length;
             //Cycles the entities and creates the objects
-            await _recursivelyAddObject(assetList.sublist(
-                _localMediaPage - _UPDATE_LOCAL_MEDIA_STEP >= 0
-                    ? _localMediaPage - _UPDATE_LOCAL_MEDIA_STEP
-                    : 0,
-                _localMediaPage));
+            await _recursivelyAddObject(
+                assetList.sublist(start, end));
             _objectSubject.add(UnmodifiableListView(_objectsList));
             changeLoading(false);
           }
