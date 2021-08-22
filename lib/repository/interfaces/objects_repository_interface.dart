@@ -6,13 +6,13 @@ import 'package:photo_sync/models/user.dart';
 ///Abstract class for the [ObjectsRepository]
 abstract class ObjectsRepositoryInterface {
   ///Returns a list of [Object] as in models
-  Future<List<Object>> getAll(Function errorCallBack);
+  Future<List<Object>> getAll(Function({String title}) errorCallBack);
 
   ///Returns a list of [Object] as in models
-  Future<List<Object>> getPictures(Function errorCallBack);
+  Future<List<Object>> getPictures(Function({String title}) errorCallBack);
 
   ///Returns a list of [Object] as in models
-  Future<List<Object>> getVideos(Function errorCallBack);
+  Future<List<Object>> getVideos(Function({String title}) errorCallBack);
 
   ///Uploads a [RawObject]
   Future<Map<String, dynamic>> addObject(RawObject object);

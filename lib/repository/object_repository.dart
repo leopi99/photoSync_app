@@ -60,21 +60,21 @@ class ObjectRepository extends ObjectsRepositoryInterface {
       {'apiKey': _dioInstance!.options.headers['apiKey']};
 
   @override
-  Future<List<Object>> getAll(Function errorCallBack) async {
+  Future<List<Object>> getAll(Function({String title}) errorCallBack) async {
     Response response = await _dioInstance!.get('/getAll').onError(
         (error, stackTrace) => errorCallBack(title: "Get objects error"));
     return _convertJsonListToObject(response.data);
   }
 
   @override
-  Future<List<Object>> getPictures(Function errorCallBack) async {
+  Future<List<Object>> getPictures(Function({String title}) errorCallBack) async {
     Response response = await _dioInstance!.get('/getPictures').onError(
         (error, stackTrace) => errorCallBack(title: "Get pictures error"));
     return _convertJsonListToObject(response.data);
   }
 
   @override
-  Future<List<Object>> getVideos(Function errorCallBack) async {
+  Future<List<Object>> getVideos(Function({String title}) errorCallBack) async {
     Response response = await _dioInstance!.get('/getVideos').onError(
         (error, stackTrace) => errorCallBack(title: "Get videos error"));
     return _convertJsonListToObject(response.data);
