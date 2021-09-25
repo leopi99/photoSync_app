@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:photo_sync/global/methods.dart';
 
 class SyncDialog extends StatelessWidget {
   final String title;
@@ -46,24 +45,25 @@ class SyncDialog extends StatelessWidget {
     required this.primaryButtonText,
     this.secondaryButtonOnPressed,
     this.secondaryButtonText,
-  });
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Material(
       child: Container(
-        padding: EdgeInsets.all(20).copyWith(bottom: 6),
+        padding: const EdgeInsets.all(20).copyWith(bottom: 6),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
               title,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(content),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Row(
               mainAxisSize: MainAxisSize.max,
               children: [
@@ -85,8 +85,9 @@ class SyncDialog extends StatelessWidget {
                     child: TextButton(
                       onPressed: () {
                         Navigator.pop(context);
-                        if (secondaryButtonOnPressed != null)
+                        if (secondaryButtonOnPressed != null) {
                           secondaryButtonOnPressed!();
+                        }
                       },
                       child: Text(secondaryButtonText!),
                     ),

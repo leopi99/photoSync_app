@@ -17,38 +17,38 @@ class AppBloc {
 
   //Checks the "session", changes the current page
   static Future<void> checkSession() async {
-    bool onBoarding = await SharedManager().readBool(SharedType.OnBoardingDone);
+    bool onBoarding = await SharedManager().readBool(SharedType.onBoardingDone);
 
     String? username =
-        await SharedManager().readString(SharedType.LoginUsername);
+        await SharedManager().readString(SharedType.loginUsername);
     String? password =
-        await SharedManager().readString(SharedType.LoginPassword);
+        await SharedManager().readString(SharedType.loginPassword);
 
     //Goes to the onBoarding if not already done
     if (!onBoarding) {
       Navigator.pushReplacementNamed(
-          navigatorKey.currentContext!, RouteBuilder.ONBOARDING_PAGE);
+          navigatorKey.currentContext!, RouteBuilder.onBoardingPage);
       return;
     }
     if (AuthBlocInherited.of(navigatorKey.currentContext!).currentUser ==
         null) {
       Navigator.pushReplacementNamed(
-          navigatorKey.currentContext!, RouteBuilder.LOGIN_PAGE,
+          navigatorKey.currentContext!, RouteBuilder.loginPage,
           arguments: {'username': username ?? '', 'password': password ?? ''});
       return;
     }
     //If nothing needs to be done, goes to the homepage
     Navigator.pushReplacementNamed(
-        navigatorKey.currentContext!, RouteBuilder.HOMEPAGE);
+        navigatorKey.currentContext!, RouteBuilder.homepage);
   }
 
   Future<void> setBackgroundSync(bool value) async {
-    await SharedManager().writeBool(SharedType.BackgroundBackup, value);
+    await SharedManager().writeBool(SharedType.backgroundBackup, value);
     _backgroundSyncSubject.add(value);
   }
 
   Future<bool> readBackgroundSync() async {
-    bool value = await SharedManager().readBool(SharedType.BackgroundBackup);
+    bool value = await SharedManager().readBool(SharedType.backgroundBackup);
     _backgroundSyncSubject.add(value);
     return value;
   }

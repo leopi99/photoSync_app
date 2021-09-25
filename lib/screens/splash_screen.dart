@@ -5,6 +5,8 @@ import 'package:photo_sync/global/methods.dart';
 import 'package:photo_sync/global/nav_key.dart';
 
 class SplashScreen extends StatefulWidget {
+  const SplashScreen({Key? key}) : super(key: key);
+
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
@@ -33,7 +35,7 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       body: Center(
         child: AnimatedOpacity(
-          duration: Duration(milliseconds: 1500),
+          duration: const Duration(milliseconds: 1500),
           curve: Curves.ease,
           opacity: opacity,
           child: FlutterLogo(

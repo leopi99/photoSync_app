@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:photo_sync/constants/appearance.dart';
-import 'package:photo_sync/global/methods.dart';
 import 'package:photo_sync/global/nav_key.dart';
 import 'package:photo_sync/inherited_widgets/appearance_bloc_inherited.dart';
 import 'package:photo_sync/inherited_widgets/objects_bloc_inherited.dart';
@@ -13,7 +12,10 @@ import 'package:easy_localization/easy_localization.dart';
 class SkeletonPage extends StatefulWidget {
   final int initialPage;
 
-  SkeletonPage({this.initialPage: 0});
+  const SkeletonPage({
+    this.initialPage = 0,
+    Key? key,
+  }) : super(key: key);
 
   @override
   _SkeletonPageState createState() => _SkeletonPageState();
@@ -21,9 +23,9 @@ class SkeletonPage extends StatefulWidget {
 
 class _SkeletonPageState extends State<SkeletonPage>
     with WidgetsBindingObserver {
-  static const double _BAR_HEIGHT = 64;
+  static const double _barHeight = 64;
   late PageController _controller;
-  static const double _NAV_ICONS_RADIUS = 48;
+  static const double _navIconsRadius = 48;
   int currentPage = 0;
 
   @override
@@ -36,7 +38,7 @@ class _SkeletonPageState extends State<SkeletonPage>
 
   @override
   Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
-    print('AppLifeCycle state: $state');
+    debugPrint('AppLifeCycle state: $state');
     switch (state) {
       case AppLifecycleState.resumed:
         await ObjectsBlocInherited.of(navigatorKey.currentContext!)
@@ -62,15 +64,15 @@ class _SkeletonPageState extends State<SkeletonPage>
           Align(
             alignment: AlignmentDirectional.topCenter,
             child: Padding(
-              padding: const EdgeInsets.only(bottom: _BAR_HEIGHT),
+              padding: const EdgeInsets.only(bottom: _barHeight),
               child: PageView(
                 controller: _controller,
                 onPageChanged: (value) => currentPage = value,
-                children: [
+                children: const [
                   Homepage(),
                   SettingsPage(),
                 ],
-                physics: NeverScrollableScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
               ),
             ),
           ),
@@ -91,9 +93,9 @@ class _SkeletonPageState extends State<SkeletonPage>
             padding: const EdgeInsets.symmetric(vertical: 8),
             child: GNav(
               haptic: false,
-              tabBorderRadius: _NAV_ICONS_RADIUS,
+              tabBorderRadius: _navIconsRadius,
               curve: Curves.linear,
-              duration: Duration(milliseconds: 250),
+              duration: const Duration(milliseconds: 250),
               selectedIndex: currentPage,
               onTabChange: (value) => _controller.jumpToPage(value),
               gap: 8,
@@ -104,8 +106,8 @@ class _SkeletonPageState extends State<SkeletonPage>
                   ? Colors.white.withOpacity(.8)
                   : Colors.black,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              tabMargin: EdgeInsets.symmetric(horizontal: 8),
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+              tabMargin: const EdgeInsets.symmetric(horizontal: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
               tabs: [
                 GButton(
                   icon: FeatherIcons.home,

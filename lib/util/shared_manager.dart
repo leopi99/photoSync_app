@@ -34,8 +34,8 @@ class SharedManager {
   }
 
   Future<void> logout() async {
-    await _wrapper.delete(key: SharedType.AppAppearance.toValue);
-    await _wrapper.delete(key: SharedType.LoginPassword.toValue);
-    await _wrapper.delete(key: SharedType.LoginUsername.toValue);
+    await _wrapper.delete(key: SharedType.appAppearance.toValue);
+    await _wrapper.delete(key: SharedType.loginPassword.toValue);
+    await _wrapper.delete(key: SharedType.loginUsername.toValue);
   }
 }

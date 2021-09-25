@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:photo_sync/models/raw_object.dart';
 import 'package:photo_sync/models/object.dart';
 import 'package:photo_sync/models/user.dart';
@@ -9,11 +10,12 @@ import 'package:photo_sync/util/api_connection_interceptor.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 class ObjectRepository extends ObjectsRepositoryInterface {
-  static const _HOST =
+  static const _host =
       "http://192.168.1.7"; //This address works in the android emulator => change to the ip address where you host the api (with the api in localhost)
-  static const _PORT = ":8010"; //Port dedicated to the api
-  static const _API_PATH = "$_HOST$_PORT/photoSync/api/v1";
-  static get apiPath => _API_PATH;
+  static const _port = ":8010"; //Port dedicated to the api
+  static const _apiPath = "$_host$_port/photoSync/api/v1";
+
+  static get apiPath => _apiPath;
 
   String? _authKey;
 
@@ -29,10 +31,10 @@ class ObjectRepository extends ObjectsRepositoryInterface {
 
   ///Creates the dio instance, if already present, sets the headers
   void setupDio() {
-    print('ApiPath: $_API_PATH');
+    debugPrint('ApiPath: $_apiPath');
     if (_dioInstance == null) {
       BaseOptions _dioOptions = BaseOptions(
-        baseUrl: _API_PATH,
+        baseUrl: _apiPath,
         connectTimeout: 10800,
         validateStatus: (_) => true,
         responseType: ResponseType.json,
@@ -67,7 +69,8 @@ class ObjectRepository extends ObjectsRepositoryInterface {
   }
 
   @override
-  Future<List<Object>> getPictures(Function({String title}) errorCallBack) async {
+  Future<List<Object>> getPictures(
+      Function({String title}) errorCallBack) async {
     Response response = await _dioInstance!.get('/getPictures').onError(
         (error, stackTrace) => errorCallBack(title: "Get pictures error"));
     return _convertJsonListToObject(response.data);
@@ -137,11 +140,11 @@ class ObjectRepository extends ObjectsRepositoryInterface {
     try {
       await File(localPath).writeAsBytes(base64Decode(response.data));
     } catch (e, stacktrace) {
-      print(e);
-      print(stacktrace);
+      debugPrint('$e');
+      debugPrint('$stacktrace');
       return Response(
           statusCode: 500,
-          requestOptions: RequestOptions(path: _API_PATH + '/object/$url'));
+          requestOptions: RequestOptions(path: _apiPath + '/object/$url'));
     }
     return response;
   }
@@ -169,7 +172,7 @@ class ObjectRepository extends ObjectsRepositoryInterface {
     try {
       json.forEach((element) => objects.add(Object.fromJSON(element)));
     } catch (e) {
-      print(e);
+      debugPrint('$e');
     }
     return objects;
   }

@@ -9,13 +9,14 @@ class BasePage extends StatelessWidget {
   final bool usePadding;
   final Widget? floatingActionButton;
 
-  BasePage({
+  const BasePage({
     required this.child,
     required this.loadingStream,
     this.usePadding = false,
     this.appBar,
     this.floatingActionButton,
-  });
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +37,7 @@ class BasePage extends StatelessWidget {
                   absorbing: true,
                   child: Container(
                     color: Colors.black26,
-                    child: Center(
+                    child: const Center(
                       child: CircularProgressIndicator(
                         valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                       ),

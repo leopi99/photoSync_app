@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:photo_sync/bloc/objects_bloc.dart';
-import 'package:photo_sync/global/methods.dart';
 import 'package:photo_sync/global/nav_key.dart';
 import 'package:photo_sync/inherited_widgets/objects_bloc_inherited.dart';
 import 'package:photo_sync/models/object.dart';
@@ -10,6 +9,8 @@ import 'package:photo_sync/util/enums/object_type.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class Homepage extends StatefulWidget {
+  const Homepage({Key? key}) : super(key: key);
+
   @override
   _HomepageState createState() => _HomepageState();
 }
@@ -48,26 +49,28 @@ class _HomepageState extends State<Homepage>
       floatingActionButton: _buildUploadPicturesFAB(),
       child: StreamBuilder<List<Object>>(
         stream: bloc.objectsStream,
-        initialData: [],
+        initialData: const [],
         builder: (context, snapshot) {
-          if (snapshot.data!.length == 0)
+          if (snapshot.data!.isEmpty) {
             return Center(
               child: Text('nothingHere'.tr()),
             );
+          }
           return GridView.builder(
-            physics: BouncingScrollPhysics(),
-            padding: EdgeInsets.symmetric(horizontal: 8),
+            physics: const BouncingScrollPhysics(),
+            padding: const EdgeInsets.symmetric(horizontal: 8),
             controller: _scrollController,
             itemCount: snapshot.data!.length,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               crossAxisSpacing: 8,
               mainAxisSpacing: 8,
             ),
             itemBuilder: (context, index) {
-              if (snapshot.data![index].objectType == ObjectType.Picture)
+              if (snapshot.data![index].objectType == ObjectType.picture) {
                 return GridImage(snapshot.data![index], index);
-              return Center(
+              }
+              return const Center(
                 child: Text('Video not yet supported'),
               );
             },

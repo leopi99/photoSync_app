@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:photo_sync/bloc/app_bloc.dart';
 
 class AppBlocInherited extends InheritedWidget {
-  final Widget child;
   final AppBloc bloc;
 
-  AppBlocInherited({
+  const AppBlocInherited({
     required this.bloc,
-    required this.child,
-  }) : super(child: child);
+    required Widget child,
+    Key? key,
+  }) : super(child: child, key: key);
 
   @override
   bool updateShouldNotify(covariant InheritedWidget oldWidget) => false;

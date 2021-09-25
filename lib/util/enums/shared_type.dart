@@ -1,11 +1,11 @@
 enum SharedType {
-  LoginUsername,
-  LoginPassword,
-  OnBoardingDone,
-  AppAppearance,
-  BackgroundBackup,
+  loginUsername,
+  loginPassword,
+  onBoardingDone,
+  appAppearance,
+  backgroundBackup,
 }
 
 extension SharedTypeExtension on SharedType {
-  String get toValue => this.toString().split('.').last;
+  String get toValue => toString().split('.').last;
 }

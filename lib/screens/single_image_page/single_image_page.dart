@@ -1,6 +1,5 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:photo_sync/global/methods.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_sync/models/object.dart';
 
@@ -13,7 +12,8 @@ class SingleImagePage extends StatefulWidget {
   const SingleImagePage({
     required this.object,
     this.image,
-  });
+    Key? key,
+  }) : super(key: key);
 
   @override
   _SingleImagePageState createState() => _SingleImagePageState();

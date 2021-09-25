@@ -14,10 +14,11 @@ class LoginPage extends StatefulWidget {
   final String username;
   final String password;
 
-  LoginPage({
+  const LoginPage({
     required this.password,
     required this.username,
-  });
+    Key? key,
+  }) : super(key: key);
 
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -56,7 +57,7 @@ class _LoginPageState extends State<LoginPage> {
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Padding(
+            const Padding(
               padding: EdgeInsets.only(bottom: 32),
               child: Text(
                 'Login',
@@ -67,7 +68,7 @@ class _LoginPageState extends State<LoginPage> {
               controller: _usernameController,
               decoration: InputDecoration(hintText: 'username'.tr()),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             StreamBuilder<bool>(
               stream: authBloc.hidePassword,
               initialData: false,
@@ -88,9 +89,9 @@ class _LoginPageState extends State<LoginPage> {
                 );
               },
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             _buildSignUp(),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Row(
               children: [
                 Expanded(
@@ -112,7 +113,7 @@ class _LoginPageState extends State<LoginPage> {
     return InkWell(
       onTap: () {
         GlobalMethods.hideKeyboard();
-        Navigator.pushNamed(context, RouteBuilder.SIGN_UP_PAGE,
+        Navigator.pushNamed(context, RouteBuilder.signUpPage,
             arguments: authBloc);
       },
       child: Row(
@@ -121,7 +122,7 @@ class _LoginPageState extends State<LoginPage> {
           RichText(
             text: TextSpan(
               text: 'signUpInvite'.tr(),
-              style: TextStyle(color: Colors.grey),
+              style: const TextStyle(color: Colors.grey),
               children: [
                 TextSpan(
                   text: 'signUpHere'.tr(),
@@ -129,7 +130,7 @@ class _LoginPageState extends State<LoginPage> {
                     color: AppearanceBlocInherited.of(context)
                         .appearance
                         .currentThemeData
-                        .accentColor,
+                        .colorScheme.secondary,
                   ),
                 ),
               ],

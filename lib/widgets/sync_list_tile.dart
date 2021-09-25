@@ -9,6 +9,7 @@ class SyncListTile extends StatelessWidget {
 
   ///Use this only if the titleWidget is null
   final String? titleText;
+
   const SyncListTile({
     this.titleWidget,
     this.onTap,
@@ -16,7 +17,8 @@ class SyncListTile extends StatelessWidget {
     this.trailing,
     this.leading,
     this.padding,
-  });
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

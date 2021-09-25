@@ -7,12 +7,13 @@ class SyncElevatedButton extends StatelessWidget {
   final Function onPressed;
   final EdgeInsetsGeometry padding;
 
-  SyncElevatedButton({
+  const SyncElevatedButton({
     required this.buttonText,
     this.buttonTextStyle,
     this.padding = const EdgeInsets.all(0),
     required this.onPressed,
-  });
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +26,7 @@ class SyncElevatedButton extends StatelessWidget {
           primary: AppearanceBlocInherited.of(context)
               .appearance
               .currentThemeData
-              .accentColor,
+              .colorScheme.secondary,
         ),
         onPressed: () => onPressed(),
         child: Text(

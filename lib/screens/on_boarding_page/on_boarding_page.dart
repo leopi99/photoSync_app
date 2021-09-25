@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:photo_sync/bloc/app_bloc.dart';
 import 'package:photo_sync/constants/assets_path.dart';
-import 'package:photo_sync/global/methods.dart';
 import 'package:photo_sync/inherited_widgets/appearance_bloc_inherited.dart';
 import 'package:photo_sync/models/on_boarding_info.dart';
 import 'package:photo_sync/util/enums/shared_type.dart';
@@ -32,6 +31,8 @@ const List<OnBoardingInfo> pages = [
 ];
 
 class OnBoardingPage extends StatefulWidget {
+  const OnBoardingPage({Key? key}) : super(key: key);
+
   @override
   _OnBoardingPageState createState() => _OnBoardingPageState();
 }
@@ -64,7 +65,7 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
             }),
             itemCount: pages.length,
             controller: _pageController,
-            physics: BouncingScrollPhysics(),
+            physics: const BouncingScrollPhysics(),
             pageSnapping: true,
             itemBuilder: (context, index) {
               return Center(
@@ -75,7 +76,7 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
           Align(
             alignment: AlignmentDirectional.bottomCenter,
             child: Padding(
-              padding: EdgeInsets.only(bottom: 64),
+              padding: const EdgeInsets.only(bottom: 64),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: List.generate(
@@ -86,25 +87,25 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
           Align(
             alignment: AlignmentDirectional.bottomEnd,
             child: Padding(
-              padding: EdgeInsets.only(bottom: 8, right: 8),
+              padding: const EdgeInsets.only(bottom: 8, right: 8),
               child: currentPage < pages.length - 1
                   ? TextButton(
                       onPressed: () {
                         _pageController.animateToPage(currentPage + 1,
-                            duration: Duration(milliseconds: 250),
+                            duration: const Duration(milliseconds: 250),
                             curve: Curves.easeInBack);
                         setState(() {});
                       },
                       child: Text(
                         'next'.tr(),
-                        style: TextStyle(fontSize: 16),
+                        style: const TextStyle(fontSize: 16),
                       ),
                     )
                   : TextButton(
                       onPressed: _goToHomepage,
                       child: Text(
                         'close'.tr(),
-                        style: TextStyle(fontSize: 16),
+                        style: const TextStyle(fontSize: 16),
                       ),
                     ),
             ),
@@ -118,13 +119,14 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
     return Container(
       height: 10,
       width: 10,
-      margin: EdgeInsets.symmetric(horizontal: 4),
+      margin: const EdgeInsets.symmetric(horizontal: 4),
       decoration: BoxDecoration(
         color: currentPage == index
             ? AppearanceBlocInherited.of(context)
                 .appearance
                 .currentThemeData
-                .accentColor
+                .colorScheme
+                .secondary
             : Colors.grey[300],
         shape: BoxShape.circle,
       ),
@@ -148,7 +150,7 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
             child: Text(
               info.pageDescription!,
               textAlign: TextAlign.center,
-              style: TextStyle(fontWeight: FontWeight.w600),
+              style: const TextStyle(fontWeight: FontWeight.w600),
             ),
           ),
       ],
@@ -156,7 +158,7 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
   }
 
   void _goToHomepage() async {
-    await SharedManager().writeBool(SharedType.OnBoardingDone, true);
+    await SharedManager().writeBool(SharedType.onBoardingDone, true);
     AppBloc.checkSession();
   }
 }

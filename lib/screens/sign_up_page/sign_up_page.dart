@@ -13,8 +13,9 @@ class SignUpPage extends StatelessWidget {
   final TextEditingController _passwordController = TextEditingController();
 
   SignUpPage({
+    Key? key,
     required this.bloc,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +29,7 @@ class SignUpPage extends StatelessWidget {
             await GlobalMethods.hideKeyboard();
             Navigator.of(context).pop();
           },
-          icon: Icon(FeatherIcons.chevronLeft),
+          icon: const Icon(FeatherIcons.chevronLeft),
         ),
       ),
       child: Padding(
@@ -41,7 +42,7 @@ class SignUpPage extends StatelessWidget {
               controller: _usernameController,
               decoration: InputDecoration(hintText: 'username'.tr()),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             StreamBuilder<bool>(
               stream: bloc.hidePassword,
               initialData: false,
@@ -61,12 +62,13 @@ class SignUpPage extends StatelessWidget {
                 );
               },
             ),
-            SizedBox(height: 32),
+            const SizedBox(height: 32),
             Row(
               children: [
                 Expanded(
                   child: SyncElevatedButton(
-                    onPressed: () async => bloc.register(_usernameController.text, _passwordController.text),
+                    onPressed: () async => bloc.register(
+                        _usernameController.text, _passwordController.text),
                     buttonText: 'register'.tr(),
                   ),
                 ),

@@ -18,7 +18,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class ObjectsBloc extends BlocBase {
-  static const int _UPDATE_LOCAL_MEDIA_STEP = 20;
+  static const int _updateLocalMediaStep = 20;
 
   ObjectsBloc() {
     _objectSubject = BehaviorSubject<List<Object>>.seeded([]);
@@ -34,7 +34,7 @@ class ObjectsBloc extends BlocBase {
   Stream<List<Object>> get objectsStream => _objectSubject.stream;
 
   ///To use for the "pagination" when loading media files
-  int _localMediaPage = _UPDATE_LOCAL_MEDIA_STEP;
+  int _localMediaPage = _updateLocalMediaStep;
 
   //
   // Api Repository
@@ -75,7 +75,7 @@ class ObjectsBloc extends BlocBase {
   }
 
   Future<void> loadMoreFromDisk() async {
-    _localMediaPage += _UPDATE_LOCAL_MEDIA_STEP;
+    _localMediaPage += _updateLocalMediaStep;
     await loadFromDisk();
   }
 
@@ -99,17 +99,15 @@ class ObjectsBloc extends BlocBase {
       List<AssetEntity> assets) async {
     List<Object> objects = [];
 
-    for (AssetEntity element in assets) {
-      int start = _localMediaPage - _UPDATE_LOCAL_MEDIA_STEP >= 0
-          ? _localMediaPage - _UPDATE_LOCAL_MEDIA_STEP
-          : 0;
-      int end = _localMediaPage;
-      if (assets.length < end) end = assets.length;
-      //Cycles the entities and creates the objects
-      objects = await _recursivelyAddObject(assets.sublist(start, end), []);
-      _objectSubject.add(UnmodifiableListView(_objectsList));
-      changeLoading(false);
-    }
+    int start = _localMediaPage - _updateLocalMediaStep >= 0
+        ? _localMediaPage - _updateLocalMediaStep
+        : 0;
+    int end = _localMediaPage;
+    if (assets.length < end) end = assets.length;
+    //Cycles the entities and creates the objects
+    objects = await _recursivelyAddObject(assets.sublist(start, end), []);
+    _objectSubject.add(UnmodifiableListView(_objectsList));
+    changeLoading(false);
 
     return objects;
   }
@@ -126,8 +124,8 @@ class ObjectsBloc extends BlocBase {
         Object(
           futureFileBytes: assetList.first.file,
           objectType: assetList.first.type == AssetType.image
-              ? ObjectType.Picture
-              : ObjectType.Video,
+              ? ObjectType.picture
+              : ObjectType.video,
           attributes: ObjectAttributes(
             extension: '.${file!.path.split('.').last}',
             creationDate: assetList.first.createDateTime.millisecondsSinceEpoch
@@ -142,7 +140,7 @@ class ObjectsBloc extends BlocBase {
       );
       assetList.removeAt(0);
     }
-    if (assetList.length > 0) await _recursivelyAddObject(assetList, objects);
+    if (assetList.isNotEmpty) await _recursivelyAddObject(assetList, objects);
     return objects;
   }
 
@@ -160,8 +158,8 @@ class ObjectsBloc extends BlocBase {
       );
       response = await _repository.addObject(object);
     } catch (e, stacktrace) {
-      print(e);
-      print(stacktrace);
+      debugPrint('$e');
+      debugPrint('$stacktrace');
       _showError();
       return;
     }
@@ -196,15 +194,13 @@ class ObjectsBloc extends BlocBase {
   //Creates a list of RawObject from the list of Object passed
   Future<void> _recursiveAddRawObjects(
       List<Object> objects, List<RawObject> raws) async {
-    if (objects.length == 0) {
-      print('No need to upload media');
+    if (objects.isEmpty) {
+      debugPrint('No need to upload media');
       return;
     }
-    print(
+    debugPrint(
         'recursiveAddRawObjects\tobjects: ${objects.length}\t rows:${raws.length}');
-    if (objects.first.objectType ==
-        ObjectType
-            .Picture) //Only uploads the object if is a photo TODO: allow videos
+    if (objects.first.objectType == ObjectType.picture) {
       try {
         if (objects.first.futureFileBytes != null) {
           //Gets the bytes of the object
@@ -214,13 +210,14 @@ class ObjectsBloc extends BlocBase {
               bytes: Int8List.fromList(bytes.toList()), object: objects.first));
         }
       } catch (e, stacktrace) {
-        print('Error: $e');
-        print('StackTrace: $stacktrace');
-        print(
+        debugPrint('Error: $e');
+        debugPrint('StackTrace: $stacktrace');
+        debugPrint(
             'Error uploading file from ${objects.first.attributes.localPath}');
         changeLoading(false);
         // return;
       }
+    }
     //If the list is not empty, calls itself
     if (objects.length - 1 > 0) {
       objects.removeAt(0);
@@ -231,11 +228,11 @@ class ObjectsBloc extends BlocBase {
   //Uploads the list of RawObject
   Future<void> _uploadObjectRecursive(List<RawObject> objects) async {
     try {
-      print('uploadObjectRecursive\tobjects: ${objects.length}');
+      debugPrint('uploadObjectRecursive\tobjects: ${objects.length}');
       await createPicture(objects.first);
     } catch (e, stacktrace) {
-      print('Error: $e');
-      print('StackTrace: $stacktrace');
+      debugPrint('Error: $e');
+      debugPrint('StackTrace: $stacktrace');
       changeLoading(false);
       return;
     }
@@ -251,7 +248,7 @@ class ObjectsBloc extends BlocBase {
       backgroundColor: Colors.red,
       content: Text(
         title,
-        style: TextStyle(color: Colors.white),
+        style: const TextStyle(color: Colors.white),
       ),
       behavior: SnackBarBehavior.floating,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),

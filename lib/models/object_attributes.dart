@@ -1,15 +1,15 @@
 import 'package:geocoding/geocoding.dart';
 
 class ObjectAttributes {
-  static const _KEY_SYNC_DATE = "sync_date";
-  static const _KEY_CREATION_DATE = "creation_date";
-  static const _KEY_PICTURE_POSITION = "position";
-  static const _KEY_BYTE_SIZE = "bytes_size";
-  static const _KEY_LOCAL_PATH = "local_path";
-  static const _KEY_ID = "database_id";
-  static const _KEY_EXTENSION = "extension";
-  static const _KEY_LOCAL_ID = "local_id";
-  static const KEY_ATTRIBUTES = "attributes";
+  static const _keySyncDate = "sync_date";
+  static const _keyCreationDate = "creation_date";
+  static const _keyPicturePosition = "position";
+  static const _keyByteSize = "bytes_size";
+  static const _keyLocalPath = "local_path";
+  static const _keyId = "database_id";
+  static const _keyExtension = "extension";
+  static const _keyLocalId = "local_id";
+  static const keyAttributes = "attributes";
 
   final String? syncDate;
   final String creationDate;
@@ -52,25 +52,25 @@ class ObjectAttributes {
 
   static ObjectAttributes fromJSON(Map<String, dynamic> json) =>
       ObjectAttributes(
-        creationDate: json[_KEY_CREATION_DATE],
-        localPath: json[_KEY_LOCAL_PATH],
-        pictureByteSize: json[_KEY_BYTE_SIZE],
-        picturePosition: json[_KEY_PICTURE_POSITION],
-        syncDate: json[_KEY_SYNC_DATE],
-        databaseID: json[_KEY_ID],
-        extension: json[_KEY_EXTENSION],
-        localID: json[_KEY_LOCAL_ID],
+        creationDate: json[_keyCreationDate],
+        localPath: json[_keyLocalPath],
+        pictureByteSize: json[_keyByteSize],
+        picturePosition: json[_keyPicturePosition],
+        syncDate: json[_keySyncDate],
+        databaseID: json[_keyId],
+        extension: json[_keyExtension],
+        localID: json[_keyLocalId],
       );
 
   Map<String, dynamic> get toJSON => {
-        _KEY_CREATION_DATE: creationDate,
-        _KEY_LOCAL_PATH: localPath,
-        _KEY_BYTE_SIZE: pictureByteSize,
-        _KEY_PICTURE_POSITION: picturePosition,
-        _KEY_SYNC_DATE: syncDate ?? '',
-        _KEY_ID: databaseID,
-        _KEY_EXTENSION: extension ?? '',
-        _KEY_LOCAL_ID: localID,
+        _keyCreationDate: creationDate,
+        _keyLocalPath: localPath,
+        _keyByteSize: pictureByteSize,
+        _keyPicturePosition: picturePosition,
+        _keySyncDate: syncDate ?? '',
+        _keyId: databaseID,
+        _keyExtension: extension ?? '',
+        _keyLocalId: localID,
       };
 
   ObjectAttributes copyWith({
@@ -84,7 +84,7 @@ class ObjectAttributes {
   }) =>
       ObjectAttributes(
         creationDate: creationDate ?? this.creationDate,
-        databaseID: this.databaseID,
+        databaseID: databaseID,
         localPath: localPath ?? this.localPath,
         pictureByteSize: pictureByteSize ?? this.pictureByteSize,
         picturePosition: picturePosition ?? this.picturePosition,

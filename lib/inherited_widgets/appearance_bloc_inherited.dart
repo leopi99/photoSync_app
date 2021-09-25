@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:photo_sync/bloc/appearance_bloc.dart';
 
 class AppearanceBlocInherited extends InheritedWidget {
-  final Widget child;
   final AppearanceBloc bloc;
 
-  AppearanceBlocInherited({
+  const AppearanceBlocInherited({
     required this.bloc,
-    required this.child,
-  }) : super(child: child);
+    required Widget child,
+    Key? key,
+  }) : super(child: child, key: key);
 
   @override
   bool updateShouldNotify(covariant InheritedWidget oldWidget) => false;

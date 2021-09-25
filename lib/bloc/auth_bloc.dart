@@ -49,7 +49,7 @@ class AuthBloc extends BlocBase {
       changeLoading(true);
       data = await ObjectRepository().login(username, password);
     } catch (e) {
-      print('Error $e');
+      debugPrint('Error $e');
       _showError(title: 'loginError'.tr());
       SharedManager().logout();
       changeLoading(false);
@@ -69,7 +69,7 @@ class AuthBloc extends BlocBase {
       changeLoading(false);
       _currentUser = User.fromJSON(data);
     } catch (e) {
-      print('Error $e');
+      debugPrint('Error $e');
       SharedManager().logout();
       _showError(title: data['description'] ?? '');
       return;
@@ -80,8 +80,8 @@ class AuthBloc extends BlocBase {
         .getObjectListFromApi();
 
     //Saves the credentials
-    await SharedManager().writeString(SharedType.LoginUsername, username);
-    await SharedManager().writeString(SharedType.LoginPassword, password);
+    await SharedManager().writeString(SharedType.loginUsername, username);
+    await SharedManager().writeString(SharedType.loginPassword, password);
     changeLoading(false);
     //Checks the session, should go to the homepage
     await AppBloc.checkSession();
@@ -98,7 +98,7 @@ class AuthBloc extends BlocBase {
     try {
       data = await ObjectRepository().register(username, password);
     } catch (e) {
-      print('Error $e');
+      debugPrint('Error $e');
       _showError(title: 'signUpError'.tr());
       SharedManager().logout();
       changeLoading(false);
@@ -122,8 +122,8 @@ class AuthBloc extends BlocBase {
     try {
       data = await ObjectRepository().updateProfile(_currentUser!);
     } catch (e, stacktrace) {
-      print('Error $e');
-      print('Stacktrace: $stacktrace');
+      debugPrint('Error $e');
+      debugPrint('Stacktrace: $stacktrace');
       _showError();
       changeLoading(false);
       return;
@@ -136,7 +136,7 @@ class AuthBloc extends BlocBase {
       return;
     }
 
-    await SharedManager().writeString(SharedType.LoginPassword, newPassword);
+    await SharedManager().writeString(SharedType.loginPassword, newPassword);
 
     _showSuccess();
 
@@ -149,7 +149,7 @@ class AuthBloc extends BlocBase {
       backgroundColor: Colors.red,
       content: Text(
         title,
-        style: TextStyle(color: Colors.white),
+        style: const TextStyle(color: Colors.white),
       ),
       behavior: SnackBarBehavior.floating,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -165,10 +165,10 @@ class AuthBloc extends BlocBase {
 
   void _showSuccess({String title = "Success"}) {
     SnackBar _snack = SnackBar(
-      backgroundColor: Theme.of(navigatorKey.currentContext!).accentColor,
+      backgroundColor: Theme.of(navigatorKey.currentContext!).colorScheme.secondary,
       content: Text(
         title,
-        style: TextStyle(color: Colors.white),
+        style: const TextStyle(color: Colors.white),
       ),
       behavior: SnackBarBehavior.floating,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),

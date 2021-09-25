@@ -12,7 +12,7 @@ class ApiConnectionInterceptor extends Interceptor {
     ObjectsBlocInherited.of(navigatorKey.currentContext!).changeLoading(false);
     if (err.type == DioErrorType.connectTimeout) {
       Navigator.pushNamed(
-          navigatorKey.currentContext!, RouteBuilder.API_NOT_REACHABLE);
+          navigatorKey.currentContext!, RouteBuilder.apiNotReachable);
     }
   }
 }

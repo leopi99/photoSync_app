@@ -6,6 +6,8 @@ import 'package:easy_localization/easy_localization.dart';
 
 ///Tells the user that the server is not reachable
 class ApiConnectionErrorPage extends StatelessWidget {
+  const ApiConnectionErrorPage({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final double size = MediaQuery.of(context).size.width - 64;
@@ -14,7 +16,7 @@ class ApiConnectionErrorPage extends StatelessWidget {
         title: Text('ApiError'.tr()),
         leading: IconButton(
           onPressed: () => Navigator.of(context).pop(),
-          icon: Icon(FeatherIcons.chevronLeft),
+          icon: const Icon(FeatherIcons.chevronLeft),
         ),
       ),
       body: Center(
@@ -28,7 +30,7 @@ class ApiConnectionErrorPage extends StatelessWidget {
                 height: size,
                 width: size,
               ),
-              SizedBox(height: 32),
+              const SizedBox(height: 32),
               Text(
                 'apiNotReachableDescription'.tr(),
                 textAlign: TextAlign.center,

@@ -33,5 +33,5 @@ abstract class ObjectsRepositoryInterface {
   Future<Map<String, dynamic>> updateProfile(User user);
 
   ///Returns the base64 encoded object
-  Future<dynamic> getSingleObject(String fileName);
+  Future<dynamic> getSingleObject(String path);
 }

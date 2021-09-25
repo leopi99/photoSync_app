@@ -14,6 +14,8 @@ import 'package:photo_sync/routes/route_builder.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class App extends StatefulWidget {
+  const App({Key? key}) : super(key: key);
+
   @override
   _AppState createState() => _AppState();
 }
@@ -30,7 +32,7 @@ class _AppState extends State<App> {
     _authBloc = AuthBloc();
     _appearanceBloc = AppearanceBloc();
     _appBloc = AppBloc();
-    ObjectRepository()..setupDio();
+    ObjectRepository().setupDio();
     super.initState();
   }
 
@@ -52,7 +54,7 @@ class _AppState extends State<App> {
               child: LayoutBuilder(
                 builder: (context, constraints) => Navigator(
                   key: navigatorKey,
-                  initialRoute: RouteBuilder.INITIAL_PAGE,
+                  initialRoute: RouteBuilder.initialPage,
                   observers: [
                     HeroController(),
                   ],

@@ -3,7 +3,6 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:photo_sync/bloc/app_bloc.dart';
 import 'package:photo_sync/bloc/appearance_bloc.dart';
 import 'package:photo_sync/constants/appearance.dart';
-import 'package:photo_sync/global/methods.dart';
 import 'package:photo_sync/global/nav_key.dart';
 import 'package:photo_sync/inherited_widgets/app_bloc_inherited.dart';
 import 'package:photo_sync/inherited_widgets/appearance_bloc_inherited.dart';
@@ -16,6 +15,8 @@ import 'package:photo_sync/widgets/sync_list_tile.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class SettingsPage extends StatefulWidget {
+  const SettingsPage({Key? key}) : super(key: key);
+
   @override
   _SettingsPageState createState() => _SettingsPageState();
 }
@@ -35,7 +36,7 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: ListView(
-        padding: EdgeInsets.symmetric(horizontal: 16)
+        padding: const EdgeInsets.symmetric(horizontal: 16)
             .copyWith(top: MediaQuery.of(context).padding.top + 8),
         children: [
           _buildBackgroundSync(),
@@ -62,13 +63,13 @@ class _SettingsPageState extends State<SettingsPage> {
             },
             value: snapshot.data!.currentType,
             underline: Container(),
-            icon: Icon(FeatherIcons.chevronDown),
+            icon: const Icon(FeatherIcons.chevronDown),
             items: List.generate(
               AppearanceModeType.values.length,
               (index) => DropdownMenuItem(
                 value: AppearanceModeType.values[index],
                 child: Text(
-                  '${AppearanceModeType.values[index].toValue}'.tr(),
+                  AppearanceModeType.values[index].toValue.tr(),
                 ),
               ),
             ),
@@ -91,8 +92,8 @@ class _SettingsPageState extends State<SettingsPage> {
             content: 'logoutDescription'.tr(),
             primaryButtonOnPressed: () async => await SharedManager()
                 .logout()
-                .then((value) => AuthBlocInherited.of(context).logout(
-                    context)), //Removes the saved credentials, then goes to the login page
+                .then((value) => AuthBlocInherited.of(context).logout(context)),
+            //Removes the saved credentials, then goes to the login page
             primaryButtonText: 'ok'.tr(),
             secondaryButtonText: 'cancel'.tr(),
           );
@@ -105,7 +106,7 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget _buildChangePasswordTile() {
     return SyncListTile(
       titleText: 'changePassword'.tr(),
-      onTap: () => Navigator.pushNamed(context, RouteBuilder.UPDATE_PROFILE),
+      onTap: () => Navigator.pushNamed(context, RouteBuilder.updateProfile),
     );
   }
 

@@ -7,7 +7,7 @@ import 'package:photo_sync/repository/object_repository.dart';
 import 'package:photo_sync/util/enums/object_type.dart';
 
 class Object {
-  static const _KEY_TYPE = "type";
+  static const _keyType = "type";
 
   final ObjectType objectType;
   final ObjectAttributes attributes;
@@ -28,27 +28,28 @@ class Object {
   ///Returns the object from a json
   static Object fromJSON(Map<String, dynamic> json) => Object(
         attributes:
-            ObjectAttributes.fromJSON(json[ObjectAttributes.KEY_ATTRIBUTES]),
-        objectType: ObjectType.Picture.findExact(json[_KEY_TYPE]),
+            ObjectAttributes.fromJSON(json[ObjectAttributes.keyAttributes]),
+        objectType: ObjectType.picture.findExact(json[_keyType]),
       );
 
   ///Returns the json representation of the object
   Map<String, dynamic> get toJSON => {
-        ObjectAttributes.KEY_ATTRIBUTES: attributes.toJSON,
-        _KEY_TYPE: objectType.toValue,
+        ObjectAttributes.keyAttributes: attributes.toJSON,
+        _keyType: objectType.toValue,
       };
 
   Object copyWith({ObjectType? objectType, ObjectAttributes? attributes}) =>
       Object(
         objectType: objectType ?? this.objectType,
         attributes: attributes ?? this.attributes,
-        futureFileBytes: this.futureFileBytes,
+        futureFileBytes: futureFileBytes,
       );
 
   ///Returns the bytes of the object from cache/local memory or api
   Future<Uint8List> get getFileBytes async {
-    if (futureFileBytes != null)
+    if (futureFileBytes != null) {
       return (await futureFileBytes)!.readAsBytesSync();
+    }
 
     Uint8List bytes;
     FileInfo? fileInfo =

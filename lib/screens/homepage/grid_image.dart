@@ -4,7 +4,6 @@ import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:photo_sync/bloc/objects_bloc.dart';
-import 'package:photo_sync/global/methods.dart';
 import 'package:photo_sync/global/nav_key.dart';
 import 'package:photo_sync/inherited_widgets/appearance_bloc_inherited.dart';
 import 'package:photo_sync/inherited_widgets/objects_bloc_inherited.dart';
@@ -22,10 +21,7 @@ class GridImage extends StatelessWidget {
   final int objectIndex;
   Uint8List? imageBytes;
 
-  GridImage(
-    this.object,
-    this.objectIndex,
-  );
+  GridImage(this.object, this.objectIndex, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +84,7 @@ class GridImage extends StatelessWidget {
     await showModalBottomSheet(
       context: context,
       clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
       builder: (context) {
         return Column(
@@ -96,7 +92,7 @@ class GridImage extends StatelessWidget {
           children: [
             Center(
               child: Container(
-                margin: EdgeInsets.symmetric(vertical: 16),
+                margin: const EdgeInsets.symmetric(vertical: 16),
                 height: 4,
                 width: 64,
                 decoration: BoxDecoration(
@@ -113,7 +109,7 @@ class GridImage extends StatelessWidget {
                   downloaded &&
                           (object.attributes.syncDate?.isNotEmpty ?? false)
                       ? IconButton(
-                          padding: EdgeInsets.all(16),
+                          padding: const EdgeInsets.all(16),
                           onPressed: () async {
                             bool isOk = false;
                             await SyncDialog.show(
@@ -134,14 +130,14 @@ class GridImage extends StatelessWidget {
                                 await ObjectsBlocInherited.of(context)
                                     .getObjectListFromApi();
                               } catch (e) {
-                                print(e);
+                                debugPrint('$e');
                               }
                               Navigator.pop(context);
                             }
                           },
                           icon: Icon(
                             FeatherIcons.trash2,
-                            color: Theme.of(context).accentColor,
+                            color: Theme.of(context).colorScheme.secondary,
                           ),
                         )
                       : Container(),
@@ -183,10 +179,11 @@ class DownloadIcon extends StatefulWidget {
   final Object object;
   final int objectIndex;
 
-  DownloadIcon({
+  const DownloadIcon({
     required this.object,
     required this.objectIndex,
-  });
+    Key? key,
+  }) : super(key: key);
 
   @override
   _DownloadIconState createState() => _DownloadIconState();
@@ -215,9 +212,9 @@ class _DownloadIconState extends State<DownloadIcon> {
               widget.object.attributes.localPath);
           await ObjectsBlocInherited.of(context).getObjectListFromApi();
         } catch (e, stacktrace) {
-          print('Error while downloading or updating the object');
-          print(e);
-          print(stacktrace);
+          debugPrint('Error while downloading or updating the object');
+          debugPrint('$e');
+          debugPrint('$stacktrace');
           setState(() {
             downloading = false;
           });
@@ -228,10 +225,10 @@ class _DownloadIconState extends State<DownloadIcon> {
       },
       child: Container(
         child: downloading
-            ? CircularProgressIndicator()
-            : Icon(FeatherIcons.downloadCloud),
-        padding: EdgeInsets.all(6),
-        margin: EdgeInsets.all(8),
+            ? const CircularProgressIndicator()
+            : const Icon(FeatherIcons.downloadCloud),
+        padding: const EdgeInsets.all(6),
+        margin: const EdgeInsets.all(8),
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: AppearanceBlocInherited.of(context).appearance.isDarkMode
@@ -246,9 +243,10 @@ class _DownloadIconState extends State<DownloadIcon> {
 class UploadIcon extends StatefulWidget {
   final Object object;
 
-  UploadIcon({
+  const UploadIcon({
     required this.object,
-  });
+    Key? key,
+  }) : super(key: key);
 
   @override
   _UploadIconState createState() => _UploadIconState();
@@ -269,11 +267,12 @@ class _UploadIconState extends State<UploadIcon> {
 
   Future<void> _createRawObject() async {
     File? file = await widget.object.futureFileBytes!;
-    if (file != null)
+    if (file != null) {
       rawObject = RawObject(
         object: widget.object,
         bytes: file.readAsBytesSync().buffer.asInt8List(),
       );
+    }
   }
 
   @override
@@ -287,9 +286,9 @@ class _UploadIconState extends State<UploadIcon> {
           if (rawObject != null) await bloc.createPicture(rawObject!);
           await bloc.getObjectListFromApi();
         } catch (e, stacktrace) {
-          print('Error while downloading or updating the object');
-          print(e);
-          print(stacktrace);
+          debugPrint('Error while downloading or updating the object');
+          debugPrint('$e');
+          debugPrint('$stacktrace');
           setState(() {
             uploading = false;
           });
@@ -300,10 +299,10 @@ class _UploadIconState extends State<UploadIcon> {
       },
       child: Container(
         child: uploading
-            ? CircularProgressIndicator()
-            : Icon(FeatherIcons.uploadCloud),
-        padding: EdgeInsets.all(6),
-        margin: EdgeInsets.all(8),
+            ? const CircularProgressIndicator()
+            : const Icon(FeatherIcons.uploadCloud),
+        padding: const EdgeInsets.all(6),
+        margin: const EdgeInsets.all(8),
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: AppearanceBlocInherited.of(context).appearance.isDarkMode

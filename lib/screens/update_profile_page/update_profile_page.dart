@@ -8,7 +8,7 @@ import 'package:photo_sync/widgets/sync_elevated_button.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class UpdateProfilePage extends StatefulWidget {
-  UpdateProfilePage();
+  const UpdateProfilePage({Key? key}) : super(key: key);
 
   @override
   _UpdateProfilePageState createState() => _UpdateProfilePageState();
@@ -43,24 +43,24 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
         title: Text('updateProfile'.tr()),
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
-          icon: Icon(FeatherIcons.chevronLeft),
+          icon: const Icon(FeatherIcons.chevronLeft),
         ),
       ),
       child: ListView(
-        padding: EdgeInsets.symmetric(horizontal: 32),
+        padding: const EdgeInsets.symmetric(horizontal: 32),
         children: [
           TextField(
             enabled: false,
             controller: usernameController,
             decoration: InputDecoration(labelText: 'username'.tr()),
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           TextField(
             controller: passwordController,
             decoration: InputDecoration(labelText: 'newPassword'.tr()),
           ),
           SyncElevatedButton(
-            padding: EdgeInsets.only(top: 16),
+            padding: const EdgeInsets.only(top: 16),
             buttonText: 'update'.tr(),
             onPressed: () async {
               await bloc.changePassword(passwordController.text);
