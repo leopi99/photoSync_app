@@ -84,14 +84,11 @@ class ObjectsBloc extends BlocBase {
     PermissionState state = await PhotoManager.requestPermissionExtend();
     if (state == PermissionState.authorized) {
       changeLoading(true);
-      (await PhotoManager.getAssetPathList()).forEach(
-        (element) async {
-          //Only picks the Recent "folder"
-          if (element.name == "Recent") {
-            await compute(_computeEntryLoadFromDisk, await element.assetList);
-          }
-        },
-      );
+      await compute(
+          _computeEntryLoadFromDisk,
+          await (await PhotoManager.getAssetPathList())
+              .firstWhere((element) => element.name == "Recent")
+              .assetList);
     }
   }
 
