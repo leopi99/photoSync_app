@@ -37,7 +37,6 @@ class _SkeletonPageState extends State<SkeletonPage>
   @override
   Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
     print('AppLifeCycle state: $state');
-    GlobalMethods.setStatusBarColorAsScaffoldBackground();
     switch (state) {
       case AppLifecycleState.resumed:
         await ObjectsBlocInherited.of(navigatorKey.currentContext!)

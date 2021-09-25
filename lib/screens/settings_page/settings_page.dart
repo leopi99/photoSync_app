@@ -28,7 +28,6 @@ class _SettingsPageState extends State<SettingsPage> {
   void initState() {
     appearanceBloc = AppearanceBlocInherited.of(navigatorKey.currentContext!);
     appBloc = AppBlocInherited.of(navigatorKey.currentContext!);
-    GlobalMethods.setStatusBarColorAsScaffoldBackground();
     super.initState();
   }
 
@@ -60,7 +59,6 @@ class _SettingsPageState extends State<SettingsPage> {
             onChanged: (value) {
               if (value == null) return;
               appearanceBloc.changeAppearance(value);
-              GlobalMethods.setStatusBarColorAsScaffoldBackground();
             },
             value: snapshot.data!.currentType,
             underline: Container(),

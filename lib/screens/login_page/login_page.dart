@@ -30,7 +30,6 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void initState() {
-    GlobalMethods.setStatusBarColorAsScaffoldBackground();
     _usernameController = TextEditingController(text: widget.username);
     _passwordController = TextEditingController(text: widget.password);
     authBloc = AuthBlocInherited.of(navigatorKey.currentContext!);

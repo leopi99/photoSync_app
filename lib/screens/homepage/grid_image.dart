@@ -85,7 +85,6 @@ class GridImage extends StatelessWidget {
   //Shows the modalBottomBar with some settings/text for the single image
   void _imageBottomBar(
       Object object, BuildContext context, bool downloaded) async {
-    await GlobalMethods.setStatusBarColorForDialog();
     await showModalBottomSheet(
       context: context,
       clipBehavior: Clip.antiAlias,
@@ -176,7 +175,6 @@ class GridImage extends StatelessWidget {
         );
       },
     );
-    await GlobalMethods.setStatusBarColorAsScaffoldBackground();
   }
 }
 

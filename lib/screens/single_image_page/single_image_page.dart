@@ -22,13 +22,11 @@ class SingleImagePage extends StatefulWidget {
 class _SingleImagePageState extends State<SingleImagePage> {
   @override
   initState() {
-    GlobalMethods.setStatusBarColor(Colors.black, true);
     super.initState();
   }
 
   @override
   void dispose() {
-    GlobalMethods.setStatusBarColorAsScaffoldBackground();
     super.dispose();
   }
 

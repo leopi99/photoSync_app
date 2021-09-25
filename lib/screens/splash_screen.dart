@@ -17,7 +17,6 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    GlobalMethods.setStatusBarColorAsScaffoldBackground();
     GlobalMethods.hideKeyboard();
     opacity = 0;
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {

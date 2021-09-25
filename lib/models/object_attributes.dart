@@ -1,4 +1,4 @@
-import 'package:flutter_geocoder/geocoder.dart';
+import 'package:geocoding/geocoding.dart';
 
 class ObjectAttributes {
   static const _KEY_SYNC_DATE = "sync_date";
@@ -23,6 +23,7 @@ class ObjectAttributes {
   DateTime get creationDateTime =>
       DateTime.tryParse(creationDate) ??
       DateTime.fromMillisecondsSinceEpoch(int.parse(creationDate));
+
   DateTime? get syncronizationDateTime {
     if (syncDate == null) return null;
     if (DateTime.tryParse(syncDate!) == null) {
@@ -32,11 +33,9 @@ class ObjectAttributes {
   }
 
   Future<String?> get positionFromCoordinates async {
-    Coordinates coordinates = Coordinates(
+    List<Placemark> address = await placemarkFromCoordinates(
         double.parse(picturePosition.split(',').first.trim()),
         double.parse(picturePosition.split(',').last.trim()));
-    List<Address> address =
-        await Geocoder.local.findAddressesFromCoordinates(coordinates);
     return address.first.locality;
   }
 

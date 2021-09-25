@@ -17,20 +17,18 @@ dependencies:
   pretty_dio_logger: ^1.2.0-beta-1 # Logs the http/https requests
   rxdart: ^0.27.0 # State management
   storage_wrapper: ^2.0.0 # Settings/info storage save
-  cached_network_image: ^3.0.0 # Network image renderer 
-  flutter_statusbarcolor_ns: ^0.3.0-nullsafety # Changes the statusBar color
+  cached_network_image: ^3.0.0 # Network image renderer
   flutter_feather_icons: ^2.0.0+1 # Icons
   flutter_svg: ^0.22.0 # Svg render
   google_nav_bar: ^5.0.5 # Navigation bar
   photo_manager: ^1.2.1 # Returns the media from the local disk
-  photo_view: ^0.11.1 # Zoomable image
+  photo_view: ^0.12.0 # Zoomable image
   filesize: ^2.0.1 # Handles the bytes conversion
   path_provider: ^2.0.2 # Temporary, needs to find a better solution to get the save file path
   flutter_cache_manager: ^3.1.2 # Cache manager for the objects
   easy_localization: ^3.0.0 # Localization
-  flutter_geocoder:
-    git:
-      url: https://github.com/JCKodel/flutter_geocoder
+  geocoding: ^2.0.1
+  flutter_lints:
 
 
 dev_dependencies:

@@ -10,7 +10,7 @@ import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 class ObjectRepository extends ObjectsRepositoryInterface {
   static const _HOST =
-      "http://10.0.2.2"; //This address works in the android emulator => change to the ip address where you host the api (with the api in localhost)
+      "http://192.168.1.7"; //This address works in the android emulator => change to the ip address where you host the api (with the api in localhost)
   static const _PORT = ":8010"; //Port dedicated to the api
   static const _API_PATH = "$_HOST$_PORT/photoSync/api/v1";
   static get apiPath => _API_PATH;

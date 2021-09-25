@@ -18,7 +18,6 @@ class SyncDialog extends StatelessWidget {
     Function? secondaryButtonOnPressed,
     String? secondaryButtonText,
   }) async {
-    await GlobalMethods.setStatusBarColorForDialog();
     var response = await showDialog(
       context: context,
       barrierDismissible: true,
@@ -37,7 +36,6 @@ class SyncDialog extends StatelessWidget {
         ),
       ),
     );
-    GlobalMethods.setStatusBarColorAsScaffoldBackground();
     return response;
   }
 

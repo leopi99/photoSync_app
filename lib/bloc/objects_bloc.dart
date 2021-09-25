@@ -1,11 +1,12 @@
 import 'dart:collection';
 import 'dart:io';
 import 'dart:typed_data';
+import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:photo_sync/bloc/base/bloc_base.dart';
 import 'package:photo_sync/global/nav_key.dart';
-import 'package:photo_sync/inherited_widgets/auth_bloc_inherited.dart';
 import 'package:photo_sync/models/api_error.dart';
 import 'package:photo_sync/models/object.dart';
 import 'package:photo_sync/models/object_attributes.dart';
@@ -18,6 +19,7 @@ import 'package:easy_localization/easy_localization.dart';
 
 class ObjectsBloc extends BlocBase {
   static const int _UPDATE_LOCAL_MEDIA_STEP = 20;
+
   ObjectsBloc() {
     _objectSubject = BehaviorSubject<List<Object>>.seeded([]);
     _repository = ObjectRepository();
@@ -86,54 +88,62 @@ class ObjectsBloc extends BlocBase {
         (element) async {
           //Only picks the Recent "folder"
           if (element.name == "Recent") {
-            List<AssetEntity> assetList = await element.assetList;
-            int start = _localMediaPage - _UPDATE_LOCAL_MEDIA_STEP >= 0
-                ? _localMediaPage - _UPDATE_LOCAL_MEDIA_STEP
-                : 0;
-            int end = _localMediaPage;
-            if (assetList.length < end) end = assetList.length;
-            //Cycles the entities and creates the objects
-            await _recursivelyAddObject(assetList.sublist(start, end));
-            _objectSubject.add(UnmodifiableListView(_objectsList));
-            changeLoading(false);
+            await compute(_computeEntryLoadFromDisk, await element.assetList);
           }
         },
       );
     }
   }
 
+  Future<List<Object>> _computeEntryLoadFromDisk(
+      List<AssetEntity> assets) async {
+    List<Object> objects = [];
+
+    for (AssetEntity element in assets) {
+      int start = _localMediaPage - _UPDATE_LOCAL_MEDIA_STEP >= 0
+          ? _localMediaPage - _UPDATE_LOCAL_MEDIA_STEP
+          : 0;
+      int end = _localMediaPage;
+      if (assets.length < end) end = assets.length;
+      //Cycles the entities and creates the objects
+      objects = await _recursivelyAddObject(assets.sublist(start, end), []);
+      _objectSubject.add(UnmodifiableListView(_objectsList));
+      changeLoading(false);
+    }
+
+    return objects;
+  }
+
   ///Recursively adds objects from the local media [List<AssetEntity>]
-  Future _recursivelyAddObject(List<AssetEntity> assetList) async {
+  Future<List<Object>> _recursivelyAddObject(
+      List<AssetEntity> assetList, List<Object> objects) async {
     if (assetList.first.type == AssetType.image ||
         assetList.first.type == AssetType.video) {
       int bytes = (await assetList.first.file)!.statSync().size;
       File? file = await assetList.first.file;
       LatLng pos = await assetList.first.latlngAsync();
-      addObjects(
-        [
-          Object(
-            futureFileBytes: assetList.first.file,
-            objectType: assetList.first.type == AssetType.image
-                ? ObjectType.Picture
-                : ObjectType.Video,
-            attributes: ObjectAttributes(
-              extension: '.${file!.path.split('.').last}',
-              creationDate: assetList
-                  .first.createDateTime.millisecondsSinceEpoch
-                  .toString(),
-              picturePosition: "${pos.latitude}, ${pos.longitude}",
-              localPath: file.path,
-              pictureByteSize: bytes,
-              databaseID: 0,
-              localID: int.parse(assetList.first.id),
-            ),
+      objects.add(
+        Object(
+          futureFileBytes: assetList.first.file,
+          objectType: assetList.first.type == AssetType.image
+              ? ObjectType.Picture
+              : ObjectType.Video,
+          attributes: ObjectAttributes(
+            extension: '.${file!.path.split('.').last}',
+            creationDate: assetList.first.createDateTime.millisecondsSinceEpoch
+                .toString(),
+            picturePosition: "${pos.latitude}, ${pos.longitude}",
+            localPath: file.path,
+            pictureByteSize: bytes,
+            databaseID: 0,
+            localID: int.parse(assetList.first.id),
           ),
-        ],
-        updateState: false,
+        ),
       );
       assetList.removeAt(0);
     }
-    if (assetList.length > 0) await _recursivelyAddObject(assetList);
+    if (assetList.length > 0) await _recursivelyAddObject(assetList, objects);
+    return objects;
   }
 
   ///Creates an image on the db => api

@@ -43,7 +43,6 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
 
   @override
   void initState() {
-    GlobalMethods.setStatusBarColorAsScaffoldBackground();
     _pageController = PageController();
     super.initState();
   }

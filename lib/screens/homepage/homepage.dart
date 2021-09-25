@@ -29,7 +29,6 @@ class _HomepageState extends State<Homepage>
     _scrollController.addListener(() {
       if (_scrollController.position.extentAfter <= 10) bloc.loadMoreFromDisk();
     });
-    GlobalMethods.setStatusBarColorAsScaffoldBackground();
     super.initState();
   }
 
