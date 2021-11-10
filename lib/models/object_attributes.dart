@@ -1,5 +1,9 @@
 import 'package:geocoding/geocoding.dart';
+import 'package:json_annotation/json_annotation.dart';
 
+part 'object_attributes.g.dart';
+
+@JsonSerializable()
 class ObjectAttributes {
   static const _keySyncDate = "sync_date";
   static const _keyCreationDate = "creation_date";
@@ -11,13 +15,27 @@ class ObjectAttributes {
   static const _keyLocalId = "local_id";
   static const keyAttributes = "attributes";
 
+  @JsonKey(name: _keySyncDate)
   final String? syncDate;
+  @JsonKey(name: _keyCreationDate)
   final String creationDate;
+
+  @JsonKey(name: _keyPicturePosition)
   final String picturePosition;
+
+  @JsonKey(name: _keyLocalPath)
   final String localPath;
+
+  @JsonKey(name: _keyByteSize)
   final int pictureByteSize;
+
+  @JsonKey(name: _keyId)
   final int databaseID;
+
+  @JsonKey(name: _keyExtension)
   final String? extension;
+
+  @JsonKey(name: _keyLocalId)
   final int localID;
 
   DateTime get creationDateTime =>
@@ -50,28 +68,10 @@ class ObjectAttributes {
     required this.extension,
   });
 
-  static ObjectAttributes fromJSON(Map<String, dynamic> json) =>
-      ObjectAttributes(
-        creationDate: json[_keyCreationDate],
-        localPath: json[_keyLocalPath],
-        pictureByteSize: json[_keyByteSize],
-        picturePosition: json[_keyPicturePosition],
-        syncDate: json[_keySyncDate],
-        databaseID: json[_keyId],
-        extension: json[_keyExtension],
-        localID: json[_keyLocalId],
-      );
+  factory ObjectAttributes.fromJson(Map<String, dynamic> json) =>
+      _$ObjectAttributesFromJson(json);
 
-  Map<String, dynamic> get toJSON => {
-        _keyCreationDate: creationDate,
-        _keyLocalPath: localPath,
-        _keyByteSize: pictureByteSize,
-        _keyPicturePosition: picturePosition,
-        _keySyncDate: syncDate ?? '',
-        _keyId: databaseID,
-        _keyExtension: extension ?? '',
-        _keyLocalId: localID,
-      };
+  Map<String, dynamic> get toJson => _$ObjectAttributesToJson(this);
 
   ObjectAttributes copyWith({
     String? syncDate,

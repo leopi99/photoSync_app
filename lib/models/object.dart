@@ -2,14 +2,20 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:json_annotation/json_annotation.dart';
 import 'package:photo_sync/models/object_attributes.dart';
 import 'package:photo_sync/repository/object_repository.dart';
 import 'package:photo_sync/util/enums/object_type.dart';
 
+part 'object.g.dart';
+
+@JsonSerializable(ignoreUnannotated: true)
 class Object {
   static const _keyType = "type";
 
+  @JsonKey(name: _keyType, unknownEnumValue: ObjectType.unknown)
   final ObjectType objectType;
+  @JsonKey(name: 'attributes')
   final ObjectAttributes attributes;
   final Future<File?>? futureFileBytes;
   final String _imageRemotePath;
@@ -26,17 +32,10 @@ class Object {
       await File(attributes.localPath).exists();
 
   ///Returns the object from a json
-  static Object fromJSON(Map<String, dynamic> json) => Object(
-        attributes:
-            ObjectAttributes.fromJSON(json[ObjectAttributes.keyAttributes]),
-        objectType: ObjectType.picture.findExact(json[_keyType]),
-      );
+  factory Object.fromJSON(Map<String, dynamic> json) => _$ObjectFromJson(json);
 
   ///Returns the json representation of the object
-  Map<String, dynamic> get toJSON => {
-        ObjectAttributes.keyAttributes: attributes.toJSON,
-        _keyType: objectType.toValue,
-      };
+  Map<String, dynamic> toJSON() => _$ObjectToJson(this);
 
   Object copyWith({ObjectType? objectType, ObjectAttributes? attributes}) =>
       Object(
