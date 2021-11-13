@@ -16,17 +16,23 @@ import 'package:photo_sync/widgets/sync_dialog.dart';
 import 'package:photo_sync/widgets/sync_list_tile.dart';
 import 'package:easy_localization/easy_localization.dart';
 
-class GridImage extends StatelessWidget {
+class GridImage extends StatefulWidget {
   final Object object;
   final int objectIndex;
-  Uint8List? imageBytes;
 
-  GridImage(this.object, this.objectIndex, {Key? key}) : super(key: key);
+  const GridImage(this.object, this.objectIndex, {Key? key}) : super(key: key);
+
+  @override
+  State<GridImage> createState() => _GridImageState();
+}
+
+class _GridImageState extends State<GridImage> {
+  Uint8List? imageBytes;
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<bool>(
-      future: object.isDownloaded,
+      future: widget.object.isDownloaded,
       initialData: false,
       builder: (context, isDownloaded) {
         return Stack(
@@ -36,17 +42,17 @@ class GridImage extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (context) => SingleImagePage(
-                    object: object,
+                    object: widget.object,
                     image: imageBytes,
                   ),
                 ),
               ),
               onLongPress: () =>
-                  _imageBottomBar(object, context, isDownloaded.data!),
+                  _imageBottomBar(widget.object, context, isDownloaded.data!),
               child: Hero(
-                tag: object.attributes.creationDate,
+                tag: widget.object.attributes.creationDate,
                 child: FutureBuilder<Uint8List>(
-                  future: object.getFileBytes,
+                  future: widget.object.getFileBytes,
                   builder: (context, snapshot) {
                     if (snapshot.data == null) return Container();
                     imageBytes = snapshot.data;
@@ -63,14 +69,14 @@ class GridImage extends StatelessWidget {
               Align(
                 alignment: AlignmentDirectional.bottomEnd,
                 child: DownloadIcon(
-                  object: object,
-                  objectIndex: objectIndex,
+                  object: widget.object,
+                  objectIndex: widget.objectIndex,
                 ),
               ),
-            if (object.attributes.syncDate == null)
+            if (widget.object.attributes.syncDate == null)
               Align(
                 alignment: AlignmentDirectional.bottomEnd,
-                child: UploadIcon(object: object),
+                child: UploadIcon(object: widget.object),
               ),
           ],
         );
@@ -78,7 +84,6 @@ class GridImage extends StatelessWidget {
     );
   }
 
-  //Shows the modalBottomBar with some settings/text for the single image
   void _imageBottomBar(
       Object object, BuildContext context, bool downloaded) async {
     await showModalBottomSheet(

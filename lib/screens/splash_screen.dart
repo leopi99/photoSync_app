@@ -12,7 +12,7 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  static const Duration _animationDuration = Duration(seconds: 2);
+  static const Duration _kAnimationDuration = Duration(seconds: 2);
 
   late double opacity;
 
@@ -26,7 +26,7 @@ class _SplashScreenState extends State<SplashScreen> {
         opacity = 1;
       });
     });
-    Future.delayed(_animationDuration).then((_) => AppBloc.checkSession());
+    Future.delayed(_kAnimationDuration).then((_) => AppBloc.checkSession());
   }
 
   //TODO: Create the animation (maybe with flare) or show the app icon.

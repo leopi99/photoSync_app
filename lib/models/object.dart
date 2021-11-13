@@ -32,10 +32,10 @@ class Object {
       await File(attributes.localPath).exists();
 
   ///Returns the object from a json
-  factory Object.fromJSON(Map<String, dynamic> json) => _$ObjectFromJson(json);
+  factory Object.fromJson(Map<String, dynamic> json) => _$ObjectFromJson(json);
 
   ///Returns the json representation of the object
-  Map<String, dynamic> toJSON() => _$ObjectToJson(this);
+  Map<String, dynamic> toJson() => _$ObjectToJson(this);
 
   Object copyWith({ObjectType? objectType, ObjectAttributes? attributes}) =>
       Object(

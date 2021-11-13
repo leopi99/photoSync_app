@@ -1,5 +1,6 @@
 import 'package:photo_sync/models/object.dart';
 import 'package:photo_sync/repository/interfaces/database_repository_interface.dart';
+import 'package:photo_sync/util/enums/object_type.dart';
 import 'package:sqflite/sqflite.dart';
 
 import 'database_repository_mixin.dart';
@@ -29,26 +30,39 @@ class DatabaseRepository
   }
 
   @override
-  Future addObject(Object object) {
-    // TODO: implement addObject
-    throw UnimplementedError();
+  Future addObject(Object object) async {
+    await _database.insert('object', object.toJson());
   }
 
   @override
-  Future<List<Object>> getObjects() {
-    // TODO: implement getObjects
-    throw UnimplementedError();
+  Future<List<Object>> getObjects() async {
+    List<Object> objects = [];
+    final objs = await _database.query('objects');
+    for (var obj in objs) {
+      Object.fromJson(obj);
+    }
+    return objects;
   }
 
   @override
-  Future<List<Object>> getPhotos() {
-    // TODO: implement getPhotos
-    throw UnimplementedError();
+  Future<List<Object>> getPhotos() async {
+    List<Object> objects = [];
+    final objs = await _database.query('objects',
+        where: 'type = ${ObjectType.picture.toValue}');
+    for (var obj in objs) {
+      Object.fromJson(obj);
+    }
+    return objects;
   }
 
   @override
-  Future<List<Object>> getVideos() {
-    // TODO: implement getVideos
-    throw UnimplementedError();
+  Future<List<Object>> getVideos() async {
+    List<Object> objects = [];
+    final objs = await _database.query('objects',
+        where: 'type = ${ObjectType.video.toValue}');
+    for (var obj in objs) {
+      Object.fromJson(obj);
+    }
+    return objects;
   }
 }

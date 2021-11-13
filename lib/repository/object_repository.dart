@@ -170,7 +170,7 @@ class ObjectRepository extends ObjectsRepositoryInterface {
   List<Object> _convertJsonListToObject(dynamic json) {
     List<Object> objects = [];
     try {
-      json.forEach((element) => objects.add(Object.fromJSON(element)));
+      json.forEach((element) => objects.add(Object.fromJson(element)));
     } catch (e) {
       debugPrint('$e');
     }
