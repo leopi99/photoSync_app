@@ -24,18 +24,22 @@ class ObjectsBloc extends BlocBase {
   static const int _updateLocalMediaStep = 20;
   final DatabaseRepository _db = DatabaseRepository();
 
-  ObjectsBloc() {
+  ObjectsBloc({bool getData = true}) {
     _objectSubject = BehaviorSubject<List<Object>>.seeded([]);
     _repository = ObjectRepository();
-    SharedManager().readBool(SharedType.backgroundBackup).then((value) async {
-      if (value) {
-        return;
-      }
-      final list = await _loadFromDisk();
-      for (var element in list) {
-        await _db.addObject(element);
-      }
-    });
+    if (getData) {
+      SharedManager().readBool(SharedType.backgroundBackup).then(
+        (value) async {
+          if (value) {
+            return;
+          }
+          final list = await _loadFromDisk();
+          for (var element in list) {
+            await _db.addObject(element);
+          }
+        },
+      );
+    }
   }
 
   //
