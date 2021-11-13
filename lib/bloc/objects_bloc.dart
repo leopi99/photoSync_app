@@ -15,6 +15,8 @@ import 'package:photo_sync/repository/database_repository.dart';
 import 'package:photo_sync/repository/interfaces/objects_repository_interface.dart';
 import 'package:photo_sync/repository/object_repository.dart';
 import 'package:photo_sync/util/enums/object_type.dart';
+import 'package:photo_sync/util/enums/shared_type.dart';
+import 'package:photo_sync/util/shared_manager.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:easy_localization/easy_localization.dart';
 
@@ -25,6 +27,15 @@ class ObjectsBloc extends BlocBase {
   ObjectsBloc() {
     _objectSubject = BehaviorSubject<List<Object>>.seeded([]);
     _repository = ObjectRepository();
+    SharedManager().readBool(SharedType.backgroundBackup).then((value) async {
+      if (value) {
+        return;
+      }
+      final list = await _loadFromDisk();
+      for (var element in list) {
+        await _db.addObject(element);
+      }
+    });
   }
 
   //
@@ -42,6 +53,13 @@ class ObjectsBloc extends BlocBase {
   // Api Repository
   //
   late ObjectsRepositoryInterface _repository;
+
+  Future<void> getObjectsFromDb() async {
+    changeLoading(true);
+    _objectsList = await _db.getObjects();
+    _objectSubject.add(_objectsList);
+    changeLoading(false);
+  }
 
   ///Adds a [List] of [Object] to the subject
   ///
@@ -73,16 +91,15 @@ class ObjectsBloc extends BlocBase {
     response = await _repository.getAll(_showError);
     addObjects([], reset: true, updateState: false);
     addObjects(response, updateState: false);
-    await loadFromDisk();
   }
 
   Future<void> loadMoreFromDisk() async {
     _localMediaPage += _updateLocalMediaStep;
-    await loadFromDisk();
+    await _loadFromDisk();
   }
 
   ///Loads the Recent folder
-  Future<void> loadFromDisk() async {
+  Future<List<Object>> _loadFromDisk() async {
     PermissionState state = await PhotoManager.requestPermissionExtend();
     if (state == PermissionState.authorized) {
       changeLoading(true);
@@ -99,8 +116,9 @@ class ObjectsBloc extends BlocBase {
       if (assets.length < end) end = assets.length;
       //Cycles the entities and creates the objects
       objects = await _recursivelyAddObject(assets.sublist(start, end), []);
-      _objectSubject.add(UnmodifiableListView(_objectsList));
-      changeLoading(false);
+      return objects;
+    } else {
+      return [];
     }
   }
 

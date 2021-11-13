@@ -42,7 +42,7 @@ class _SkeletonPageState extends State<SkeletonPage>
     switch (state) {
       case AppLifecycleState.resumed:
         await ObjectsBlocInherited.of(navigatorKey.currentContext!)
-            .loadFromDisk();
+            .getObjectsFromDb();
         break;
       default:
         break;
