@@ -30,6 +30,7 @@ dependencies:
   geocoding: ^2.0.1
   sqflite: ^2.0.0+4 # Database
   json_annotation: ^4.3.0
+  rive: ^0.7.33 # Animations
 
 dev_dependencies:
   flutter_lints: ^1.0.4
@@ -45,4 +46,4 @@ flutter:
   assets:
     - assets/on_boarding/
     - assets/translations/
-    - assets/
+    - assets/animations/

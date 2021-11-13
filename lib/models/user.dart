@@ -9,7 +9,7 @@ class User {
   @JsonKey(name: 'password')
   final String? password;
   @JsonKey(name: 'userID', includeIfNull: false, toJson: _toNull)
-  final String? userID;
+  final int? userID;
 
   User({
     required this.username,
@@ -21,7 +21,7 @@ class User {
 
   Map<String, dynamic> toJson() => _$UserToJson(this);
 
-  User copyWith({String? username, String? password, String? userID}) => User(
+  User copyWith({String? username, String? password, int? userID}) => User(
         username: username ?? this.username,
         password: password ?? this.password,
         userID: userID ?? this.userID,

@@ -11,6 +11,7 @@ import 'package:photo_sync/models/api_error.dart';
 import 'package:photo_sync/models/object.dart';
 import 'package:photo_sync/models/object_attributes.dart';
 import 'package:photo_sync/models/raw_object.dart';
+import 'package:photo_sync/repository/database_repository.dart';
 import 'package:photo_sync/repository/interfaces/objects_repository_interface.dart';
 import 'package:photo_sync/repository/object_repository.dart';
 import 'package:photo_sync/util/enums/object_type.dart';
@@ -19,6 +20,7 @@ import 'package:easy_localization/easy_localization.dart';
 
 class ObjectsBloc extends BlocBase {
   static const int _updateLocalMediaStep = 20;
+  final DatabaseRepository _db = DatabaseRepository();
 
   ObjectsBloc() {
     _objectSubject = BehaviorSubject<List<Object>>.seeded([]);
@@ -84,29 +86,22 @@ class ObjectsBloc extends BlocBase {
     PermissionState state = await PhotoManager.requestPermissionExtend();
     if (state == PermissionState.authorized) {
       changeLoading(true);
-      await compute(
-          _computeEntryLoadFromDisk,
-          await (await PhotoManager.getAssetPathList())
-              .firstWhere((element) => element.name == "Recent")
-              .assetList);
+
+      final assets = await (await PhotoManager.getAssetPathList())
+          .firstWhere((element) => element.name == "Recent")
+          .assetList;
+      List<Object> objects = [];
+
+      int start = _localMediaPage - _updateLocalMediaStep >= 0
+          ? _localMediaPage - _updateLocalMediaStep
+          : 0;
+      int end = _localMediaPage;
+      if (assets.length < end) end = assets.length;
+      //Cycles the entities and creates the objects
+      objects = await _recursivelyAddObject(assets.sublist(start, end), []);
+      _objectSubject.add(UnmodifiableListView(_objectsList));
+      changeLoading(false);
     }
-  }
-
-  Future<List<Object>> _computeEntryLoadFromDisk(
-      List<AssetEntity> assets) async {
-    List<Object> objects = [];
-
-    int start = _localMediaPage - _updateLocalMediaStep >= 0
-        ? _localMediaPage - _updateLocalMediaStep
-        : 0;
-    int end = _localMediaPage;
-    if (assets.length < end) end = assets.length;
-    //Cycles the entities and creates the objects
-    objects = await _recursivelyAddObject(assets.sublist(start, end), []);
-    _objectSubject.add(UnmodifiableListView(_objectsList));
-    changeLoading(false);
-
-    return objects;
   }
 
   ///Recursively adds objects from the local media [List<AssetEntity>]

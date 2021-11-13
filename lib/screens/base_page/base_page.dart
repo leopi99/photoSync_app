@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:photo_sync/constants/assets_path.dart';
+import 'package:rive/rive.dart';
 
 //Handles the view of the loading
 
@@ -8,8 +10,9 @@ class BasePage extends StatelessWidget {
   final PreferredSizeWidget? appBar;
   final bool usePadding;
   final Widget? floatingActionButton;
+  final RiveAnimationController _controller = SimpleAnimation('Animation 1');
 
-  const BasePage({
+  BasePage({
     required this.child,
     required this.loadingStream,
     this.usePadding = false,
@@ -35,11 +38,19 @@ class BasePage extends StatelessWidget {
               if (snapshot.data!)
                 AbsorbPointer(
                   absorbing: true,
-                  child: Container(
-                    color: Colors.black26,
-                    child: const Center(
-                      child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  child: Center(
+                    child: SizedBox(
+                      height: 156,
+                      width: 156,
+                      child: RiveAnimation.asset(
+                        AssetsPath.loadingAnimationRive,
+                        controllers: [
+                          _controller,
+                        ],
+                        onInit: (animation) {
+                          animation.fills.first.paint.color =
+                              Colors.transparent;
+                        },
                       ),
                     ),
                   ),
