@@ -116,10 +116,13 @@ class _SettingsPageState extends State<SettingsPage> {
       stream: appBloc.backgroundSyncStream,
       initialData: false,
       builder: (context, snapshot) {
-        return SwitchListTile(
-          title: Text('backgroundSync'.tr()),
-          value: snapshot.data!,
-          onChanged: (value) async => await appBloc.setBackgroundSync(value),
+        return SyncListTile(
+          titleText: 'backgroundSync'.tr(),
+          onTap: () {},
+          trailing: Switch(
+            value: snapshot.data!,
+            onChanged: (value) async => await appBloc.setBackgroundSync(value),
+          ),
         );
       },
     );

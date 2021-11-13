@@ -22,20 +22,26 @@ import 'package:easy_localization/easy_localization.dart';
 
 class ObjectsBloc extends BlocBase {
   static const int _updateLocalMediaStep = 20;
-  final DatabaseRepository _db = DatabaseRepository();
+  late DatabaseRepository _db;
 
   ObjectsBloc({bool getData = true}) {
     _objectSubject = BehaviorSubject<List<Object>>.seeded([]);
     _repository = ObjectRepository();
+    _db = DatabaseRepository();
+    _db.startDatabaseRepository();
     if (getData) {
       SharedManager().readBool(SharedType.backgroundBackup).then(
         (value) async {
           if (value) {
             return;
           }
+          debugPrint('Loading from disk');
           final list = await _loadFromDisk();
+          if (!_db.isReady.isCompleted) {
+            await _db.isReady.future;
+          }
           for (var element in list) {
-            await _db.addObject(element);
+            await _addObjectToDb(element);
           }
         },
       );
@@ -60,6 +66,9 @@ class ObjectsBloc extends BlocBase {
 
   Future<void> getObjectsFromDb() async {
     changeLoading(true);
+    if (!_db.isReady.isCompleted) {
+      await _db.isReady.future;
+    }
     _objectsList = await _db.getObjects();
     _objectSubject.add(_objectsList);
     changeLoading(false);
@@ -87,6 +96,11 @@ class ObjectsBloc extends BlocBase {
       _objectsList.add(objects[i]);
     }
     if (updateState) _objectSubject.add(UnmodifiableListView(_objectsList));
+  }
+
+  ///Adds a [Object] to the database
+  Future<void> _addObjectToDb(Object object) async {
+    await _db.addObject(object);
   }
 
   ///Retrieves the objects (pictures and videos) from the api

@@ -35,7 +35,7 @@
     "newPassoword": "Nuova password",
     "update": "Aggiorna",
     "backupAllObjects": "Upload degli oggetti",
-    "Dark_Mode": "Dark Mode",
-    "Light_Mode": "Light Mode",
-    "Follow_System": "Sistema"
+    "darkMode": "Dark Mode",
+    "lightMode": "Light Mode",
+    "followSystem": "Segui il Sistema"
 }

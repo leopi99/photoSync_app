@@ -37,19 +37,6 @@ class _SkeletonPageState extends State<SkeletonPage>
   }
 
   @override
-  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
-    debugPrint('AppLifeCycle state: $state');
-    switch (state) {
-      case AppLifecycleState.resumed:
-        await ObjectsBlocInherited.of(navigatorKey.currentContext!)
-            .getObjectsFromDb();
-        break;
-      default:
-        break;
-    }
-  }
-
-  @override
   void dispose() {
     WidgetsBinding.instance!.removeObserver(this);
     super.dispose();
