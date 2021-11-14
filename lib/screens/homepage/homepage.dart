@@ -25,11 +25,12 @@ class _HomepageState extends State<Homepage>
 
   @override
   void initState() {
-    bloc = ObjectsBlocInherited.of(navigatorKey.currentContext!);
+    bloc = ObjectsBlocInherited.of(navigatorKey.currentContext!)
+      ..getObjectsFromDb();
     _scrollController = ScrollController();
-    _scrollController.addListener(() {
-      if (_scrollController.position.extentAfter <= 10) bloc.loadMoreFromDisk();
-    });
+    // _scrollController.addListener(() {
+    //   if (_scrollController.position.extentAfter <= 10) bloc.loadMoreFromDisk();
+    // });
     super.initState();
   }
 

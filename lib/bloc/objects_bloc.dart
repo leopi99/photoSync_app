@@ -21,25 +21,21 @@ import 'package:rxdart/rxdart.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class ObjectsBloc extends BlocBase {
-  static const int _updateLocalMediaStep = 20;
   late DatabaseRepository _db;
 
   ObjectsBloc({bool getData = true}) {
     _objectSubject = BehaviorSubject<List<Object>>.seeded([]);
     _repository = ObjectRepository();
     _db = DatabaseRepository();
-    _db.startDatabaseRepository();
     if (getData) {
-      SharedManager().readBool(SharedType.backgroundBackup).then(
+      SharedManager().readBool(SharedType.onBoardingDone).then(
         (value) async {
+          await _db.startDatabaseRepository();
           if (value) {
             return;
           }
           debugPrint('Loading from disk');
-          final list = await _loadFromDisk();
-          for (var element in list) {
-            await _addObjectToDb(element);
-          }
+          await _initiateDb();
         },
       );
     }
@@ -53,9 +49,6 @@ class ObjectsBloc extends BlocBase {
 
   Stream<List<Object>> get objectsStream => _objectSubject.stream;
 
-  ///To use for the "pagination" when loading media files
-  int _localMediaPage = _updateLocalMediaStep;
-
   //
   // Api Repository
   //
@@ -65,8 +58,16 @@ class ObjectsBloc extends BlocBase {
   Future<void> getObjectsFromDb() async {
     changeLoading(true);
     _objectsList = await _db.getObjects();
-    _objectSubject.add(_objectsList);
+    _objectSubject.add(UnmodifiableListView(_objectsList));
     changeLoading(false);
+  }
+
+  ///Gets the objects from the recent media, then adds them to the local database
+  Future<void> _initiateDb() async {
+    final objectsFromMedia = await _loadFromDisk();
+    for (var element in objectsFromMedia) {
+      await _addObjectToDb(element);
+    }
   }
 
   ///Adds a [List] of [Object] to the subject
@@ -105,11 +106,6 @@ class ObjectsBloc extends BlocBase {
     addObjects(response, updateState: false);
   }
 
-  Future<void> loadMoreFromDisk() async {
-    _localMediaPage += _updateLocalMediaStep;
-    await _loadFromDisk();
-  }
-
   ///Loads the Recent folder
   Future<List<Object>> _loadFromDisk() async {
     PermissionState state = await PhotoManager.requestPermissionExtend();
@@ -120,14 +116,8 @@ class ObjectsBloc extends BlocBase {
           .firstWhere((element) => element.name == "Recent")
           .assetList;
       List<Object> objects = [];
-
-      int start = _localMediaPage - _updateLocalMediaStep >= 0
-          ? _localMediaPage - _updateLocalMediaStep
-          : 0;
-      int end = _localMediaPage;
-      if (assets.length < end) end = assets.length;
       //Cycles the entities and creates the objects
-      objects = await _recursivelyAddObject(assets.sublist(start, end), []);
+      objects = await _recursivelyAddObject(assets, []);
       return objects;
     } else {
       return [];

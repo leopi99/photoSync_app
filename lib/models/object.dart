@@ -34,6 +34,21 @@ class Object {
   ///Returns the object from a json
   factory Object.fromJson(Map<String, dynamic> json) => _$ObjectFromJson(json);
 
+  ///Returns the object as the local db's json
+  factory Object.fromDb(Map<String, dynamic> json) {
+    return Object(
+      futureFileBytes: Future.value(File(json['local_path'])),
+      objectType: $enumDecode(_$ObjectTypeEnumMap, json['type']),
+      attributes: ObjectAttributes(
+        creationDate: json['creation_date'],
+        extension: json['extension'],
+        localPath: json['local_path'],
+        localID: json['local_id'],
+        picturePosition: json['picture_position'],
+      ),
+    );
+  }
+
   ///Returns the json representation of the object
   Map<String, dynamic> toJson() => _$ObjectToJson(this);
 
@@ -65,5 +80,11 @@ class Object {
       );
     }
     return bytes;
+  }
+
+  ///Returns the sql representation of the object
+  String toSql() {
+    return '(local_path, creation_date, picture_position, type, extension, local_id)'
+        'VALUES ("${attributes.localPath}", "${attributes.creationDate}", "${attributes.picturePosition}", "${objectType.toValue}", "${attributes.extension}", ${attributes.localID})';
   }
 }

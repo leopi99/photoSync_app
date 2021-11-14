@@ -36,15 +36,16 @@ class DatabaseRepository
   @override
   Future addObject(Object object) async {
     debugPrint('Adding an object to the database');
-    await _database.insert('object', object.toJson());
+    await _database.execute('INSERT INTO object ${object.toSql()};');
   }
 
   @override
   Future<List<Object>> getObjects() async {
     List<Object> objects = [];
-    final objs = await _database.query('objects');
+    final objs = await _database.rawQuery('SELECT * FROM object;');
+    debugPrint('Found ${objs.length} elements from the local db');
     for (var obj in objs) {
-      Object.fromJson(obj);
+      objects.add(Object.fromDb(obj));
     }
     return objects;
   }

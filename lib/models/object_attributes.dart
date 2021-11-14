@@ -62,8 +62,8 @@ class ObjectAttributes {
     required this.creationDate,
     required this.picturePosition,
     required this.localPath,
-    required this.pictureByteSize,
-    required this.databaseID,
+    this.pictureByteSize = 0,
+    this.databaseID = 0,
     required this.localID,
     required this.extension,
   });
