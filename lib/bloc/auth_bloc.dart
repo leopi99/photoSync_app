@@ -48,8 +48,9 @@ class AuthBloc extends BlocBase {
     try {
       changeLoading(true);
       data = await ObjectRepository().login(username, password);
-    } catch (e) {
-      debugPrint('Error $e');
+    } catch (e, stacktrace) {
+      debugPrint('$e');
+      debugPrint('Stacktrace:\n$stacktrace');
       _showError(title: 'loginError'.tr());
       SharedManager().logout();
       changeLoading(false);
@@ -68,8 +69,9 @@ class AuthBloc extends BlocBase {
     try {
       changeLoading(false);
       _currentUser = User.fromJSON(data);
-    } catch (e) {
+    } catch (e, stacktrace) {
       debugPrint('Error $e');
+      debugPrint('Stacktrace:\n$stacktrace');
       SharedManager().logout();
       _showError(title: data['description'] ?? '');
       return;
@@ -97,8 +99,9 @@ class AuthBloc extends BlocBase {
     changeLoading(true);
     try {
       data = await ObjectRepository().register(username, password);
-    } catch (e) {
+    } catch (e, stacktrace) {
       debugPrint('Error $e');
+      debugPrint('Stacktrace:\n$stacktrace');
       _showError(title: 'signUpError'.tr());
       SharedManager().logout();
       changeLoading(false);
@@ -165,7 +168,8 @@ class AuthBloc extends BlocBase {
 
   void _showSuccess({String title = "Success"}) {
     SnackBar _snack = SnackBar(
-      backgroundColor: Theme.of(navigatorKey.currentContext!).colorScheme.secondary,
+      backgroundColor:
+          Theme.of(navigatorKey.currentContext!).colorScheme.secondary,
       content: Text(
         title,
         style: const TextStyle(color: Colors.white),

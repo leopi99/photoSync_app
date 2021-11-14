@@ -37,9 +37,6 @@ class ObjectsBloc extends BlocBase {
           }
           debugPrint('Loading from disk');
           final list = await _loadFromDisk();
-          if (!_db.isReady.isCompleted) {
-            await _db.isReady.future;
-          }
           for (var element in list) {
             await _addObjectToDb(element);
           }
@@ -64,11 +61,9 @@ class ObjectsBloc extends BlocBase {
   //
   late ObjectsRepositoryInterface _repository;
 
+  ///Gets the objects from the local database
   Future<void> getObjectsFromDb() async {
     changeLoading(true);
-    if (!_db.isReady.isCompleted) {
-      await _db.isReady.future;
-    }
     _objectsList = await _db.getObjects();
     _objectSubject.add(_objectsList);
     changeLoading(false);
@@ -99,9 +94,8 @@ class ObjectsBloc extends BlocBase {
   }
 
   ///Adds a [Object] to the database
-  Future<void> _addObjectToDb(Object object) async {
-    await _db.addObject(object);
-  }
+  Future<void> _addObjectToDb(Object object) async =>
+      await _db.addObject(object);
 
   ///Retrieves the objects (pictures and videos) from the api
   Future<void> getObjectListFromApi() async {

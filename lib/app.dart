@@ -28,7 +28,7 @@ class _AppState extends State<App> {
 
   @override
   void initState() {
-    _objectsBloc = ObjectsBloc();
+    _objectsBloc = ObjectsBloc(getData: false);
     _authBloc = AuthBloc();
     _appearanceBloc = AppearanceBloc();
     _appBloc = AppBloc();
