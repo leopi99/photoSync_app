@@ -43,7 +43,6 @@ class DatabaseRepository
   Future<List<Object>> getObjects() async {
     List<Object> objects = [];
     final objs = await _database.rawQuery('SELECT * FROM object;');
-    debugPrint('Found ${objs.length} elements from the local db');
     for (var obj in objs) {
       objects.add(Object.fromDb(obj));
     }
